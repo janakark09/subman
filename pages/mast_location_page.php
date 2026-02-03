@@ -19,7 +19,7 @@
         <h4>All Locations</h4>  
     </div>
     <div>
-        <table class="table1" cellspacing="0">
+        <table class="table1 table-responsive" cellspacing="0">
         	<tr>
             	<th>Location ID</th>
                 <th>Location Name</th>
@@ -32,8 +32,7 @@
 			?>
             <tr>
             	<td>
-                <a href="DashBoard.php?activity=editUser&selectedID=<?php echo $result1['User_ID']?>"><?php echo $result1['User_ID']?></a>
-                <?php echo $result1['locationID'];?></td>
+                <a href="DashBoard.php?activity=editUser&selectedID=<?php echo $result1['locationID']?>"><?php echo $result1['locationID']?></a>
                 <td><?php echo $result1['location']?></td>
                 <td><?php echo $result1['address']?></td>
                 <td><?php echo $result1['status']?></td>				

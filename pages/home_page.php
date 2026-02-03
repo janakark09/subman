@@ -74,10 +74,10 @@
 			{
 				height:100%;
 				width:100%;
-				float:left;
+				float:right;
 				position:absolute;
 			}
-			#td1
+			#td11
 			{
 				min-height:100%;
 				width:300px;
@@ -140,7 +140,7 @@
 
 		<!------------------------------ Body Contents ------------------------------------------------>
 		<div>
-			<div class="row content_div">
+			<div class="row content_div" id="body_row">
 				<div class="col-2 pt-5 mt-1">
 					<!-------------------------------- Side bar ---------------------------->
 					<?php include '../includes/sidebar.php'?>
