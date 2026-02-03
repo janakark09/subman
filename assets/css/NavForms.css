@@ -1,0 +1,198 @@
+.content_area
+{
+	margin-top:50px;
+	margin-left:20px;
+	margin-right:20px;
+	height:100%;
+	/*background-color:blue;*/
+	vertical-align:top;
+}
+
+/*######################## in Content area #############################*/
+
+
+.body
+{
+	margin:0;
+	padding:0;
+}
+
+.title
+{
+	background-color:#A0A0A0;
+	margin:0;
+	color:white;
+	text-align:center;
+	font-size:24px;
+	font-family:"Arial Black";
+	border-radius:3px;
+}
+.Content_forms
+{
+	padding-top:10px;
+	padding-left:30px;
+	padding-bottom:0;
+	height:auto;
+	font-family:sans-serif;
+	font-weight:bold;
+	font-size:12px;
+}
+
+.objects
+{
+	padding:20px 0 0 0;
+	margin:0;
+}
+
+.Dash_uL
+{
+	list-style-type:none;
+	text-align:center;
+	padding:0px;
+}
+.Dash_uL li
+{
+	display:inline-block;
+	width:200px;
+	height:250px;
+	
+	margin:50px 0 0 50px;
+	background-color:#B7D9C8;
+	text-align:center;
+	vertical-align:central;
+	color:white;
+	font-size:16pt;
+	font-family:Arial;
+	font-weight:bold;
+	border-radius:20px;
+}
+
+.Lbls
+{
+	font-family:sans-serif;
+	font-weight:normal;
+	font-size:12px;
+}
+
+/******************************Text Boxes************************************/
+#textBox1
+{
+	width:200px;
+}
+#textBox_full
+{
+	width:70%;
+}
+
+/******************************Alert Messages************************************/
+/*.ALT
+{
+	font-size:16px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	color:#6AC1A0;
+	transition:0.3s ease;
+}*/
+/******************************Buttons************************************/
+/*#Btn
+{
+	width:200px;
+	height:40px;
+	margin:20px 20px 0 0;
+	border:0;
+	border-radius:10px;
+	color:white;
+	background-color:#2B5860;
+}*/
+/**************************************** tables ***********************************************/
+/*.table1
+{
+	width:100%;
+	text-align:center;
+	font-family:"Courier New";
+}
+
+.table1 tr
+{
+	padding:10px;
+}
+.table1 tr th
+{
+	color:#FFF;
+	background-color:#666666;
+	font-weight:bold;
+	padding: 10px;
+	margin:0px;
+	border-left:1px solid;
+	border-right:1px solid;
+	border-color:#FFF;
+	border-radius:10px 10px 0 0;
+}
+.table1 tr td
+{
+	color:#000;
+	border:1px solid;
+	border-color:#666666;
+	padding: 10px;
+}*/
+
+
+/**********************************************************************************************/
+/*
+.table2
+{
+	width:100%;
+	text-align:center;
+	font-family:"Courier New";
+	font-size:14px;
+}
+
+.table2 tr
+{
+	padding:10px;
+}
+.table2 tr th
+{
+	color:#FFF;
+	background-color:#666666;
+	font-weight:bold;
+	padding: 5px;
+	margin:0px;
+	border-left:1px solid;
+	border-right:1px solid;
+	border-color:#FFF;
+	border-radius:10px 10px 0 0;
+}
+.table2 tr td
+{
+	color:#000;
+	border:1px solid;
+	border-color:#666666;
+	padding:10px 3px 10px 3px;
+}
+*/
+/**************************************** lists***********************************************/
+/*.list1
+{
+	list-style-type:none;
+	font-size:20px;
+	font-family:"Courier New", Courier, monospace;
+	font-weight:bold;
+	text-align:center;
+}
+
+.list1 li
+{
+	display:inline-block;
+	height:50px;
+	width:200px;
+	padding:25px;
+	margin:10px;
+	color:#000;
+	background-color:#DDEBEC;
+	border:1px solid #3E9AAA;
+	border-radius:10pt 0 10pt 0;
+	text-align:left;
+	vertical-align:middle;
+	text-align:center;
+}*/

@@ -1,0 +1,126 @@
+body
+{
+	background-color: #000;
+	margin:0;
+	height:100%;
+}
+p
+{
+	font-size:28px;
+	margin:0;
+}
+.index_div1
+{
+	height:auto;
+	background-image:url(../../Resources/library_1.jpg);
+	background-repeat:no-repeat;
+	background-size:cover;
+	margin:0px 0px;
+	padding:1px;
+}
+.p1
+{
+	margin:3px 0px;
+	font-size:56px;
+	color:white;
+	text-shadow:0 0 10px #000;
+}
+.p2
+{
+	margin-top:10px;
+	margin-bottom:0;
+	font-size:24px;
+	font-family:"Arial Black", Gadget, sans-serif;
+	text-shadow:0 0 10px #000;
+	font-weight:500;
+	color:white;
+}
+/**********************************************************************************/
+.index_div1_1
+{
+	background-color:red;
+	margin:0px 0px;
+	padding:10px;
+}
+
+.index_div2
+{
+	background-color:red;
+}
+.index_div3
+{
+	height:100px;
+	width:100%;
+	background-color:red;
+	vertical-align:top;
+	position:relative;
+	bottom:0;
+	/*background-color:#464646;*/
+}
+ul.navbar
+{
+	list-style-type:none;
+	font-family:"Arial Black";
+	margin:0px;
+	padding:0px;
+	line-height:20px;
+}
+
+ul.navbar li,ul.navbar a
+{
+	display:inline-block;
+	color:white;
+	text-decoration:none;
+	font-size:16pt;
+	font-size-adjust:none;
+	padding:0px 10px;
+	margin:0px 0px
+	border:10px solid white;
+	transition:0.2s ease;
+}
+
+ul.navbar li:hover:not(.active),ul.navbar a:hover:not(.active)
+{
+	display:inline;
+	color:#FFF86C;
+	text-decoration:none;
+	background color:white;
+	font-size:26pt;
+}
+.active
+{
+	background:#330000;
+}
+
+ul.sidebar
+{
+	list-style-type:none;
+	color:white;
+	height:800px;
+	font-family:"Arial Black";
+	margin:1px 1px;
+	padding:10px 2px;
+}
+
+ul.sidebar li,ul.sidebar a
+{
+	display:block;
+	color:white;
+	text-decoration:none;
+	font-size-adjust:none;
+	padding:0px 0px;
+	margin:0px 0px
+	border:10px solid white;
+	transition:0.2s ease;
+}
+ul.sidebar li:hover:not(.active),ul.sidebar a:hover:not(.active)
+{
+	display:block;
+	color:white;
+	text-decoration:none;
+	font-size-adjust:none;
+	font-size:24px;
+	padding:3px 10px;
+	margin:0px 0px
+	border:10px solid white;
+}

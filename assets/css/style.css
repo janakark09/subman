@@ -1,0 +1,157 @@
+body
+{
+	background-color: black;
+	margin:0;
+	height:100%;
+	width:100%;
+}
+.save_btn{
+	width: 100px;
+}
+.p1
+{
+	margin:3px 0px;
+	font-size:56px;
+	color:white;
+	text-shadow:0 0 10px #000;
+}
+.p2
+{
+	margin-top:10px;
+	margin-bottom:0;
+	font-size:24px;
+	font-family:"Arial Black", Gadget, sans-serif;
+	text-shadow:0 0 10px #000;
+	font-weight:500;
+	color:white;
+}
+.p3
+{
+
+}
+/**********************************************************************************/
+.navbar_div
+{
+	background-color:red;
+	margin:0px 0px;
+	padding:10px;
+}
+
+.content_div
+{
+	height:100%;
+	width:100%;
+	float:left;
+	position:absolute;
+}
+.footer_div
+{
+	height:60px;
+	mai-height:300px;
+	width:100%;
+	padding:10px;
+	bottom:0;
+	margin:0;
+	background-color:#464646;
+	color:white;
+	position:fixed;
+}
+.footer_div p
+{
+	font-size:14px;
+	margin:0;
+	text-align:center;
+	opacity:0.5;
+	color:#999;
+}
+ul.navbar
+{
+	list-style-type:none;
+	font-family:"Arial Black";
+	margin:0px;
+	padding:0px;
+	line-height:20px;
+}
+ul.sidebar
+{
+	list-style-type:none;
+	color:white;
+	height:100%;
+	font-family:"Arial Black";
+	margin:10px 0px;
+	padding:10px 5px;
+	border:10px;
+	border-bottom-color:white;
+}
+
+ul.sidebar li,ul.sidebar a
+{
+	display:block;
+	color:white;
+	text-decoration:none;
+	font-size-adjust:none;
+	padding:0px 0px;
+	margin:10px 0px;
+	border:0px solid white;
+	transition:0.5s ease;
+}
+ul.sidebar li:hover:not(.active)
+{
+	display:block;
+	color:white;
+	text-decoration:none;
+	font-size-adjust:none;
+	font-size:14pt;
+	padding:0px 20px;
+	margin:10px 0px;
+	border:0px solid white;
+}
+
+/*#############################################################################*/
+ul.sidebar ul li,ul.sidebar ul a
+{
+	display:block;
+	color:gray;
+	text-decoration:none;
+	font-size-adjust:none;
+	padding:0px 0px;
+	margin:10px 0px;
+	border:0px solid white;
+	transition:0.5s ease;
+}
+ul.sidebar ul li:hover:not(.active)
+{
+	display:list-item;
+	color:gray;
+	text-decoration:none;
+	font-size-adjust:none;
+	font-size:16pt;
+	padding:0px 20px;
+	margin:10px 0px;
+	border:0px solid white;
+}
+#td1
+{
+	min-height:100%;
+	width:300px;
+	background-color:#000;
+	margin:0px 0px;
+	vertical-align:top;
+}
+
+
+/******************************Index********************************************/
+.Home_div1
+{
+	height:100%;
+	width:80%;
+	margin:0 auto;
+	padding:10px 10px;
+}
+
+ul.Home_bookNav li
+{
+	display:inline;
+	margin:30px;
+	padding:10px;
+}
