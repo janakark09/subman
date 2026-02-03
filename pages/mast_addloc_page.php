@@ -24,8 +24,11 @@
         {
             $message="Error adding location: " . mysqli_error($conn);
         }
-        header("Location: mast_addloc_page.php");
-        exit;
+        echo "<script>
+        setTimeout(function(){
+            window.location.href = 'home_page.php?activity=loc';
+        }, 1000);
+      </script>";
     }
  ?>
 
