@@ -145,7 +145,7 @@
 					<!-------------------------------- Side bar ---------------------------->
 					<?php include '../includes/sidebar.php'?>
 				</div>
-			<div class="col pt-5 mt-5">
+			<div class="col pt-5 mt-5 ms-5 me-5 ">
 				<!-------------------------- Content for the system operations ------------------------->
 				<?php
 				if(empty($_REQUEST['activity']))
@@ -196,6 +196,38 @@
 				?>
 			</div>
 		</div>
-	</body>
 
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+
+				const employeeRadio = document.getElementById("Radio1");
+				const subcontractorRadio = document.getElementById("Radio2");
+
+				const locationSelect = document.getElementById("locationSelect");
+				const subcontractorSelect = document.getElementById("subcontractorSelect");
+
+				// Initial state
+				locationSelect.disabled = true;
+				subcontractorSelect.disabled = true;
+
+				employeeRadio.addEventListener("change", function () {
+					if (this.checked) {
+						locationSelect.disabled = false;
+						subcontractorSelect.disabled = true;
+						subcontractorSelect.selectedIndex = 0;
+					}
+				});
+
+				subcontractorRadio.addEventListener("change", function () {
+					if (this.checked) {
+						subcontractorSelect.disabled = false;
+						locationSelect.disabled = true;
+						locationSelect.selectedIndex = 0;
+					}
+				});
+
+			});
+		</script>
+
+	</body>
 </html>

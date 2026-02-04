@@ -25,9 +25,7 @@
             $message="Error adding location: " . mysqli_error($conn);
         }
         echo "<script>
-        setTimeout(function(){
-            window.location.href = 'home_page.php?activity=loc';
-        }, 1000);
+        setTimeout(function(){window.location.href = 'home_page.php?activity=loc';}, 1000);
       </script>";
     }
  ?>
@@ -40,6 +38,7 @@
     <title>Add Location</title>
 </head>
 <body>
+    <?php echo $activeUser?>
     <div>
         <h4>Add New Location</h4>  
     </div>
@@ -50,7 +49,7 @@
                 <input type="text" class="form-control" id="locname" placeholder="Company Location" required name="locname">
             </div>
             <div class="form-group">
-                <label for="inputAddress2">Address 2</label>
+                <label for="inputAddress2">Address</label>
                 <input type="text" class="form-control" id="locaddress" required name="locaddress">
             </div>
             <div class="form-row">
