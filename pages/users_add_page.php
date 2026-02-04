@@ -1,7 +1,23 @@
 <?php
 	include "../includes/db-con.php";
     $message="";
+
+    //------------------ Generate New User ID --------------------------------
+    $Query_id="SELECT MAX(User_ID) FROM users";
+	$return=mysqli_query($conn,$Query_id);
+	$row=mysqli_fetch_assoc($return);
+	$lastID=$row['MAX(User_ID)'];
 	
+	if(empty($lastID))
+	{
+		$NewID=$lastID='1001';
+	}
+	else
+	{
+		$NewID=$lastID+1;
+	}
+	
+    //------------------ Fetch Active User Types and Locations -------------------
     $sqlQuery1="SELECT * FROM  user_type WHERE status='Active'";
 	$returnDataSet1=mysqli_query($conn,$sqlQuery1);
 
@@ -13,29 +29,85 @@
 
 	$activeUser=$_SESSION['_UserID'];
     
+    //------------------ Insert New User --------------------------------
     if(isset($_POST['btnSubmit']))
     {
-        $name=$_POST['locname'];
-        $email=$_POST['locaddress'];
-        $fname=$_POST['locstatus'];
-        $lname=$_POST['locstatus'];
-        $fullName=$_POST['locstatus'];
-        $userType=$_POST['locstatus'];
-        $password=$_POST['locstatus'];
+        $uid=$NewID;
+        $Uname=$_POST['username1'];
+        $email=$_POST['email'];
+        $fname=$_POST['fname'];
+        $lname=$_POST['lname'];
+        $fullName=$_POST['fullname'];
+        $userType=$_POST['usertype'];
+        $Pswd=$_POST['password'];
+        $Pswd1=$_POST['confirmpassword'];
+        $uStatus=$_POST['ustatus'];
+        $address=$_POST['address'];
+        $tel=$_POST['tel'];
+        $locID=$_POST['location'] ?? 'NULL';
+        $subconID=$_POST['subcontractor'] ?? 'NULL';
+        $password=md5($Pswd);
+
+        $ac1=$_POST['check1'] ?? 'false';
+        $ac2=$_POST['check2'] ?? 'false';
+        $ac3=$_POST['check3'] ?? 'false';
+        $ac4=$_POST['check4'] ?? 'false';
+        $ac5=$_POST['check5'] ?? 'false';
+        $ac6=$_POST['check6'] ?? 'false';
+        $ac7=$_POST['check7'] ?? 'false';
+        $ac8=$_POST['check8'] ?? 'false';
+        $ac9=$_POST['check9'] ?? 'false';
+        $ac10=$_POST['check10'] ?? 'false';
+        $ac11=$_POST['check11'] ?? 'false';
+        $ac12=$_POST['check12'] ?? 'false';
+        $ac13=$_POST['check13'] ?? 'false';
+        $ac14=$_POST['check14'] ?? 'false';
+        $ac15=$_POST['check15'] ?? 'false';
+
+
+        $query_userchk="SELECT COUNT(User_ID) FROM users WHERE Name='$Uname'";
+		$result_userchk=mysqli_query($conn,$query_userchk);
+		$chk=mysqli_fetch_assoc($result_userchk);
+		$chk_count= $chk['COUNT(User_ID)'];
         
-        $insertQuery="INSERT INTO users (Name, Email, Fname, Lname, fullName, User_Type, Password, Member_Status) VALUES ('', '".$_POST['fname']."', '".$_POST['email']."', '".$_POST['fname']."', '".$_POST['lname']."', '".$_POST['fullname']."', '".$_POST['usertype']."', '".$_POST['password']."', '$loc_status')";
-        
-        if(mysqli_query($conn, $insertQuery))
+        if($chk_count==0)
         {
-            $message="User added successfully.";
+            if($Pswd == $Pswd1)
+                {
+                    echo "Pass";
+                    echo $locID;
+                    echo $subconID;
+                    
+                    $insertQuery1="INSERT INTO users (User_ID, Name, Email, Fname, Lname, fullName, User_Type, Password, Member_Status) 
+                        VALUES ('$NewID','$Uname', '$email', '$fname', '$lname', '$fullName', '$userType', '$password', '$uStatus')";
+                    $insertQuery2="INSERT INTO user_details (User_ID, Address, TelNumber, Joined_Date, locationID, venderID, acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10, acc11, acc12, acc13, acc14, acc15)
+                        VALUES ('$NewID', '$address', '$tel', NOW(), '$locID', '$subconID', '$ac1', '$ac2', '$ac3', '$ac4', '$ac5', '$ac6', '$ac7', '$ac8', '$ac9', '$ac10', '$ac11', '$ac12', '$ac13', '$ac14', '$ac15')";
+                    $result1=mysqli_query($conn, $insertQuery1);
+                    $result2=mysqli_query($conn, $insertQuery2);
+        
+                    if($result1 && $result2)
+                    {
+                        $message="User added successfully.";
+                    }
+                    else
+                    {
+                        $message="Error adding User: " . mysqli_error($conn);
+                    }
+                    echo "<script>
+                        setTimeout(function(){window.location.href = 'home_page.php?activity=users';}, 1000);
+                    </script>";
+                }
+                else
+                {
+                    $message="*Passwords do not match. Please try again.";
+                }
         }
         else
         {
-            $message="Error adding User: " . mysqli_error($conn);
+            $message="Username already exists. Please choose a different username.";
+            $Uname="";    
         }
-        echo "<script>
-        setTimeout(function(){window.location.href = 'home_page.php?activity=users';}, 1000);
-      </script>";
+        
     }
  ?>
 
@@ -66,45 +138,45 @@
                     <div class="d-lg-flex">
                         <div class="form-group me-5 col-lg-3">
                             <label>First Name</label>
-                            <input type="text" class="form-control" id="locname" placeholder="Company Location" required name="locname">
+                            <input type="text" class="form-control" id="fname"  required name="fname">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>Last Name</label>
-                            <input type="text" class="form-control" id="locaddress" required name="locaddress">
+                            <input type="text" class="form-control" id="lname" required name="lname">
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="inputAddress2">Name with Initials</label>
-                        <input type="text" class="form-control" id="locaddress" required name="locaddress">
+                        <input type="text" class="form-control" id="fullname" required name="fullname">
                     </div>
                     <div class="form-group">
                         <label for="inputAddress2">Address</label>
-                        <input type="text" class="form-control" id="locaddress" required name="locaddress">
+                        <input type="text" class="form-control" id="address" required name="address">
                     </div>
                     <div class="d-lg-flex">
                         <div class="form-group me-5 col-lg-3">
                             <label>Email</label>
-                            <input type="email" class="form-control" id="locname" placeholder="Working Email" required name="locname">
+                            <input type="email" class="form-control" id="email" placeholder="Working Email" required name="email">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>Tel.</label>
-                            <input type="text" class="form-control" id="locaddress" required name="locaddress">
+                            <input type="text" class="form-control" id="tel" name="tel">
                         </div>
                     </div>
                     <hr>
                     <div class="d-lg-flex">
                         <div class="form-group me-5 col-lg-3">
                             <label>Username</label>
-                            <input type="text" class="form-control" id="locname"  required name="locname">
+                            <input type="text" class="form-control" id="username"  required name="username1">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>Password</label>
-                            <input type="password" class="form-control" id="locaddress" required name="locaddress">
+                            <input type="password" class="form-control" id="password" required name="password">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>Confirm Password</label>
-                            <input type="password" class="form-control" id="locaddress" required name="locaddress">
+                            <input type="password" class="form-control" id="confirmpassword" required name="confirmpassword">
                         </div>
                     </div>
                 <!---------------------------------------->
@@ -160,7 +232,7 @@
                     <div class="form-row mb-3">
                         <div class="form-group col-md-4 mt-3">
                             <label for="inputState">Status</label>
-                            <select id="inputState" class="form-control" name="locstatus">
+                            <select id="inputState" class="form-control" name="ustatus">
                                 <option selected>Active</option>
                                 <option>Inactive</option>
                             </select>

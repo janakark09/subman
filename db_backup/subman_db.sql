@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 03, 2026 at 01:21 PM
+-- Generation Time: Feb 04, 2026 at 06:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -146,7 +146,8 @@ INSERT INTO `mast_location` (`locationID`, `location`, `address`, `status`, `cre
 (7, 'other3', 'sdfsf', 'Active', 1001, '2026-02-03 17:42:38'),
 (8, 'other4', 'sghgh', 'Active', 1001, '2026-02-03 17:45:47'),
 (9, 'other5', 'lkl', 'Active', 1001, '2026-02-03 17:47:07'),
-(10, 'other6', 'jhg', 'Active', 1001, '2026-02-03 17:47:43');
+(10, 'other6', 'jhg', 'Active', 1001, '2026-02-03 17:47:43'),
+(11, 'Other7', 'fxfgh', 'Active', 1001, '2026-02-04 09:58:43');
 
 -- --------------------------------------------------------
 
@@ -267,7 +268,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`User_ID`, `Name`, `Email`, `Fname`, `Lname`, `fullName`, `User_Type`, `Password`, `Member_Status`) VALUES
-(1001, 'Admin', 'it@originalapparel.lk', 'System', 'Admin', 'System Admin', 'administrator', '123', 'Active');
+(1001, 'Admin', 'it@originalapparel.lk', 'System', 'Admin', 'System Admin', 'administrator', '123', 'Active'),
+(1002, 'janakar', 'janakar@originalapparel.lk', 'Janaka', 'Kumara', 'Janaka Ruwan Kumara', 'administrator', '202cb962ac59075b964b07152d234b70', 'Active');
 
 -- --------------------------------------------------------
 
@@ -341,7 +343,7 @@ CREATE TABLE `vendors` (
   `vatPercentage` double NOT NULL,
   `contactPerson` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL,
+  `status` varchar(10) NOT NULL,
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -497,7 +499,7 @@ ALTER TABLE `grn_details`
 -- AUTO_INCREMENT for table `mast_location`
 --
 ALTER TABLE `mast_location`
-  MODIFY `locationID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `locationID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -528,12 +530,6 @@ ALTER TABLE `style_sizes`
 --
 ALTER TABLE `sub_production`
   MODIFY `recordID` int(32) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `User_ID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1003;
 
 --
 -- AUTO_INCREMENT for table `vendors`
