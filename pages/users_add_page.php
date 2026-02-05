@@ -44,8 +44,8 @@
         $uStatus=$_POST['ustatus'];
         $address=$_POST['address'];
         $tel=$_POST['tel'];
-        $locID=$_POST['location'] ?? 'NULL';
-        $subconID=$_POST['subcontractor'] ?? 'NULL';
+        $locID=$_POST['location'] ?? '';
+        $subconID=$_POST['subcontractor'] ?? '';
         $password=md5($Pswd);
 
         $ac1=$_POST['check1'] ?? 'false';
@@ -73,11 +73,7 @@
         if($chk_count==0)
         {
             if($Pswd == $Pswd1)
-                {
-                    echo "Pass";
-                    echo $locID;
-                    echo $subconID;
-                    
+                {                    
                     $insertQuery1="INSERT INTO users (User_ID, Name, Email, Fname, Lname, fullName, User_Type, Password, Member_Status) 
                         VALUES ('$NewID','$Uname', '$email', '$fname', '$lname', '$fullName', '$userType', '$password', '$uStatus')";
                     $insertQuery2="INSERT INTO user_details (User_ID, Address, TelNumber, Joined_Date, locationID, venderID, acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10, acc11, acc12, acc13, acc14, acc15)
@@ -96,6 +92,7 @@
                     echo "<script>
                         setTimeout(function(){window.location.href = 'home_page.php?activity=users';}, 1000);
                     </script>";
+                    exit();
                 }
                 else
                 {
@@ -193,7 +190,6 @@
                                     <?php
                                     }
                                     ?>
-                                ?>
                             </select>
                         </div>
                     </div>
@@ -210,7 +206,6 @@
                                     <?php
                                     }
                                     ?>
-                                ?>
                             </select>
                         </div>
                         <div class="form-group col-md-4 me-3">
@@ -219,12 +214,11 @@
                                 <option selected hidden></option>
                                 <?php 
                                     while($location=mysqli_fetch_assoc(result:$returnDataSet3)){
-                                        ?>
+                                ?>
                                         <option value="<?php echo $location['vendorID']; ?>"><?php echo $location['vendor']?></option>
                                     <?php
                                     }
                                     ?>
-                                ?>
                             </select>
                         </div>
                     </div>

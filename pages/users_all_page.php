@@ -14,11 +14,12 @@
     <title>Document</title>
 </head>
 <body>
-    <div>
-        <h4>All Users</h4>  
+    <div class="d-flex justify-content-between mb-3">
+        <h4>All Users</h4>
+        <button type="submit" class="btn btn-primary me-2" name="btnAddUser" onclick="window.location.href='home_page.php?activity=adduser'">+ Add New User</button> 
     </div>
     <div>
-        <table class="table1" cellspacing="0">
+        <table class="table1 text-center" cellspacing="0">
         	<tr>
             	<th>User ID</th>
                 <th>User Name</th>

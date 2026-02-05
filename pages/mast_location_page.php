@@ -19,7 +19,7 @@
         <h4>All Locations</h4>
         <button type="submit" class="btn btn-primary me-2" name="btnAddLoc" onclick="window.location.href='home_page.php?activity=addloc'">+ Add New Location</button> 
     </div>
-    <div class="table-wrapper">
+    <div class="table-wrapper table-responsive">
         <table class="table1 table-responsive" cellspacing="0">
         	<tr class="text-center">
             	<th>Location ID</th>

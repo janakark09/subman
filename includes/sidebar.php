@@ -221,7 +221,7 @@
                             <a href="home_page.php?activity=users" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='users' ? 'active' : '' ?>">All Users</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">User Types</a>
+                            <a href="home_page.php?activity=usertype" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='usertype' ? 'active' : '' ?>">User Types</a>
                         </li>
                     </ul>
                 </div>

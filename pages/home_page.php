@@ -174,6 +174,12 @@
 								case 'adduser':
 									include ('users_add_page.php');
 									break;
+								case 'usertype':
+									include ('users_type_page.php');
+									break;
+								case 'addusertype':
+									include ('users_addutype_page.php');
+									break;
 								case 'loc':
 									include ('mast_location_page.php');
 									break;

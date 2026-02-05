@@ -38,7 +38,6 @@
     <title>Add Location</title>
 </head>
 <body>
-    <?php echo $activeUser?>
     <div>
         <h4>Add New Location</h4>  
     </div>
