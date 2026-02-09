@@ -6,16 +6,21 @@
 	
 	$activeUser=$_SESSION['_UserID'];
 
-    if(isset($_POST['btnSaveUserType']))
+    if(isset($_POST['btnSave']))
         {
+            echo $activeUser;
         $selectedUType=$_POST['usertype'];
-        $isActive=isset($_POST['check1']) ? 1 : 0;
+        $isActive=isset($_POST['check']) ? 1 : 0;
 
         echo $selectedUType;
         echo $isActive;
         $updateQuery="UPDATE user_type SET status='$isActive' WHERE userType='$selectedUType'";
 
         mysqli_query($conn, $updateQuery);
+
+        echo "<script>
+        setTimeout(function(){window.location.href = 'home_page.php?activity=usertype';}, 1000);
+      </script>";
     }
  ?>
 <!DOCTYPE html>
@@ -30,8 +35,8 @@
         <h4>All User Types</h4>
         <button type="submit" class="btn btn-primary me-2" name="btnAddUserType" onclick="window.location.href='home_page.php?activity=addusertype'">+ Add New User Type</button> 
     </div>
-    
-    <div class="form-group col-md-4">
+    <form method="post">
+        <div class="form-group col-md-4">
         <label >User Type</label>
         <select class="form-control" name="usertype" id="usertype">
             <option selected hidden value="" >Select User Type</option>
@@ -46,11 +51,12 @@
                 }
                 ?>
         </select>
-        <div class="form-check mt-3"><input class="form-check-input" type="checkbox" id="check1"><label for="check1"> Active</label></div>
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary mt-5 me-2 save_btn" name="btnSaveUserType">Save</button>
-    </div>
+        <div class="form-check mt-3"><input class="form-check-input" type="checkbox" id="check" name="check"><label for="check"> Active</label></div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary mt-5 me-2 save_btn" name="btnSave">Save</button>
+        </div>
+    </form>
 
 <!-- JavaScript to handle the change event of the dropdown and update the checkbox -->
     <script>
@@ -60,7 +66,7 @@
         // status is "1" or "0" as string → convert to number
         const isActive = Number(selectedOption.dataset.active) === 1;
 
-        document.getElementById('check1').checked = isActive;
+        document.getElementById('check').checked = isActive;
         });
     </script>
 </body>

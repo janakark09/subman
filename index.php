@@ -75,7 +75,7 @@
             <div class="col-md-6 col-lg-7 d-flex align-items-center">
               <div class="card-body p-4 p-lg-5 text-black">
 
-                <form method="post" action="./includes/user_login.php">
+                <form method="post" action="./includes/user_login.php">  <!--Linking the "./includes/user_login.php" to login process-->
 
                   <div class="d-flex align-items-center mb-1 pb-1">
                     <a href="index.php"><img src="./Resources/images/logo.png" alt="Logo" class="img-fluid" style="border-radius: 1rem 0 0 1rem;"></a>
@@ -96,7 +96,7 @@
                   </div>
 
                   <div class="pt-1 mb-4">
-					<input type="submit" value="Login" name="login1" class="btn btn-dark btn-lg btn-block"/>
+					        <input type="submit" value="Login" name="login1" class="btn btn-dark btn-lg btn-block"/>
                   </div>
 
                   <a href="https://originalapparel.lk/" class="small text-muted" target="_blank">www.originalapparel.lk</a>

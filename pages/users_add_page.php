@@ -18,7 +18,7 @@
 	}
 	
     //------------------ Fetch Active User Types and Locations -------------------
-    $sqlQuery1="SELECT * FROM  user_type WHERE status='Active'";
+    $sqlQuery1="SELECT * FROM  user_type WHERE status=1";
 	$returnDataSet1=mysqli_query($conn,$sqlQuery1);
 
 	$sqlQuery2="SELECT * FROM  mast_location WHERE status='Active'";

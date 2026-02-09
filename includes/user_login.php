@@ -21,11 +21,15 @@
 			$sql="SELECT * FROM users WHERE Name='$accUname'";
 			$query=mysqli_query($conn,$sql);
 			$result=mysqli_fetch_assoc($query);
+
+			$dbuname=$result['Name'];
+			$dbpass=md5($result['Password']);
+
 			if($result)
 			{
-				if($accUname==$result['Name'] && $accPass==$result['Password'])
+				if($accUname==$dbuname && $accPass==$dbpass)
 					{
-											echo "done";
+						
 						$_SESSION['_UserName']=$accUname;
 						$_SESSION['_UserID']=$result['User_ID'];
 						header("Location:../pages/home_page.php?activity=Dashboard");
@@ -33,7 +37,7 @@
 					}
 					else
 					{
-						header("Location:../index.php?error=*Wrong Password");
+						header("Location:../index.php?error=*Wrong Password+$dbuname+$dbpass");
 						exit();
 					}
 				
