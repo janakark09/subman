@@ -78,16 +78,13 @@
                 <div class="collapse submenu" id="vendorMenu">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">New Vendor</a>
+                            <a href="home_page.php?activity=allvendors" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allvendors' ? 'active' : '' ?>">All Vendors</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">All Vendors</a>
+                            <a href="home_page.php?activity=vendor" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='vendor' ? 'active' : '' ?>">New Vendor</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Edit Vendor</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Order Agreements</a>
+                            <a href="home_page.php?activity=greements" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='greements' ? 'active' : '' ?>">Order Agreements</a>
                         </li>
                     </ul>
                 </div>

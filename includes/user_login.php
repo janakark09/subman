@@ -4,7 +4,7 @@
 	if(isset($_POST['login1']))
 	{
 		
-		$accUname=$_REQUEST['Uname'];
+		$accUname=strtolower($_REQUEST['Uname']);
 		$accPass= $_REQUEST['Pswd'];
 		
 		//validate -check empty fields..
@@ -23,13 +23,12 @@
 			$result=mysqli_fetch_assoc($query);
 
 			$dbuname=$result['Name'];
-			$dbpass=md5($result['Password']);
+			$dbpass=$result['Password'];
 
 			if($result)
 			{
-				if($accUname==$dbuname && $accPass==$dbpass)
+				if($accUname==$dbuname && md5($accPass)==$dbpass)
 					{
-						
 						$_SESSION['_UserName']=$accUname;
 						$_SESSION['_UserID']=$result['User_ID'];
 						header("Location:../pages/home_page.php?activity=Dashboard");
@@ -37,7 +36,7 @@
 					}
 					else
 					{
-						header("Location:../index.php?error=*Wrong Password+$dbuname+$dbpass");
+						header("Location:../index.php?error=*Wrong Password+$accUname");
 						exit();
 					}
 				

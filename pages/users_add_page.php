@@ -33,7 +33,7 @@
     if(isset($_POST['btnSubmit']))
     {
         $uid=$NewID;
-        $Uname=$_POST['username1'];
+        $Uname=strtolower($_POST['username1']);
         $email=$_POST['email'];
         $fname=$_POST['fname'];
         $lname=$_POST['lname'];
@@ -72,6 +72,7 @@
         
         if($chk_count==0)
         {
+
             if($Pswd == $Pswd1)
                 {                    
                     $insertQuery1="INSERT INTO users (User_ID, Name, Email, Fname, Lname, fullName, User_Type, Password, Member_Status) 
@@ -259,6 +260,8 @@
 
                     <input type="submit" value="Save" class="btn btn-primary mt-5 me-2 save_btn" name="btnSubmit"/>
                     <input type="reset" value="Clear" class="btn btn-secondary mt-5 save_btn" name="btnClear"/>
+                    <br>
+                    <p class="text-danger mt-5">*<?php echo $message?></p>
                 </form>
             </div> 
     </div>

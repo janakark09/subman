@@ -167,7 +167,18 @@
 								case 'dashboard':
 									include ("dashboard_page.php");
 								break;
+								//------------------------------------------------
+								case 'vendor':
+									include ("vendor_add_page.php");
+								break;
+								case 'allvendors':
+									include ("vendor_all_page.php");
+								break;
 								
+								case 'agreements':
+									include ("agreements_page.php");
+								break;
+								//------------------------------------------------
 								case 'users':
 									include ('users_all_page.php');
 									break;
@@ -180,12 +191,14 @@
 								case 'addusertype':
 									include ('users_addutype_page.php');
 									break;
+								//------------------------------------------------
 								case 'loc':
 									include ('mast_location_page.php');
 									break;
 								case 'addloc':
 									include ('mast_addloc_page.php');
 									break;
+								//------------------------------------------------
 								case 'logout':
 								break;
 								
