@@ -81,10 +81,10 @@
                             <a href="home_page.php?activity=allvendors" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allvendors' ? 'active' : '' ?>">All Vendors</a>
                         </li>
                         <li class="nav-item">
-                            <a href="home_page.php?activity=vendor" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='vendor' ? 'active' : '' ?>">New Vendor</a>
+                            <a href="home_page.php?activity=addvendor" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='addvendor' ? 'active' : '' ?>">New Vendor</a>
                         </li>
                         <li class="nav-item">
-                            <a href="home_page.php?activity=greements" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='greements' ? 'active' : '' ?>">Order Agreements</a>
+                            <a href="home_page.php?activity=agreements" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='agreements' ? 'active' : '' ?>">Order Agreements</a>
                         </li>
                     </ul>
                 </div>
@@ -101,7 +101,7 @@
                 <div class="collapse submenu" id="merchMenu">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Buyers</a>
+                            <a href="home_page.php?activity=allbuyers" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allbuyers' ? 'active' : '' ?>">All Buyers</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link text-white">Style Order Management</a>
@@ -175,10 +175,10 @@
                 </div>
             </li>
          <!------------------------------- Reports with Sub Menu ---------------------------->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="#" class="nav-link text-white">
                     <i class="fa fa-calculator me-2"></i> Reports</a>
-            </li>
+            </li> -->
             <!-------------------------- Reports with Sub Menu ------------------------------------------>
             <li class="nav-item">
                 <a class="nav-link text-white d-flex justify-content-between align-items-center"

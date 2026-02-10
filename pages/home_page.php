@@ -168,7 +168,7 @@
 									include ("dashboard_page.php");
 								break;
 								//------------------------------------------------
-								case 'vendor':
+								case 'addvendor':
 									include ("vendor_add_page.php");
 								break;
 								case 'allvendors':
@@ -178,6 +178,23 @@
 								case 'agreements':
 									include ("agreements_page.php");
 								break;
+								case 'addagreement':
+									include ("agreement_new_page.php");
+								break;
+								//------------------------------------------------
+								case 'addbuyer':
+									include ("buyers_add_page.php");
+								break;
+								case 'allbuyers':
+									include ("buyers_all_page.php");
+								break;
+								
+								/*case 'styleorder':
+									include ("agreements_page.php");
+								break;
+								case 'colorsize':
+									include ("agreement_new_page.php");
+								break;*/
 								//------------------------------------------------
 								case 'users':
 									include ('users_all_page.php');

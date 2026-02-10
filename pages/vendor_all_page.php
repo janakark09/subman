@@ -29,6 +29,7 @@
                 <th>Tel.</th>
                 <th>Contact Person</th>
                 <th>Email</th>
+                <th>Daily Capacity</th>
                 <th>Status</th>	
                 <th></th>				
             </tr>
@@ -51,6 +52,7 @@
                 <td><?php echo $result1['tel']?></td>
                 <td><?php echo $result1['contactPerson']?></td>
                 <td><?php echo $result1['email']?></td>
+                <td><?php echo $result1['dailyCapacity']?></td>
                 <td><?php echo $result1['status']?></td>
                 <td><a href="DashBoard.php?activity=view&Criteria=Vendor&selectedID=<?php echo $result1['vendorID']?>">View</a></td>
 				

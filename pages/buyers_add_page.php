@@ -2,49 +2,26 @@
 	include "../includes/db-con.php";
     $message="";
 
-    //------------------ Generate New User ID --------------------------------
-    $Query_id="SELECT MAX(vendorID) FROM vendors";
-	$return=mysqli_query($conn,$Query_id);
-	$row=mysqli_fetch_assoc($return);
-	$lastID=$row['MAX(vendorID)'];
-	
-	if(empty($lastID))
-	{
-		$NewID=$lastID='101';
-	}
-	else
-	{
-		$NewID=$lastID+1;
-	}
-	
-    //------------------ Fetch Active Vendors -------------------
-	
-    // $sqlQuery3="SELECT * FROM  vendors WHERE status='Active'";
-    // $returnDataSet3=mysqli_query($conn,$sqlQuery3);
-
 	$activeUser=$_SESSION['_UserID'];
     
     //------------------ Insert New Vendor --------------------------------
     if(isset($_POST['btnSubmit']))
     {
-        $venid=$NewID;
-        $Vendorname=$_POST['vendorname'];
+        $buyercode=$_POST['buyerCode'];
+        $buyername=$_POST['buyerName'];
         $address=$_POST['address'];
-        $email=$_POST['email'];
         $tel=$_POST['tel'];
         $fax=$_POST['fax'];
-        $conPerson=$_POST['contactperson'];
-        $dailycapacity=$_POST['capacity'];
         $brno=$_POST['brno'];
         $vatno=$_POST['vatno'];
-        $vatprecentage=$_POST['vatpercentage'];
-        $venStatus=$_POST['venstatus'];
+        $conPerson=$_POST['contactperson'];
+        $email=$_POST['email'];
 
 
-        $query_vendorchk="SELECT COUNT(vendorID) FROM vendors WHERE vendor='$Vendorname'";
-		$result_vendorchk=mysqli_query($conn,$query_vendorchk);
-		$chk=mysqli_fetch_assoc($result_vendorchk);
-		$chk_count= $chk['COUNT(vendorID)'];
+        $query_buyerchk="SELECT COUNT(buyerID) FROM buyer WHERE buyerName='$buyername'";
+		$result_buyerchk=mysqli_query($conn,$query_buyerchk);
+		$chk=mysqli_fetch_assoc($result_buyerchk);
+		$chk_count= $chk['COUNT(buyerID)'];
         
         if($chk_count==0)
         {
@@ -85,19 +62,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add vendor</title>
+    <title>Add Buyer</title>
 </head>
 <body>
     <div class="container-fluid">
             <div class="mb-5">
-                <h4>Add New Vendor</h4>  
+                <h4>Add New Buyer</h4>  
             </div>
             <div>
                 <form method="post">
                     
+                    <div class="form-group mb-1 col-lg-3    ">
+                        <label for="buyercode">Buyer Code</label>
+                        <input type="text" class="form-control" id="buyercode" required name="buyercode">
+                    </div>
                     <div class="form-group mb-1">
-                        <label for="vendorname">Subcontractor's name</label>
-                        <input type="text" class="form-control" id="vendorname" required name="vendorname">
+                        <label for="buyername">Buyer Name</label>
+                        <input type="text" class="form-control" id="buyername" required name="buyername">
                     </div>
                     <div class="form-group mb-1">
                         <label for="address1">Address</label>
@@ -123,23 +104,12 @@
                             <input type="text" class="form-control" id="contactperson" required name="contactperson">
                         </div>
                         <div class="form-group me-5 col-lg-3">
-                            <label>Capacity Per Day</label>
-                            <input type="number" class="form-control" id="capacity" required name="capacity">
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="d-lg-flex mb-1">
-                        <div class="form-group me-5 col-lg-3">
                             <label>BR No.</label>
                             <input type="text" class="form-control" id="brno"  required name="brno">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>VAT No.</label>
                             <input type="text" class="form-control" id="vatno" required name="vatno">
-                        </div>
-                        <div class="form-group me-5 col-lg-3">
-                            <label>VAT Percentage</label>
-                            <input type="number" class="form-control" id="vatpercentage" required name="vatpercentage" placeholder="00%">
                         </div>
                     </div>
                 <!-- ------------------------------------------- -->

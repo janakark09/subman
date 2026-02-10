@@ -13,12 +13,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Agreements</title>
+    <title> All Vendors</title>
 </head>
 <body>
     <div class="d-flex justify-content-between mb-3">
-        <h4>All Subcontract Agreements</h4>
-        <button type="submit" class="btn btn-primary me-2" name="btnAddVen" onclick="window.location.href='home_page.php?activity=addagreement'">+ Add New Agreement</button> 
+        <h4>All Subcontractors</h4>
+        <button type="submit" class="btn btn-primary me-2" name="btnAddBuy" onclick="window.location.href='home_page.php?activity=addbuyer'">+ Add New Buyer</button> 
     </div>
     <div>
         <table class="table1 text-center" cellspacing="0">
@@ -55,6 +55,7 @@
                 <td><?php echo $result1['dailyCapacity']?></td>
                 <td><?php echo $result1['status']?></td>
                 <td><a href="DashBoard.php?activity=view&Criteria=Vendor&selectedID=<?php echo $result1['vendorID']?>">View</a></td>
+				
             <tr>
             <?php
 			}
