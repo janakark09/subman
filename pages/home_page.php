@@ -188,13 +188,16 @@
 								case 'allbuyers':
 									include ("buyers_all_page.php");
 								break;
-								
-								/*case 'styleorder':
-									include ("agreements_page.php");
+								//----------------------------
+								case 'styles':
+									include ("buyers_styles_page.php");
+								break;
+								case 'addstyle':
+									include ("buyers_styleadd_page.php");
 								break;
 								case 'colorsize':
-									include ("agreement_new_page.php");
-								break;*/
+									include ("abuyers_colorsize_page.php");
+								break;
 								//------------------------------------------------
 								case 'users':
 									include ('users_all_page.php');

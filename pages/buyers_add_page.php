@@ -7,8 +7,8 @@
     //------------------ Insert New Vendor --------------------------------
     if(isset($_POST['btnSubmit']))
     {
-        $buyercode=$_POST['buyerCode'];
-        $buyername=$_POST['buyerName'];
+        $buyercode=$_POST['buyercode'];
+        $buyername=$_POST['buyername'];
         $address=$_POST['address'];
         $tel=$_POST['tel'];
         $fax=$_POST['fax'];
@@ -16,6 +16,7 @@
         $vatno=$_POST['vatno'];
         $conPerson=$_POST['contactperson'];
         $email=$_POST['email'];
+        $status=$_POST['status'];
 
 
         $query_buyerchk="SELECT COUNT(buyerID) FROM buyer WHERE buyerName='$buyername'";
@@ -25,29 +26,29 @@
         
         if($chk_count==0)
         {
-            //echo $venid.",".$Vendorname.",".$address.",".$email.",".$tel.",".$fax.",".$conPerson.",".$brno.",".$vatno.",".$vatprecentage.",".$venStatus;
+            //echo $buyercode.",".$buyername.",".$address.",".$email.",".$tel.",".$fax.",".$conPerson.",".$brno.",".$vatno.",".$status.",".$activeUser;
             
-            $insertQuery1="INSERT INTO vendors(vendorID, vendor, address, tel, fax, brNo, vatNo, vatPercentage, contactPerson,dailyCapacity, email, status, createdBy)
-                         VALUES ('$venid','$Vendorname','$address','$tel','$fax','$brno','$vatno','$vatprecentage','$conPerson','$dailycapacity','$email','$venStatus','$activeUser')";
+            $insertQuery1="INSERT INTO buyer(buyerCode, buyerName, address, tel, fax, brNo, vatNo, contactPerson, email, status, createdBy)
+                         VALUES ('$buyercode','$buyername','$address','$tel','$fax','$brno','$vatno','$conPerson','$email','$status','$activeUser')";
                 
                     $result1=mysqli_query($conn, $insertQuery1);
         
                     if($result1)
                     {
-                        $message="Subcontractor added successfully.";
+                        $message="Buyer added successfully.";
                     }
                     else
                     {
-                        $message="Error adding Subcontractor: " . mysqli_error($conn);
+                        $message="Error adding Buyer: " . mysqli_error($conn);
                     }
                     echo "<script>
-                        setTimeout(function(){window.location.href = 'home_page.php?activity=allvendors';}, 1000);
+                        setTimeout(function(){window.location.href = 'home_page.php?activity=allbuyers';}, 1000);
                     </script>";
                     exit();
         }
         else
         {
-            $message="This Subcontractor already exists. Please choose a different username.";  
+            $message="This Buyer already exists. Please choose a different buyer Name.";  
         }
         
     }
@@ -116,7 +117,7 @@
                     <div class="form-row mb-2">
                         <div class="form-group col-md-4 mt-3">
                             <label for="inputState">Status</label>
-                            <select id="inputState" class="form-control" name="venstatus">
+                            <select id="inputState" class="form-control" name="status">
                                 <option selected>Active</option>
                                 <option>Inactive</option>
                             </select>

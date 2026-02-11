@@ -104,7 +104,7 @@
                             <a href="home_page.php?activity=allbuyers" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allbuyers' ? 'active' : '' ?>">All Buyers</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Style Order Management</a>
+                            <a href="home_page.php?activity=styles" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='styles' ? 'active' : '' ?>">Style Order Management</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link text-white">Colors and Sizes</a>
