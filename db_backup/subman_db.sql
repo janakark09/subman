@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 10, 2026 at 04:50 PM
+-- Generation Time: Feb 11, 2026 at 01:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -68,6 +68,14 @@ CREATE TABLE `buyer` (
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `buyer`
+--
+
+INSERT INTO `buyer` (`buyerID`, `buyerCode`, `buyerName`, `address`, `tel`, `fax`, `brNo`, `vatNo`, `contactPerson`, `email`, `status`, `createdDT`, `createdBy`) VALUES
+(1, '', '', 'sdf sdf sdf sdf', '0778520129', '656565', 'sdf35356', '35321-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:12:10', 1001),
+(2, 'B002', 'dfg gdfg', '301/A, Owitiyagala, Horana.', '0778520129', '656565', 'sdf35356', '6546-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:13:22', 1001);
 
 -- --------------------------------------------------------
 
@@ -173,9 +181,8 @@ CREATE TABLE `payments` (
 
 CREATE TABLE `styleorder` (
   `id` int(32) NOT NULL,
-  `styleNo` varchar(100) NOT NULL,
+  `styleNo` varchar(50) NOT NULL,
   `orderNo` varchar(100) NOT NULL,
-  `buyerID` int(32) NOT NULL,
   `orderQty` int(32) NOT NULL,
   `division` varchar(50) NOT NULL,
   `proCategory` varchar(50) NOT NULL,
@@ -185,6 +192,35 @@ CREATE TABLE `styleorder` (
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `styleorder`
+--
+
+INSERT INTO `styleorder` (`id`, `styleNo`, `orderNo`, `orderQty`, `division`, `proCategory`, `description`, `deliveryDate`, `Status`, `createdDT`, `createdBy`) VALUES
+(1, 'GBHD0235', '0025632', 50000, '', '', 'sdfsdf sd f', '2026-05-21', 'Active', '2026-02-11 18:15:29', 1001);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `styles`
+--
+
+CREATE TABLE `styles` (
+  `styleNo` varchar(50) NOT NULL,
+  `styleName` varchar(50) NOT NULL,
+  `buyerID` int(32) NOT NULL,
+  `createdBy` int(32) NOT NULL,
+  `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `styles`
+--
+
+INSERT INTO `styles` (`styleNo`, `styleName`, `buyerID`, `createdBy`, `createdDT`, `status`) VALUES
+('GBHD0235', 'dsf sdfsdfhfg fghfgh', 2, 1001, '2026-02-11 17:11:48', 'Active');
 
 -- --------------------------------------------------------
 
@@ -419,8 +455,15 @@ ALTER TABLE `payments`
 --
 ALTER TABLE `styleorder`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_Style_Buyer` (`buyerID`),
-  ADD KEY `FK_Style_Create` (`createdBy`);
+  ADD KEY `FK_Style_Create` (`createdBy`),
+  ADD KEY `FK_StyleOrder_StyleNo` (`styleNo`);
+
+--
+-- Indexes for table `styles`
+--
+ALTER TABLE `styles`
+  ADD PRIMARY KEY (`styleNo`),
+  ADD KEY `FK_Style_Buyer` (`buyerID`);
 
 --
 -- Indexes for table `style_colors`
@@ -492,7 +535,7 @@ ALTER TABLE `agreements`
 -- AUTO_INCREMENT for table `buyer`
 --
 ALTER TABLE `buyer`
-  MODIFY `buyerID` int(32) NOT NULL AUTO_INCREMENT;
+  MODIFY `buyerID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `gatepass`
@@ -522,7 +565,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `styleorder`
 --
 ALTER TABLE `styleorder`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `style_colors`
@@ -602,8 +645,14 @@ ALTER TABLE `mast_location`
 -- Constraints for table `styleorder`
 --
 ALTER TABLE `styleorder`
-  ADD CONSTRAINT `FK_Style_Buyer` FOREIGN KEY (`buyerID`) REFERENCES `buyer` (`buyerID`),
-  ADD CONSTRAINT `FK_Style_Create` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`);
+  ADD CONSTRAINT `FK_StyleOrder_Create` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
+  ADD CONSTRAINT `FK_StyleOrder_StyleNo` FOREIGN KEY (`styleNo`) REFERENCES `styles` (`styleNo`);
+
+--
+-- Constraints for table `styles`
+--
+ALTER TABLE `styles`
+  ADD CONSTRAINT `FK_Style_Buyer` FOREIGN KEY (`buyerID`) REFERENCES `buyer` (`buyerID`);
 
 --
 -- Constraints for table `style_colors`
