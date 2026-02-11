@@ -192,11 +192,11 @@
 								case 'styles':
 									include ("buyers_styles_page.php");
 								break;
-								case 'addstyle':
+								case 'addstyleorder':
 									include ("buyers_styleadd_page.php");
 								break;
 								case 'colorsize':
-									include ("abuyers_colorsize_page.php");
+									include ("buyers_colorsize_page.php");
 								break;
 								//------------------------------------------------
 								case 'users':

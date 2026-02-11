@@ -107,7 +107,7 @@
                             <a href="home_page.php?activity=styles" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='styles' ? 'active' : '' ?>">Style Order Management</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Colors and Sizes</a>
+                            <a href="home_page.php?activity=colorsize" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='colorsize' ? 'active' : '' ?>">Style Color & Size</a>
                         </li>
                     </ul>
                 </div>

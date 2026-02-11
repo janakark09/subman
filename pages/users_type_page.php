@@ -38,7 +38,7 @@
     <form method="post">
         <div class="form-group col-md-4">
         <label >User Type</label>
-        <select class="form-control" name="usertype" id="usertype">
+        <select class="form-select" name="usertype" id="usertype">
             <option selected hidden value="" >Select User Type</option>
             <?php 
                 while($usertype=mysqli_fetch_assoc($returnDataSet)){

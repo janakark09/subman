@@ -146,7 +146,7 @@
                     <div class="form-row mb-2">
                         <div class="form-group col-md-4 mt-3">
                             <label for="inputState">Status</label>
-                            <select id="inputState" class="form-control" name="venstatus">
+                            <select id="inputState" class="form-select" name="venstatus">
                                 <option selected>Active</option>
                                 <option>Inactive</option>
                             </select>

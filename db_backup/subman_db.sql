@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 11, 2026 at 01:56 PM
+-- Generation Time: Feb 11, 2026 at 06:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -74,7 +74,7 @@ CREATE TABLE `buyer` (
 --
 
 INSERT INTO `buyer` (`buyerID`, `buyerCode`, `buyerName`, `address`, `tel`, `fax`, `brNo`, `vatNo`, `contactPerson`, `email`, `status`, `createdDT`, `createdBy`) VALUES
-(1, '', '', 'sdf sdf sdf sdf', '0778520129', '656565', 'sdf35356', '35321-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:12:10', 1001),
+(1, 'B001', 'dsfsdfdsfds', 'sdf sdf sdf sdf', '0778520129', '656565', 'sdf35356', '35321-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:12:10', 1001),
 (2, 'B002', 'dfg gdfg', '301/A, Owitiyagala, Horana.', '0778520129', '656565', 'sdf35356', '6546-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:13:22', 1001);
 
 -- --------------------------------------------------------
@@ -235,6 +235,14 @@ CREATE TABLE `style_colors` (
   `active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `style_colors`
+--
+
+INSERT INTO `style_colors` (`colorID`, `color`, `orderNoID`, `active`) VALUES
+(1, 'BLUE', 1, 1),
+(2, 'RED', 1, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -247,6 +255,13 @@ CREATE TABLE `style_sizes` (
   `orderNoID` int(32) NOT NULL,
   `active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `style_sizes`
+--
+
+INSERT INTO `style_sizes` (`sizeID`, `size`, `orderNoID`, `active`) VALUES
+(1, '30', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -571,13 +586,13 @@ ALTER TABLE `styleorder`
 -- AUTO_INCREMENT for table `style_colors`
 --
 ALTER TABLE `style_colors`
-  MODIFY `colorID` int(32) NOT NULL AUTO_INCREMENT;
+  MODIFY `colorID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `style_sizes`
 --
 ALTER TABLE `style_sizes`
-  MODIFY `sizeID` int(32) NOT NULL AUTO_INCREMENT;
+  MODIFY `sizeID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sub_production`

@@ -1,7 +1,9 @@
 <?php
 	include "../includes/db-con.php";
 	
-	$sqlQuery="SELECT * FROM styleorder JOIN buyer ON styles.buyerID=buyer.buyerID JOIN users ON styleorder.createdBy=users.user_ID JOIN styles ON styleorder.styleNo=styles.styleNo";
+	$sqlQuery="SELECT styleorder.id as ID,buyer.buyerName as BUYER,styles.styleNo as STYLE,styleorder.orderNo as ORDERNO,styleorder.orderQty as QTY,styleorder.deliveryDate as DELDATE,
+                CONCAT(users.Fname,' ',users.Lname) as USER,styleorder.Status as STATUS,DATE_FORMAT(styleorder.createdDT,'%d/%m/%Y') as CREATEDDATE 
+                FROM styleorder JOIN styles ON styleorder.styleNo = styles.styleNo JOIN buyer ON styles.buyerID = buyer.buyerID JOIN users ON styleorder.createdBy = users.user_ID;";
 	$returnDataSet=mysqli_query($conn,$sqlQuery);
 	
 	$activeUser=$_SESSION['_UserID'];
@@ -18,7 +20,7 @@
 <body>
     <div class="d-flex justify-content-between mb-3">
         <h4>All Style Orders</h4>
-        <button type="submit" class="btn btn-primary me-2" name="btnAddOrder" onclick="window.location.href='home_page.php?activity=addstyle'">+ Add New Style Order</button> 
+        <button type="submit" class="btn btn-primary me-2" name="btnAddOrder" onclick="window.location.href='home_page.php?activity=addstyleorder'">+ Add New Style Order</button> 
     </div>
     <div>
         <table class="table1 text-center" cellspacing="0">
@@ -31,33 +33,22 @@
                 <th>Delivery Date</th>
                 <th>Entered By</th>
                 <th>Created Date</th>
-                <th>Status</th>	
-                <th></th>				
+                <th>Status</th>				
             </tr>
             <?php
 			while($result1=mysqli_fetch_assoc($returnDataSet))
 			{
 			?>
             <tr>
-            	<td>
-                <?php if($result1['buyerID']!=$activeUser){ ?>
-                <a href="DashBoard.php?activity=editStyle&selectedID=<?php echo $result1['styleorder.id']?>"><?php echo $result1['styleorder.id']?></a>
-                <?php }
-				else
-				{
-					echo $result1['styleorder.id'];
-				}?>
-                </td>
-                <td><?php echo $result1['buyer.buyerName']?></td>
-                <td><?php echo $result1['styleorder.styleNo']?></td>
-                <td><?php echo $result1['styleorder.orderNo']?></td>
-                <td><?php echo $result1['styleorder.orderQty']?></td>
-                <td><?php echo $result1['styleorder.deliveryDate']?></td>
-                <td><?php echo $result1['users.firstName']." ".$result1['users.lastName']?></td>
-                <td><?php echo $result1['styleorder.createdDT']?></td>
-                <td><?php echo $result1['styleorder.Status']?></td>
-                <!-- <td><a href="DashBoard.php?activity=view&Criteria=Buyer&selectedID=<?php echo $result1['buyerID']?>">View</a></td> -->
-				
+            	<td><a href="DashBoard.php?activity=editStyle&selectedID=<?php echo $result1['ID']?>"><?php echo $result1['ID']?></a></td>
+                <td><?php echo $result1['BUYER']?></td>
+                <td><?php echo $result1['STYLE']?></td>
+                <td><?php echo $result1['ORDERNO']?></td>
+                <td><?php echo $result1['QTY']?></td>
+                <td><?php echo $result1['DELDATE']?></td>
+                <td><?php echo $result1['USER']?></td>
+                <td><?php echo $result1['CREATEDDATE']?></td>
+                <td><?php echo $result1['STATUS']?></td>				
             <tr>
             <?php
 			}

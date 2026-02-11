@@ -2,6 +2,7 @@
 	include "../includes/db-con.php";
     $message="";
     $returnDataSet2 = "";
+    $selectedBuyer = "";
 
     if(isset($_POST['buyerid']))
     {
@@ -73,18 +74,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Buyer</title>
+    <title>Add Style Order</title>
 </head>
 <body>
     <div class="container-fluid">
             <div class="mb-5">
-                <h4>Add New Buyer</h4>  
+                <h4>Place New Style Order</h4>  
             </div>
             <div>
                 <form method="post">
                     <div class="form-group col-md-4 me-3">
                             <label >Buyer</label>
-                            <select class="form-control" name="buyerid" id="buyerSelect" onchange="this.form.submit()"  >
+                            <select class="form-select" name="buyerid" id="buyerSelect" onchange="this.form.submit()"  >
                                 <option selected hidden></option>
                                 <?php 
                                     while($buyer=mysqli_fetch_assoc($returnDataSet1)){
@@ -98,7 +99,7 @@
                     <div class="d-lg-flex mb-1">
                         <div class="form-group col-md-4 me-3">
                             <label >Style</label>
-                            <select class="form-control" name="styleNo" id="styleSelect">
+                            <select class="form-select" name="styleNo" id="styleSelect">
                                 <option selected hidden></option>
                                 <?php 
                                     if($selectedBuyer != ""){
@@ -111,7 +112,8 @@
                                     ?>
                             </select>
                         </div>
-                        <div class="form-group me-5 col-lg-4">
+                        <button type="submit" class="btn btn-primary btn_add me-2" name="btnAddStyle" onclick="window.location.href='home_page.php?activity=addstyle'" style="padding:10px; height: 45px; margin: 20px 0 0 0;">Add</button> 
+                        <div class="form-group ms-5 me-5 col-lg-4">
                             <label>Order No.</label>
                             <input type="text" class="form-control" id="orderNo" name="orderNo">
                         </div>
@@ -125,12 +127,12 @@
                     <div class="d-lg-flex mb-1">
                         <div class="form-group col-md-4 me-3">
                             <label >Division</label>
-                            <select class="form-control" name="division" id="divSelect">
+                            <select class="form-select" name="division" id="divSelect">
                                 <option selected hidden></option>
                                 <?php 
-                                    while($styleno=mysqli_fetch_assoc($returnDataSet2)){
+                                    while($styleno=mysqli_fetch_assoc($returnDataSet1)){
                                         ?>
-                                        <option><?php echo $styleno['styleNo']?></option>
+                                        <option><?php echo $buyer['buyerID']?></option>
                                     <?php
                                     }
                                     ?>
@@ -138,12 +140,12 @@
                         </div>
                         <div class="form-group col-md-4 me-3">
                             <label >Product Category</label>
-                            <select class="form-control" name="proCategory" id="catSelect">
+                            <select class="form-select" name="proCategory" id="catSelect">
                                 <option selected hidden></option>
                                 <?php 
-                                    while($styleno=mysqli_fetch_assoc($returnDataSet2)){
+                                    while($styleno=mysqli_fetch_assoc($returnDataSet1)){
                                         ?>
-                                        <option><?php echo $styleno['styleNo']?></option>
+                                        <option><?php echo $styleno['category']?></option>
                                     <?php
                                     }
                                     ?>
@@ -162,7 +164,7 @@
                     <div class="form-row mb-2">
                         <div class="form-group col-md-2 mt-3">
                             <label for="inputState">Status</label>
-                            <select id="inputState" class="form-control" name="status">
+                            <select id="inputState" class="form-select" name="status">
                                 <option selected>Active</option>
                                 <option>Inactive</option>
                             </select>

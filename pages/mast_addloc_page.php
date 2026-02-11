@@ -54,7 +54,7 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                 <label for="inputState">Status</label>
-                <select id="inputState" class="form-control" name="locstatus">
+                <select id="inputState" class="form-select" name="locstatus">
                     <option selected>Active</option>
                     <option>Inactive</option>
                 </select>

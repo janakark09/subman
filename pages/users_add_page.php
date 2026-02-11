@@ -182,7 +182,7 @@
                     <div class="form-row mt-3">
                         <div class="form-group col-md-4">
                             <label >User Type</label>
-                            <select class="form-control" name="usertype">
+                            <select class="form-select" name="usertype">
                                 <option selected hidden></option>
                                 <?php 
                                     while($usertype=mysqli_fetch_assoc(result:$returnDataSet1)){
@@ -198,7 +198,7 @@
                     <div class="form-row d-lg-flex mt-3">
                         <div class="form-group col-md-4 me-3">
                             <label >Location</label>
-                            <select class="form-control" name="location" id="locationSelect">
+                            <select class="form-select" name="location" id="locationSelect">
                                 <option selected hidden></option>
                                 <?php 
                                     while($location=mysqli_fetch_assoc(result:$returnDataSet2)){
@@ -211,7 +211,7 @@
                         </div>
                         <div class="form-group col-md-4 me-3">
                             <label >Subcontractor</label>
-                            <select class="form-control" name="subcontractor" id="subcontractorSelect">
+                            <select class="form-select" name="subcontractor" id="subcontractorSelect">
                                 <option selected hidden></option>
                                 <?php 
                                     while($location=mysqli_fetch_assoc(result:$returnDataSet3)){
@@ -227,7 +227,7 @@
                     <div class="form-row mb-3">
                         <div class="form-group col-md-4 mt-3">
                             <label for="inputState">Status</label>
-                            <select id="inputState" class="form-control" name="ustatus">
+                            <select id="inputState" class="form-select" name="ustatus">
                                 <option selected>Active</option>
                                 <option>Inactive</option>
                             </select>

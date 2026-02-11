@@ -46,7 +46,7 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                 <label for="inputState">Status</label>
-                <select id="inputState" class="form-control" name="utypestatus">
+                <select id="inputState" class="form-select" name="utypestatus">
                     <option selected>Active</option>
                     <option>Inactive</option>
                 </select>
