@@ -39,13 +39,7 @@
 			?>
             <tr>
             	<td>
-                <?php if($result1['vendorID']!=$activeUser){ ?>
                 <a href="DashBoard.php?activity=editVendor&selectedID=<?php echo $result1['vendorID']?>"><?php echo $result1['vendorID']?></a>
-                <?php }
-				else
-				{
-					echo $result1['vendorID'];
-				}?>
                 </td>
                 <td><?php echo $result1['vendor']?></td>
                 <td><?php echo $result1['address']?></td>

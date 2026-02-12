@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 11, 2026 at 06:37 PM
+-- Generation Time: Feb 12, 2026 at 01:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -32,7 +32,7 @@ USE `subman_db`;
 CREATE TABLE `agreements` (
   `id` int(32) NOT NULL,
   `vendorID` int(32) NOT NULL,
-  `process` varchar(50) NOT NULL,
+  `process` int(32) NOT NULL,
   `styleOrderID` int(32) NOT NULL,
   `pcsPerSet` int(32) NOT NULL,
   `contractTotalQty` int(32) NOT NULL,
@@ -176,6 +176,24 @@ CREATE TABLE `payments` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `process_type`
+--
+
+CREATE TABLE `process_type` (
+  `typeid` int(32) NOT NULL,
+  `processType` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `process_type`
+--
+
+INSERT INTO `process_type` (`typeid`, `processType`) VALUES
+(1, 'WASHING');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `styleorder`
 --
 
@@ -241,7 +259,11 @@ CREATE TABLE `style_colors` (
 
 INSERT INTO `style_colors` (`colorID`, `color`, `orderNoID`, `active`) VALUES
 (1, 'BLUE', 1, 1),
-(2, 'RED', 1, 0);
+(2, 'RED', 1, 1),
+(3, 'BLACK', 1, 0),
+(4, 'PINK', 1, 1),
+(5, 'BROWN', 1, 1),
+(9, 'PRINT', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -261,7 +283,9 @@ CREATE TABLE `style_sizes` (
 --
 
 INSERT INTO `style_sizes` (`sizeID`, `size`, `orderNoID`, `active`) VALUES
-(1, '30', 1, 1);
+(1, '30', 1, 1),
+(2, '25', 1, 1),
+(3, '10', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -408,7 +432,8 @@ CREATE TABLE `vendors` (
 --
 
 INSERT INTO `vendors` (`vendorID`, `vendor`, `address`, `tel`, `fax`, `brNo`, `vatNo`, `vatPercentage`, `contactPerson`, `dailyCapacity`, `email`, `status`, `createdDT`, `createdBy`) VALUES
-(101, 'vendor1', 'Bandaragama', '0778520129', '0778520129', 'df354365', '254325-7000', 18, 'Janakaruwan Kumara', 103, 'janakark09@gmail.com', 'Active', '2026-02-10 20:42:20', 1001);
+(101, 'vendor1', 'Bandaragama', '0778520129', '0778520129', 'df354365', '254325-7000', 18, 'Janakaruwan Kumara', 103, 'janakark09@gmail.com', 'Active', '2026-02-10 20:42:20', 1001),
+(102, 'Vendor 2', '301/A, Owitiyagala, Horana.', '0778520129', '656565', 'sdf35356', '6546-7000', 18, 'A.D. Janaka Ruwan Kumara', 100, 'janakark09@gmail.com', 'Active', '2026-02-12 17:44:51', 1001);
 
 --
 -- Indexes for dumped tables
@@ -421,7 +446,8 @@ ALTER TABLE `agreements`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FK_Agree_vendor` (`vendorID`),
   ADD KEY `FK_Agree_order` (`styleOrderID`),
-  ADD KEY `FK_Agree_Create` (`createdBy`);
+  ADD KEY `FK_Agree_Create` (`createdBy`),
+  ADD KEY `FK_Agree_type` (`process`);
 
 --
 -- Indexes for table `buyer`
@@ -464,6 +490,12 @@ ALTER TABLE `mast_location`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`receiptID`);
+
+--
+-- Indexes for table `process_type`
+--
+ALTER TABLE `process_type`
+  ADD PRIMARY KEY (`typeid`);
 
 --
 -- Indexes for table `styleorder`
@@ -577,6 +609,12 @@ ALTER TABLE `payments`
   MODIFY `receiptID` int(32) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `process_type`
+--
+ALTER TABLE `process_type`
+  MODIFY `typeid` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `styleorder`
 --
 ALTER TABLE `styleorder`
@@ -586,13 +624,13 @@ ALTER TABLE `styleorder`
 -- AUTO_INCREMENT for table `style_colors`
 --
 ALTER TABLE `style_colors`
-  MODIFY `colorID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `colorID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `style_sizes`
 --
 ALTER TABLE `style_sizes`
-  MODIFY `sizeID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `sizeID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sub_production`
@@ -622,6 +660,7 @@ ALTER TABLE `vendors`
 ALTER TABLE `agreements`
   ADD CONSTRAINT `FK_Agree_Create` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Agree_order` FOREIGN KEY (`styleOrderID`) REFERENCES `styleorder` (`id`),
+  ADD CONSTRAINT `FK_Agree_type` FOREIGN KEY (`process`) REFERENCES `process_type` (`typeid`),
   ADD CONSTRAINT `FK_Agree_vendor` FOREIGN KEY (`vendorID`) REFERENCES `vendors` (`vendorID`);
 
 --
