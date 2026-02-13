@@ -19,8 +19,8 @@
         <h4>All Locations</h4>
         <button type="submit" class="btn btn-primary me-2" name="btnAddLoc" onclick="window.location.href='home_page.php?activity=addloc'">+ Add New Location</button> 
     </div>
-    <div class="table-wrapper table-responsive">
-        <table class="table1 table-responsive" cellspacing="0">
+    <div class="table-wrapper">
+        <table class="table1" cellspacing="0" style="min-width: 100%;">
         	<tr class="text-center">
             	<th>Location ID</th>
                 <th>Location Name</th>
@@ -34,7 +34,7 @@
             <tr>
             	<td class="text-center">
                 <a href="DashBoard.php?activity=editUser&selectedID=<?php echo $result1['locationID']?>"><?php echo $result1['locationID']?></a>
-                <td class="text-center"><?php echo $result1['location']?></td>
+                <td><?php echo $result1['location']?></td>
                 <td><?php echo $result1['address']?></td>
                 <td class="text-center"><?php echo $result1['status']?></td>				
             <tr>

@@ -8,9 +8,9 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Custom CSS -->
     <style>
-        body {
-            min-height: 100vh;
-        }
+        /* body {
+            height: 100%;
+        } */
 
         .sidebar {
             width: 100%;
@@ -67,7 +67,7 @@
                 </a>
             </li>
 
-<!---------------- Vendors with Sub Menu ------------------------------------>
+    <!---------------- Vendors with Sub Menu ------------------------------------>
             <li class="nav-item">
                 <a class="nav-link text-white d-flex justify-content-between align-items-center"
                    data-bs-toggle="collapse" href="#vendorMenu" role="button" aria-expanded="false">
@@ -114,8 +114,9 @@
             </li>
          <!------------------------------- Planning Module with Sub Menu ---------------------------->
             <li class="nav-item">
-                <a href="#" class="nav-link text-white">
-                    <i class="fa fa-clock me-2"></i> Order Planning</a>
+                <a href="home_page.php?activity=planning" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='planning' ? 'active' : '' ?>">
+                    <i class="fa fa-clock me-2" aria-hidden="true"></i> Order Planning</a>
+
             </li>
         <!---------------------------------- Gate Passes with Sub Menu ------------------------------------>
             <li class="nav-item">
@@ -251,20 +252,7 @@
 
         <hr>
 
-        <!-- User Dropdown -->
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-               data-bs-toggle="dropdown">
-                <img src="../Resources/images/userIcon.png" width="32" height="32" class="rounded-circle me-2">
-                <strong>mdo</strong>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark shadow">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
-            </ul>
-        </div>
+        
     </div>
 </div>
 

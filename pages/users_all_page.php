@@ -18,8 +18,8 @@
         <h4>All Users</h4>
         <button type="submit" class="btn btn-primary me-2" name="btnAddUser" onclick="window.location.href='home_page.php?activity=adduser'">+ Add New User</button> 
     </div>
-    <div>
-        <table class="table1 text-center" cellspacing="0">
+    <div class="table-wrapper">
+        <table class="table1 text-center" cellspacing="0" style="min-width:100%;">
         	<tr>
             	<th>User ID</th>
                 <th>User Name</th>

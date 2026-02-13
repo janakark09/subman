@@ -40,21 +40,35 @@ body
 /**************************************** tables ***********************************************/
 .table1
 {
-	min-width: 100%;
+	min-width: 120%;
+	max-width: auto;
 	/*width:100%;*/
 	/*text-align:center;*/
 	font-family:"Courier New";
-	white-space: nowrap;
+	border-collapse: collapse;
+	
+	/* width: 70%;       */
+    margin: 0 auto; 
+	/* table-layout: auto; */
 }
 
 .table-wrapper {
-    width: 100%;
+    /* width: 100%; */
     overflow-x: auto;
+	overflow-y: hidden;
+    /* white-space: nowrap;  */
+	-webkit-overflow-scrolling: touch;
+	
 }
 
 .table1 tr
 {
 	padding:10px;
+
+		/* white-space: nowrap; */
+    overflow:hidden;
+     text-overflow: ellipsis; 
+    max-width: 50px;   /* adjust per column */
 }
 .table1 tr th
 {

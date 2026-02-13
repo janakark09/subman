@@ -20,8 +20,8 @@
         <h4>All Buyers</h4>
         <button type="submit" class="btn btn-primary me-2" name="btnAddBuy" onclick="window.location.href='home_page.php?activity=addbuyer'">+ Add New Buyer</button> 
     </div>
-    <div>
-        <table class="table1 text-center" cellspacing="0">
+    <div class="table-wrapper">
+        <table class="table1" cellspacing="0">
         	<tr>
             	<th>ID</th>
                 <th>Buyer Code</th>
@@ -38,15 +38,7 @@
 			{
 			?>
             <tr>
-            	<td>
-                <?php if($result1['buyerID']!=$activeUser){ ?>
-                <a href="DashBoard.php?activity=editBuyer&selectedID=<?php echo $result1['buyerID']?>"><?php echo $result1['buyerID']?></a>
-                <?php }
-				else
-				{
-					echo $result1['buyerID'];
-				}?>
-                </td>
+            	<td class="text-center"><a href="DashBoard.php?activity=editBuyer&selectedID=<?php echo $result1['buyerID']?>"><?php echo $result1['buyerID']?></a></td>
                 <td><?php echo $result1['buyerCode']?></td>
                 <td><?php echo $result1['buyerName']?></td>
                 <td><?php echo $result1['address']?></td>

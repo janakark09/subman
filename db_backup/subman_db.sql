@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 12, 2026 at 01:25 PM
+-- Generation Time: Feb 13, 2026 at 01:22 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,6 +46,15 @@ CREATE TABLE `agreements` (
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `agreements`
+--
+
+INSERT INTO `agreements` (`id`, `vendorID`, `process`, `styleOrderID`, `pcsPerSet`, `contractTotalQty`, `dailyQty`, `startedDate`, `endDate`, `creditPeriod`, `unitPriceFg`, `unitPriceSample`, `Status`, `createdDT`, `createdBy`) VALUES
+(1, 101, 1, 1, 2, 10000, 100, '2026-02-13', '2026-05-23', 30, 30, 20, 'Active', '2026-02-13 12:39:43', 1001),
+(2, 102, 1, 1, 2, 20000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:41:39', 1001),
+(3, 102, 1, 1, 2, 20000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:45:36', 1001);
 
 -- --------------------------------------------------------
 
@@ -576,7 +585,7 @@ ALTER TABLE `vendors`
 -- AUTO_INCREMENT for table `agreements`
 --
 ALTER TABLE `agreements`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `buyer`

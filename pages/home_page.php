@@ -70,13 +70,13 @@
 			.logo{
 				text-decoration: none;
 			}
-			.content_div
+			/* .content_div
 			{
 				height:100%;
 				width:100%;
 				float:right;
 				position:absolute;
-			}
+			} */
 			#td11
 			{
 				min-height:100%;
@@ -140,100 +140,121 @@
 
 		<!------------------------------ Body Contents ------------------------------------------------>
 		<div>
-			<div class="row content_div" id="body_row">
-				<div class="col-2 pt-5 mt-1">
+			<div class="container-fluid pt-5">
+				<div class="row min-vh-100">
+					<div class="col-2 mt-1 bg-dark">
 					<!-------------------------------- Side bar ---------------------------->
-					<?php include '../includes/sidebar.php'?>
-				</div>
-			<div class="col pt-5 mt-5 ms-5 me-5 ">
-				<!-------------------------- Content for the system operations ------------------------->
-				<?php
-				if(empty($_REQUEST['activity']))
-				{
-					header("Location: ../index.php");
-				}
-				else
-				{
-					if($_REQUEST['activity'])
-					{
-						$Activity=$_REQUEST['activity'];
-				
-						switch($Activity)
+						<?php include '../includes/sidebar.php'?>
+						<!-- User Dropdown -->
+						<div class="dropdown">
+							<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+							data-bs-toggle="dropdown">
+								<img src="../Resources/images/userIcon.png" width="32" height="32" class="rounded-circle me-2">
+								<strong>mdo</strong>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-dark shadow">
+								<li><a class="dropdown-item" href="#">Profile</a></li>
+								<li><a class="dropdown-item" href="#">Settings</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" href="#">Sign out</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col pt-5 mt-5 ms-5 me-5 ">
+						<!-------------------------- Content for the system operations ------------------------->
+						<?php
+						if(empty($_REQUEST['activity']))
 						{
-								case 'acc':
-									include ("ViewProfile.php");
-								break;
-								
-								case 'dashboard':
-									include ("dashboard_page.php");
-								break;
-								//------------------------------------------------
-								case 'addvendor':
-									include ("vendor_add_page.php");
-								break;
-								case 'allvendors':
-									include ("vendor_all_page.php");
-								break;
-								
-								case 'agreements':
-									include ("agreements_page.php");
-								break;
-								case 'addagreement':
-									include ("agreement_new_page.php");
-								break;
-								//------------------------------------------------
-								case 'addbuyer':
-									include ("buyers_add_page.php");
-								break;
-								case 'allbuyers':
-									include ("buyers_all_page.php");
-								break;
-								//----------------------------
-								case 'styles':
-									include ("buyers_styles_page.php");
-								break;
-								case 'addstyleorder':
-									include ("buyers_styleadd_page.php");
-								break;
-								case 'colorsize':
-									include ("buyers_colorsize_page.php");
-								break;
-								//------------------------------------------------
-								case 'users':
-									include ('users_all_page.php');
-									break;
-								case 'adduser':
-									include ('users_add_page.php');
-									break;
-								case 'usertype':
-									include ('users_type_page.php');
-									break;
-								case 'addusertype':
-									include ('users_addutype_page.php');
-									break;
-								//------------------------------------------------
-								case 'loc':
-									include ('mast_location_page.php');
-									break;
-								case 'addloc':
-									include ('mast_addloc_page.php');
-									break;
-								//------------------------------------------------
-								case 'logout':
-								break;
-								
-								default:
-									include("dashboard_page.php");
-								break;
+							header("Location: ../index.php");
 						}
-					}
-					else
-					{
-						header("Location home_page.php?activity=adminDashboard");
-					}
-				}   
-				?>
-			</div>
+						else
+						{
+							if($_REQUEST['activity'])
+							{
+								$Activity=$_REQUEST['activity'];
+						
+								switch($Activity)
+								{
+										case 'acc':
+											include ("ViewProfile.php");
+										break;
+										
+										case 'dashboard':
+											include ("dashboard_page.php");
+										break;
+										//------------------------------------------------
+										case 'addvendor':
+											include ("vendor_add_page.php");
+										break;
+										case 'allvendors':
+											include ("vendor_all_page.php");
+										break;
+										
+										case 'agreements':
+											include ("agreements_page.php");
+										break;
+										case 'addagreement':
+											include ("agreement_new_page.php");
+										break;
+										//------------------------------------------------
+										case 'addbuyer':
+											include ("buyers_add_page.php");
+										break;
+										case 'allbuyers':
+											include ("buyers_all_page.php");
+										break;
+										//----------------------------
+										case 'styles':
+											include ("buyers_styles_page.php");
+										break;
+										case 'addstyleorder':
+											include ("buyers_styleadd_page.php");
+										break;
+										case 'colorsize':
+											include ("buyers_colorsize_page.php");
+										break;
+										//------------------------------------------------
+										case 'planning':
+											include ("order_planning_page.php");
+											break;
+										//------------------------------------------------
+										case 'users':
+											include ('users_all_page.php');
+											break;
+										case 'adduser':
+											include ('users_add_page.php');
+											break;
+										case 'usertype':
+											include ('users_type_page.php');
+											break;
+										case 'addusertype':
+											include ('users_addutype_page.php');
+											break;
+										//------------------------------------------------
+										case 'loc':
+											include ('mast_location_page.php');
+											break;
+										case 'addloc':
+											include ('mast_addloc_page.php');
+											break;
+										//------------------------------------------------
+										case 'logout':
+										break;
+										
+										default:
+											include("dashboard_page.php");
+										break;
+								}
+							}
+							else
+							{
+								header("Location home_page.php?activity=adminDashboard");
+							}
+						}   
+						?>
+					</div>
+
+				</div>
 		</div>
 
 		<script>

@@ -124,12 +124,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Agreement</title>
+    <title>Planning</title>
 </head>
 <body>
     <div class="container-fluid">
             <div class="mb-5">
-                <h4>New Subcontract Agreement</h4>  
+                <h4>Order Planning</h4>  
             </div>
             <div>
                 <form method="post">

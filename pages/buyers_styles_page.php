@@ -22,7 +22,7 @@
         <h4>All Style Orders</h4>
         <button type="submit" class="btn btn-primary me-2" name="btnAddOrder" onclick="window.location.href='home_page.php?activity=addstyleorder'">+ Add New Style Order</button> 
     </div>
-    <div>
+    <div class="table-wrapper">
         <table class="table1 text-center" cellspacing="0">
         	<tr>
                 <th>ID</th>
