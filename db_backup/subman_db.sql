@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 13, 2026 at 01:22 PM
+-- Generation Time: Feb 17, 2026 at 06:09 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -164,6 +164,24 @@ INSERT INTO `mast_location` (`locationID`, `location`, `address`, `status`, `cre
 (8, 'other4', 'sghgh', 'Active', 1001, '2026-02-03 17:45:47'),
 (9, 'other5', 'lkl', 'Active', 1001, '2026-02-03 17:47:07'),
 (10, 'other6', 'jhg', 'Active', 1001, '2026-02-03 17:47:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_plan`
+--
+
+CREATE TABLE `order_plan` (
+  `orderID` int(32) NOT NULL,
+  `setPieces` int(32) NOT NULL,
+  `subDuration` int(32) NOT NULL,
+  `vedor` int(32) NOT NULL,
+  `startDate` date NOT NULL,
+  `endDate` date NOT NULL,
+  `status` varchar(20) NOT NULL,
+  `plannedBy` int(32) NOT NULL,
+  `plannedDT` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -495,6 +513,14 @@ ALTER TABLE `mast_location`
   ADD KEY `FK_Loc_Uid` (`createdBy`);
 
 --
+-- Indexes for table `order_plan`
+--
+ALTER TABLE `order_plan`
+  ADD PRIMARY KEY (`orderID`),
+  ADD KEY `FK_plan_vendor` (`vedor`),
+  ADD KEY `FK_plan_user` (`plannedBy`);
+
+--
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
@@ -703,6 +729,14 @@ ALTER TABLE `grn_details`
 --
 ALTER TABLE `mast_location`
   ADD CONSTRAINT `FK_Loc_Uid` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`);
+
+--
+-- Constraints for table `order_plan`
+--
+ALTER TABLE `order_plan`
+  ADD CONSTRAINT `FK_plan_orderNo` FOREIGN KEY (`orderID`) REFERENCES `styleorder` (`id`),
+  ADD CONSTRAINT `FK_plan_user` FOREIGN KEY (`plannedBy`) REFERENCES `users` (`User_ID`),
+  ADD CONSTRAINT `FK_plan_vendor` FOREIGN KEY (`vedor`) REFERENCES `vendors` (`vendorID`);
 
 --
 -- Constraints for table `styleorder`

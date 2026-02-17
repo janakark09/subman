@@ -22,7 +22,7 @@
     </div>
     <div class="table-wrapper">
         <table class="table1" cellspacing="0">
-        	<tr>
+        	<tr class="text-center">
             	<th>ID</th>
                 <th>Buyer Code</th>
                 <th>Buyer Name</th>

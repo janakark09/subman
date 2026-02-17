@@ -143,7 +143,7 @@
 			<div class="container-fluid pt-5">
 				<div class="row min-vh-100">
 					<div class="col-2 mt-1 bg-dark">
-					<!-------------------------------- Side bar ---------------------------->
+						<!-------------------------------- Side bar ---------------------------->
 						<?php include '../includes/sidebar.php'?>
 						<!-- User Dropdown -->
 						<div class="dropdown">
@@ -160,7 +160,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col pt-5 mt-5 ms-5 me-5 ">
+					<div class="col pt-5 mt-2 ms-5 me-5 ">
 						<!-------------------------- Content for the system operations ------------------------->
 						<?php
 						if(empty($_REQUEST['activity']))
