@@ -56,7 +56,7 @@
                         $message="Error adding Style Order: " . mysqli_error($conn);
                     }
                     echo "<script>
-                        setTimeout(function(){window.location.href = 'home_page.php?activity=allbuyers';}, 1000);
+                        setTimeout(function(){window.location.href = 'home_page.php?activity=styleorder';}, 1000);
                     </script>";
                     exit();
         }
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     
-                    <div class="form-group mb-1">
+                    <div class="form-group mb-1 col-lg-2">
                         <label for="orderquantity">Order Quantity</label>
                         <input type="number" class="form-control" id="orderquantity" required name="orderQty">
                     </div>
@@ -152,7 +152,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group me-5 col-lg-4">
+                    <div class="form-group me-5 col-lg-9">
                         <label>Order Description</label>
                         <input type="text" class="form-control" id="description" required name="description">
                     </div>

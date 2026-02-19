@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2026 at 06:09 PM
+-- Generation Time: Feb 19, 2026 at 06:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -175,13 +175,20 @@ CREATE TABLE `order_plan` (
   `orderID` int(32) NOT NULL,
   `setPieces` int(32) NOT NULL,
   `subDuration` int(32) NOT NULL,
-  `vedor` int(32) NOT NULL,
+  `vendor` int(32) NOT NULL,
   `startDate` date NOT NULL,
   `endDate` date NOT NULL,
-  `status` varchar(20) NOT NULL,
+  `planStatus` varchar(20) NOT NULL,
   `plannedBy` int(32) NOT NULL,
   `plannedDT` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_plan`
+--
+
+INSERT INTO `order_plan` (`orderID`, `setPieces`, `subDuration`, `vendor`, `startDate`, `endDate`, `planStatus`, `plannedBy`, `plannedDT`) VALUES
+(1, 2, 100, 101, '2026-02-19', '2026-02-19', 'Pending', 1001, '2026-02-19 20:25:58');
 
 -- --------------------------------------------------------
 
@@ -243,7 +250,8 @@ CREATE TABLE `styleorder` (
 --
 
 INSERT INTO `styleorder` (`id`, `styleNo`, `orderNo`, `orderQty`, `division`, `proCategory`, `description`, `deliveryDate`, `Status`, `createdDT`, `createdBy`) VALUES
-(1, 'GBHD0235', '0025632', 50000, '', '', 'sdfsdf sd f', '2026-05-21', 'Active', '2026-02-11 18:15:29', 1001);
+(1, 'GBHD0235', '0025632', 50000, '', '', 'sdfsdf sd f', '2026-05-21', 'Active', '2026-02-11 18:15:29', 1001),
+(2, 'HGH00235', '100035', 65000, '', '', 'sdf dsf sdf sd', '2026-06-19', 'Active', '2026-02-19 21:15:34', 1001);
 
 -- --------------------------------------------------------
 
@@ -265,7 +273,8 @@ CREATE TABLE `styles` (
 --
 
 INSERT INTO `styles` (`styleNo`, `styleName`, `buyerID`, `createdBy`, `createdDT`, `status`) VALUES
-('GBHD0235', 'dsf sdfsdfhfg fghfgh', 2, 1001, '2026-02-11 17:11:48', 'Active');
+('GBHD0235', 'dsf sdfsdfhfg fghfgh', 2, 1001, '2026-02-11 17:11:48', 'Active'),
+('HGH00235', 'sadas as asd sad', 1, 1001, '2026-02-19 21:07:56', 'Active');
 
 -- --------------------------------------------------------
 
@@ -517,7 +526,7 @@ ALTER TABLE `mast_location`
 --
 ALTER TABLE `order_plan`
   ADD PRIMARY KEY (`orderID`),
-  ADD KEY `FK_plan_vendor` (`vedor`),
+  ADD KEY `FK_plan_vendor` (`vendor`),
   ADD KEY `FK_plan_user` (`plannedBy`);
 
 --
@@ -653,7 +662,7 @@ ALTER TABLE `process_type`
 -- AUTO_INCREMENT for table `styleorder`
 --
 ALTER TABLE `styleorder`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `style_colors`
@@ -736,7 +745,7 @@ ALTER TABLE `mast_location`
 ALTER TABLE `order_plan`
   ADD CONSTRAINT `FK_plan_orderNo` FOREIGN KEY (`orderID`) REFERENCES `styleorder` (`id`),
   ADD CONSTRAINT `FK_plan_user` FOREIGN KEY (`plannedBy`) REFERENCES `users` (`User_ID`),
-  ADD CONSTRAINT `FK_plan_vendor` FOREIGN KEY (`vedor`) REFERENCES `vendors` (`vendorID`);
+  ADD CONSTRAINT `FK_plan_vendor` FOREIGN KEY (`vendor`) REFERENCES `vendors` (`vendorID`);
 
 --
 -- Constraints for table `styleorder`
