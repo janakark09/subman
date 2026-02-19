@@ -7,6 +7,25 @@
     $sqlQuery1="SELECT vendor FROM vendors";
     $returnDataSet1=mysqli_query($conn,$sqlQuery1);
 	
+    if(isset($_POST['confirmPlan']))
+    {
+        $orderID = $_POST['orderID'];
+        $piecesPerSet = $_POST['piecesSet'];
+        $duration = $_POST['duration'];
+        $vendor = $_POST['vendor'];
+        $startDate = $_POST['startDate'];
+        $endDate = $_POST['endDate'];
+         $user = $_SESSION['_UserID'];
+
+        echo "Order ID: " . $orderID . "piecesPerSet: " . $piecesPerSet . "duration: " . $duration . "vendor: " . $vendor . "startDate: " . $startDate . "endDate: " . $endDate . "user: " . $user;
+        /*$insert = "INSERT INTO planning 
+                (orderID, piecesPerSet, durationDays, vendor, startDate, endDate, createdBy)
+                VALUES
+                ('$orderID','$piecesPerSet','$duration','$vendor','$startDate','$endDate','$user')";
+
+        mysqli_query($conn,$insert);*/
+    }
+
 	$activeUser=$_SESSION['_UserID'];
 
  ?>
@@ -19,7 +38,8 @@
     <title> Planning</title>
 </head>
 <body>
-    <div class="d-flex justify-content-between mb-3">
+    <form method="POST">
+        <div class="d-flex justify-content-between mb-3">
         <h4>Order Planning</h4>
         <button type="submit" class="btn btn-primary me-2" name="btnAddBuy" onclick="window.location.href='home_page.php?activity=addbuyer'">+ Add New Buyer</button> 
     </div>
@@ -45,29 +65,34 @@
 			{
 			?>
             <tr>
-            	<td class="text-center"><a href="DashBoard.php?activity=editStyleOrder&selectedID=<?php echo $result1['ID']?>"><?php echo $result1['ID']?></a></td>
+            	<td class="text-center">
+                    <a href="DashBoard.php?activity=editStyleOrder&selectedID=<?php echo $result1['ID']?>"><?php echo $result1['ID']?>
+                    </a>
+                    <input type="hidden" name="orderID" value="<?php echo $result1['ID']?>"/>
+                </td>
                 <td><?php echo $result1['ORDER_NO']?></td>
                 <td><?php echo $result1['STYLE']?></td>
                 <td><?php echo $result1['BUYER']?></td>
                 <td><?php echo $result1['DELIVERY_DATE']?></td>
                 <td><?php echo $result1['ORDER_QTY']?></td>
-                <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt"/></input></td>
-                <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt"/></input></td>
-                <td style="width: 90px;"><input type="submit" value="Check" class="btn btn-primary" style="font-size:7pt"/></td>
+                <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="piecesSet"/></input></td>
+                <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="duration"/></input></td>
+                <td style="width: 90px;"><input type="submit" value="Check" class="btn btn-primary" style="font-size:7pt" name="btnCheck"/></td>
                 <td style="width: auto;"><select class="form-select" name="vendor" id="vendor" style="font-size:9pt">
                                 <option selected hidden></option>
                                 <?php 
-                                    while($vendor=mysqli_fetch_assoc(result:$returnDataSet1)){
+                                    mysqli_data_seek($returnDataSet1, 0);
+                                    while($vendor=mysqli_fetch_assoc($returnDataSet1)){
                                         ?>
-                                        <option><?php echo $vendor['vendor']?></option>
+                                        <option value="<?php echo $vendor['vendorID'];?>"><?php echo $vendor['vendor']?></option>
                                     <?php
                                     }
                                     ?>
                             </select>
                         </td>
-                <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt;"/></td>
-                <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt;"/></td>
-                <td style="width: 80px;"><input type="submit" value="Yes" class="btn btn-primary" style="font-size:7pt"/></td>
+                <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt" name="startDate"/></td>
+                <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt" name="endDate"/></td>
+                <td style="width: 80px;"><input type="submit" class="btn btn-primary" style="font-size:7pt" name="confirmPlan"/></td>
 				
             <tr>
             <?php
@@ -75,5 +100,6 @@
 			?>
         </table>
     </div>
+    </form>
 </body>
 </html>
