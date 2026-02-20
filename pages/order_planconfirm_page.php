@@ -2,10 +2,11 @@
 	include "../includes/db-con.php";
 	
     // Fetching order and planning data with LEFT JOIN to include orders without plans
-	$sqlQuery="SELECT SO.id AS SO_ID,OP.orderID AS OP_ID, SO.orderNo AS ORDER_NO, SO.styleNo AS STYLE, B.buyerName AS BUYER, SO.deliveryDate AS DELIVERY_DATE, SO.orderQty AS ORDER_QTY, 
+	$sqlQuery="SELECT OP.orderID AS OP_ID, SO.orderNo AS ORDER_NO, SO.styleNo AS STYLE, B.buyerName AS BUYER, SO.deliveryDate AS DELIVERY_DATE, SO.orderQty AS ORDER_QTY, 
             OP.setPieces AS PIECES, OP.subDuration AS DURATION,V.vendor AS VEN, V.vendorID AS VEN_ID, OP.startDate AS START_DATE, OP.endDate AS END_DATE, CONCAT(U.Fname,' ',U.Lname) AS PLANNEDBY, DATE_FORMAT(OP.plannedDT,'%d-%m-%Y') AS PLANNEDDT
-                FROM styleorder SO JOIN styles S ON SO.styleNo=S.styleNo JOIN buyer B ON S.buyerID=B.buyerID 
-                    LEFT JOIN order_plan OP ON SO.id=OP.orderID LEFT JOIN users U ON OP.plannedBy=U.user_ID LEFT JOIN vendors V ON OP.vendor=V.vendorID WHERE SO.status='Active' AND B.status='Active' AND S.status='Active'";
+                FROM order_plan OP JOIN styleorder SO ON OP.orderID=SO.id JOIN styles S ON SO.styleNo=S.styleNo JOIN buyer B ON S.buyerID=B.buyerID 
+                    JOIN users U ON OP.plannedBy=U.user_ID JOIN vendors V ON OP.vendor=V.vendorID
+                 WHERE SO.status='Active' AND B.status='Active' AND S.status='Active'";
                     //WHERE OP.planStatus IS NULL OR OP.planStatus='Pending'
 	$returnDataSet=mysqli_query($conn,$sqlQuery);
 
@@ -58,12 +59,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Planning</title>
+    <title> Confirm Planning</title>
 </head>
 <body>
     <form method="POST">
         <div class="d-flex justify-content-between mb-3">
-        <h4>Order Planning</h4>
+        <h4>Confirm Order Planning</h4>
     </div>
     <div class="table-wrapper">
         <table class="table1 text-center" cellspacing="0" style="font-size:6pt; min-width: 110%;">
@@ -91,34 +92,27 @@
 			?>
             <tr>
             	<td class="text-center">
-                    <a href="DashBoard.php?activity=editStyleOrder&selectedID=<?php echo $result1['SO_ID']?>"><?php echo $result1['SO_ID']?>
+                    <a href="DashBoard.php?activity=editStyleOrder&selectedID=<?php echo $result1['OP_ID']?>"><?php echo $result1['OP_ID']?>
                     </a>
-                    <input type="hidden" name="orderID" value="<?php echo $result1['SO_ID']?>"/>
+                    <input type="hidden" name="orderID" value="<?php echo $result1['OP_ID']?>"/>
                 </td>
                 <td><?php echo $result1['ORDER_NO']?></td>
                 <td><?php echo $result1['STYLE']?></td>
                 <td><?php echo $result1['BUYER']?></td>
                 <td name="deldate" value="<?php echo $result1['DELIVERY_DATE']?>"><?php echo $result1['DELIVERY_DATE']?></td>
                 <td name="orderqty" value="<?php echo $result1['ORDER_QTY']?>"><?php echo $result1['ORDER_QTY']?></td>
-                <?php
-                    if($result1['OP_ID']!=null){
-                        ?>
-                        <td><?php echo $result1['PIECES']?></td>
-                        <td><?php echo $result1['DURATION']?></td>
-                        <td><button class="btn btn-secondary" disabled style="font-size:7pt">Checked</button></td>
-                        <td><?php echo $result1['VEN']?></td>
-                        <td><?php echo $result1['START_DATE']?></td>
-                        <td><?php echo $result1['END_DATE']?></td>
-                        <td><button class="btn btn-secondary" disabled style="font-size:7pt">Planned</button></td>
-                     <?php
-                    }
-                    else{
-                    ?>
-                        <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="piecesSet" value="<?php echo $result1['PIECES']?>"/></td>
-                        <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="duration" value="<?php echo $result1['DURATION']?>"/></td>
-                        <td style="width: 90px;"><input type="submit" value="Check" class="btn btn-primary" style="font-size:7pt" name="btnCheck"/></td>
-                        <td style="width: auto;"><select class="form-select" name="vendor" id="vendor" style="font-size:9pt">
-                                        <option selected hidden></option>
+                <td><?php echo $result1['PIECES']?></td>
+                <td><?php echo $result1['DURATION']?></td>
+                <td><button class="btn btn-secondary" disabled style="font-size:7pt">Checked</button></td>
+                <td><?php echo $result1['VEN']?></td>
+                <td><?php echo $result1['START_DATE']?></td>
+                <td><?php echo $result1['END_DATE']?></td>
+                <td><button class="btn btn-secondary" disabled style="font-size:7pt">Planned</button></td>
+                <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="piecesSet" value="<?php echo $result1['PIECES']?>"/></td>
+                <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="duration" value="<?php echo $result1['DURATION']?>"/></td>
+                <td style="width: 90px;"><input type="submit" value="Check" class="btn btn-primary" style="font-size:7pt" name="btnCheck"/></td>
+                <td style="width: auto;"><select class="form-select" name="vendor" id="vendor" style="font-size:9pt">
+                                <option selected hidden></option>
                                         <?php 
                                             mysqli_data_seek($returnDataSet1, 0);
                                             while($vendor=mysqli_fetch_assoc($returnDataSet1)){
@@ -128,13 +122,10 @@
                                             }
                                             ?>
                                     </select>
-                                </td>
-                        <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt" name="startDate"/></td>
-                        <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt" name="endDate"/></td>
-                        <td style="width: 80px;"><input type="submit" class="btn btn-primary" style="font-size:7pt" name="confirmPlan"/></td>
-                <?php
-                        }
-                ?>	
+                </td>
+                <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt" name="startDate"/></td>
+                <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt" name="endDate"/></td>
+                <td style="width: 80px;"><input type="submit" class="btn btn-primary" style="font-size:7pt" name="confirmPlan"/></td>
                 <td><?php echo $result1['PLANNEDBY']?></td>
                 <td><?php echo $result1['PLANNEDDT']?></td>		
             <tr>

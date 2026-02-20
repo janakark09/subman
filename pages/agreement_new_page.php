@@ -7,6 +7,7 @@
     $selectedBuyer = "";
     $selectedStyle = "";
     $selectedOrder = "";
+    $selectedVendor = "";
     $orderQuantity = 0;
     $piecesPerSet = 0;
     $subconQty = 0;
@@ -44,11 +45,14 @@
     if(isset($_POST['orderNo']) && $_POST['orderNo'] != "")
     {
         $selectedOrder=$_POST['orderNo'];
-        $sqlQuery4 = "SELECT orderQty FROM styleorder WHERE id='$selectedOrder'";
+        $sqlQuery4 = "SELECT S.orderQty, P.setPieces, P.vendor FROM styleorder AS S LEFT JOIN order_plan AS P ON S.id = P.orderID WHERE S.id='$selectedOrder'";
         $result4 = mysqli_query($conn, $sqlQuery4);
         if($result4 && mysqli_num_rows($result4) > 0){
             $row4 = mysqli_fetch_assoc($result4);
             $orderQuantity = $row4['orderQty'];
+            $piecesPerSet = $row4['setPieces'];
+            $subconQty = ($piecesPerSet > 0) ? floor($orderQuantity / $piecesPerSet) : 0;
+            $selectedVendor = $row4['vendor'];
         }
     }
 
@@ -189,18 +193,29 @@
                     </div>
                     <lable class="fw-bold">Subcontract Quantity: <?php echo $orderQuantity ?> / <?php echo $piecesPerSet?> = <?php echo $subconQty; ?></lable>
                     <hr>
-                    <!-- ------------------------------------------- -->
+                    <!-- ---------------------------------------------------------------------------------------- -->
                      <div class="form-group col-md-4 me-3 mt-1">
                             <label >Subcontractor</label>
                             <select class="form-select" name="vendorid" id="vendorSelect">
                                 <option selected hidden></option>
                                 <?php 
-                                    while($vendor=mysqli_fetch_assoc($dataSetVendors)){
-                                        ?>
-                                        <option value="<?php echo $vendor['vendorID']; ?>" 
-                                        <?php if(isset($_POST['vendorid']) && $_POST['vendorid']==$vendor['vendorID']) echo "selected"; ?>>
-                                        <?php echo $vendor['vendor']?></option>
-                                    <?php
+                                    if($selectedVendor != ""){
+                                        while($vendor=mysqli_fetch_assoc($dataSetVendors)){
+                                            ?>
+                                            
+                                            <option value="<?php echo $vendor['vendorID']; ?>" <?php if(isset($_POST['vendorid']) && $selectedVendor == $vendor['vendorID']) echo "selected";?>>
+                                            <?php echo $vendor['vendor']?></option>
+                                        <?php
+                                        }
+                                    }
+                                    else{
+                                        while($vendor=mysqli_fetch_assoc($dataSetVendors)){
+                                            ?>
+                                            <option value="<?php echo $vendor['vendorID']; ?>" 
+                                            <?php if(isset($_POST['vendorid']) && $_POST['vendorid']==$vendor['vendorID']) echo "selected"; ?>>
+                                            <?php echo $vendor['vendor']?></option>
+                                        <?php
+                                        }
                                     }
                                     ?>
                             </select>

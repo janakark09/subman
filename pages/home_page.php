@@ -223,6 +223,9 @@
 										case 'planning':
 											include ("order_planning_page.php");
 											break;
+										case 'confirmplan':
+											include ("order_planconfirm_page.php");
+											break;
 										//------------------------------------------------
 										case 'users':
 											include ('users_all_page.php');

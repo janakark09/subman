@@ -67,29 +67,6 @@
                 </a>
             </li>
 
-    <!---------------- Vendors with Sub Menu ------------------------------------>
-            <li class="nav-item">
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#vendorMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-handshake me-2"></i> Subcontractors</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
-
-                <div class="collapse submenu" id="vendorMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=allvendors" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allvendors' ? 'active' : '' ?>">All Vendors</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=addvendor" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='addvendor' ? 'active' : '' ?>">New Vendor</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=agreements" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='agreements' ? 'active' : '' ?>">Order Agreements</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-
             <!---------------- Merchandising with Sub Menu ------------------------------------>
             <li class="nav-item">
                 <a class="nav-link text-white d-flex justify-content-between align-items-center"
@@ -111,6 +88,29 @@
                         </li>
                         <li class="nav-item">
                             <a href="home_page.php?activity=colorsize" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='colorsize' ? 'active' : '' ?>">Style Color & Size</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+    <!---------------- Vendors with Sub Menu ------------------------------------>
+            <li class="nav-item">
+                <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                   data-bs-toggle="collapse" href="#vendorMenu" role="button" aria-expanded="false">
+                    <span><i class="fa fa-handshake me-2"></i> Subcontracting</span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
+
+                <div class="collapse submenu" id="vendorMenu">
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a href="home_page.php?activity=allvendors" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allvendors' ? 'active' : '' ?>">All Vendors</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="home_page.php?activity=addvendor" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='addvendor' ? 'active' : '' ?>">New Vendor</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="home_page.php?activity=agreements" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='agreements' ? 'active' : '' ?>">Order Agreements</a>
                         </li>
                     </ul>
                 </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2026 at 06:07 PM
+-- Generation Time: Feb 20, 2026 at 01:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -188,7 +188,7 @@ CREATE TABLE `order_plan` (
 --
 
 INSERT INTO `order_plan` (`orderID`, `setPieces`, `subDuration`, `vendor`, `startDate`, `endDate`, `planStatus`, `plannedBy`, `plannedDT`) VALUES
-(1, 2, 100, 101, '2026-02-19', '2026-02-19', 'Pending', 1001, '2026-02-19 20:25:58');
+(1, 2, 100, 102, '2026-02-19', '2026-02-19', 'Pending', 1001, '2026-02-19 20:25:58');
 
 -- --------------------------------------------------------
 
