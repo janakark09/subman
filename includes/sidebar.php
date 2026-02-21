@@ -117,9 +117,22 @@
             </li>
          <!------------------------------- Planning Module with Sub Menu ---------------------------->
             <li class="nav-item">
-                <a href="home_page.php?activity=planning" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='planning' ? 'active' : '' ?>">
-                    <i class="fa fa-clock me-2" aria-hidden="true"></i> Order Planning</a>
+                <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                   data-bs-toggle="collapse" href="#planningMenu" role="button" aria-expanded="false">
+                    <span><i class="fa fa-clock me-2"></i>Order Planning</span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
 
+                <div class="collapse submenu" id="planningMenu">
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a href="home_page.php?activity=planning" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='planning' ? 'active' : '' ?>">Order Planning</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="home_page.php?activity=confirmplan" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='confirmplan' ? 'active' : '' ?>">Confirm Planning</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         <!---------------------------------- Gate Passes with Sub Menu ------------------------------------>
             <li class="nav-item">

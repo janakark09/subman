@@ -227,6 +227,13 @@
 											include ("order_planconfirm_page.php");
 											break;
 										//------------------------------------------------
+										case 'gatepass':
+											include ("gp_all_page.php");
+											break;
+										case 'confirmgatepass':
+											include ("gp_new_page.php");
+											break;
+										//------------------------------------------------
 										case 'users':
 											include ('users_all_page.php');
 											break;

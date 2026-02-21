@@ -80,7 +80,7 @@
                 <th>Subcontractor</th>	
                 <th>Started Date</th>
                 <th>End Date</th>
-                <th>Confirm</th>
+                <th>Plan</th>
                 <th>Planned By</th>
                 <th>Planned Date</th>
 		
@@ -131,7 +131,7 @@
                                 </td>
                         <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt" name="startDate"/></td>
                         <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt" name="endDate"/></td>
-                        <td style="width: 80px;"><input type="submit" class="btn btn-primary" style="font-size:7pt" name="confirmPlan"/></td>
+                        <td style="width: 80px;"><input type="submit" class="btn btn-primary" style="font-size:7pt" name="confirmPlan" value="Save"/></td>
                 <?php
                         }
                 ?>	

@@ -1,0 +1,63 @@
+<?php
+	include "../includes/db-con.php";
+	
+    $sqlQuery="SELECT * FROM  vendors";
+	$returnDataSet2=mysqli_query($conn,$sqlQuery);
+	
+	$activeUser=$_SESSION['_UserID'];
+
+ ?>
+ 
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gatepass</title>
+</head>
+<body>
+    <div class="d-flex justify-content-between mb-3">
+        <h4>All Gate Passes</h4>
+        <button type="submit" class="btn btn-primary me-2" name="btnAddVen" onclick="window.location.href='home_page.php?activity=addgatepass'">+ Add New Gate Pass</button> 
+    </div>
+    <div class="table-wrapper">
+        <table class="table1" cellspacing="0">
+        	<tr class="text-center">
+            	<th>Gate Pass No.</th>
+                <th>Location</th>
+                <th>Style</th>
+                <th>Order No.</th>
+                <th>Date</th>
+                <th>Vendor</th>
+                <th>Total Qty.</th>
+                <th>Created By</th>
+                <th>Created Date</th>	
+                <th>Action</th>			
+            </tr>
+            <?php
+            try{
+			while($result1=mysqli_fetch_assoc($returnDataSet2))
+			{
+            ?>
+            <tr>
+            	<td class="text-center"><a href="DashBoard.php?activity=editVendor&selectedID=<?php echo $result1['vendorID']?>"><?php echo $result1['vendorID']?></a></td>
+                <td><?php echo $result1['vendor']?></td>
+                <td><?php echo $result1['address']?></td>
+                <td><?php echo $result1['tel']?></td>
+                <td><?php echo $result1['contactPerson']?></td>
+                <td><?php echo $result1['email']?></td>
+                <td class="text-center"><?php echo $result1['dailyCapacity']?></td>
+                <td class="text-center"><?php echo $result1['status']?></td>      
+            </tr>
+            <?php
+			}
+            }
+            catch(Exception $e){
+                echo "Error: " . $e->getMessage();
+            }
+			?>
+        </table>
+    </div>    
+</body>
+</html>
