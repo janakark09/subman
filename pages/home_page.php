@@ -52,6 +52,7 @@
 		<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Merienda:wght@300..900&display=swap" rel="stylesheet">
 		
 		<link rel="stylesheet" type="text/css" href="../assets/css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css"/>
 		<link rel="stylesheet" type="text/css" href="../assets/css/NavForms.css"/>
 		<link rel="stylesheet" type="text/css" href="../assets/font-awesome/css/all.css"/>
 		<script src="../assets/font-awesome/js/all.js"></script>
@@ -230,7 +231,7 @@
 										case 'gatepass':
 											include ("gp_all_page.php");
 											break;
-										case 'confirmgatepass':
+										case 'newgatepass':
 											include ("gp_new_page.php");
 											break;
 										//------------------------------------------------

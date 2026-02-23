@@ -6,6 +6,7 @@
     <title>Sidebar Menu</title>
 <!--Font-awsome-->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css"/>
     <!-- Custom CSS -->
     <style>
         /* body {
@@ -145,10 +146,10 @@
                 <div class="collapse submenu" id="gatepasssMenu">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">All Gate Passes</a>
+                            <a href="home_page.php?activity=gatepass" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='gatepass' ? 'active' : '' ?>">All Gate Passes</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">New gate Pass</a>
+                            <a href="home_page.php?activity=newgatepass" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='newgatepass' ? 'active' : '' ?>">New gate Pass</a>
                         </li>
                     </ul>
                 </div>

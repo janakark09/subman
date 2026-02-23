@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 20, 2026 at 01:11 PM
+-- Generation Time: Feb 23, 2026 at 04:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -100,13 +100,24 @@ CREATE TABLE `gatepass` (
   `gatepassDate` date NOT NULL,
   `vendorID` int(32) NOT NULL,
   `orderAgreement` int(32) NOT NULL,
-  `cutNo` varchar(50) NOT NULL,
-  `color` int(32) NOT NULL,
-  `size` int(32) NOT NULL,
-  `matQty` double NOT NULL,
   `status` varchar(20) NOT NULL,
   `cratedDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gatepass_details`
+--
+
+CREATE TABLE `gatepass_details` (
+  `id` bigint(32) NOT NULL,
+  `gpID` int(32) NOT NULL,
+  `cutNo` varchar(50) NOT NULL,
+  `color` int(11) NOT NULL,
+  `size` int(11) NOT NULL,
+  `matQty` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -188,7 +199,7 @@ CREATE TABLE `order_plan` (
 --
 
 INSERT INTO `order_plan` (`orderID`, `setPieces`, `subDuration`, `vendor`, `startDate`, `endDate`, `planStatus`, `plannedBy`, `plannedDT`) VALUES
-(1, 2, 100, 102, '2026-02-19', '2026-02-19', 'Pending', 1001, '2026-02-19 20:25:58');
+(1, 2, 100, 101, '2026-02-19', '2026-02-19', 'Confirmed', 1001, '2026-02-19 20:25:58');
 
 -- --------------------------------------------------------
 
@@ -500,10 +511,17 @@ ALTER TABLE `gatepass`
   ADD KEY `FK_Gatepass_LocID` (`locationID`),
   ADD KEY `FK_Gatepass_Style` (`orderNoID`),
   ADD KEY `FK_Gatepass_Vendor` (`vendorID`),
-  ADD KEY `FK_Gatepass_Color` (`color`),
-  ADD KEY `FK_Gatepass_Size` (`size`),
   ADD KEY `FK_Gatepass_Created` (`createdBy`),
   ADD KEY `FK_Gatepass_Agreement` (`orderAgreement`);
+
+--
+-- Indexes for table `gatepass_details`
+--
+ALTER TABLE `gatepass_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_Gatepass_Color` (`color`),
+  ADD KEY `FK_Gatepass_Size` (`size`),
+  ADD KEY `FK_Gatepass_gp` (`gpID`);
 
 --
 -- Indexes for table `grn_details`
@@ -635,6 +653,12 @@ ALTER TABLE `gatepass`
   MODIFY `gatepassID_1` int(32) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `gatepass_details`
+--
+ALTER TABLE `gatepass_details`
+  MODIFY `id` bigint(32) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `grn_details`
 --
 ALTER TABLE `grn_details`
@@ -718,12 +742,18 @@ ALTER TABLE `buyer`
 --
 ALTER TABLE `gatepass`
   ADD CONSTRAINT `FK_Gatepass_Agreement` FOREIGN KEY (`orderAgreement`) REFERENCES `agreements` (`id`),
-  ADD CONSTRAINT `FK_Gatepass_Color` FOREIGN KEY (`color`) REFERENCES `style_colors` (`colorID`),
   ADD CONSTRAINT `FK_Gatepass_Created` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Gatepass_LocID` FOREIGN KEY (`locationID`) REFERENCES `mast_location` (`locationID`),
-  ADD CONSTRAINT `FK_Gatepass_Size` FOREIGN KEY (`size`) REFERENCES `style_sizes` (`sizeID`),
   ADD CONSTRAINT `FK_Gatepass_Style` FOREIGN KEY (`orderNoID`) REFERENCES `styleorder` (`id`),
   ADD CONSTRAINT `FK_Gatepass_Vendor` FOREIGN KEY (`vendorID`) REFERENCES `vendors` (`vendorID`);
+
+--
+-- Constraints for table `gatepass_details`
+--
+ALTER TABLE `gatepass_details`
+  ADD CONSTRAINT `FK_Gatepass_Color` FOREIGN KEY (`color`) REFERENCES `style_colors` (`colorID`),
+  ADD CONSTRAINT `FK_Gatepass_Size` FOREIGN KEY (`size`) REFERENCES `style_sizes` (`sizeID`),
+  ADD CONSTRAINT `FK_Gatepass_gp` FOREIGN KEY (`gpID`) REFERENCES `gatepass` (`gatepassID_1`);
 
 --
 -- Constraints for table `grn_details`

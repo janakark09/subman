@@ -30,6 +30,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Merienda:wght@300..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+    		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="assets/css/login_back.css"/>
     <style type="text/css">
     #login_div

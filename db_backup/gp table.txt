@@ -1,0 +1,32 @@
+<!-- <div class="table-wrapper">
+                        <table class="table1" cellspacing="0" style="min-width: 100%">
+                            <tr class="text-center">
+                                <th>Cut No.</th>
+                                <th>Color</th>
+                                <th>Size</th>
+                                <th>Met. Sets Qty.</th>		
+                            </tr> -->
+                            <!-- <?php
+                                try{
+                                    while($result1=mysqli_fetch_assoc($returnDataSet2))
+                                    {
+                                    ?>
+                                    <tr>
+                                        <td class="text-center"><a href="DashBoard.php?activity=editVendor&selectedID=<?php echo $result1['vendorID']?>"><?php echo $result1['vendorID']?></a></td>
+                                        <td><?php echo $result1['vendor']?></td>
+                                        <td><?php echo $result1['address']?></td>
+                                        <td><?php echo $result1['tel']?></td>
+                                        <td><?php echo $result1['contactPerson']?></td>
+                                        <td><?php echo $result1['email']?></td>
+                                        <td class="text-center"><?php echo $result1['dailyCapacity']?></td>
+                                        <td class="text-center"><?php echo $result1['status']?></td>      
+                                    </tr>
+                                    <?php
+                                    }
+                                }
+                                catch(Exception $e){
+                                    echo "Error: " . $e->getMessage();
+                                }
+                            ?>
+                        </table>
+                    </div> -->
