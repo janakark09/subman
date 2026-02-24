@@ -27,7 +27,6 @@
         $selectedBuyer=$_POST['buyerid'];
     }
     
-    echo "selected buyer: ".$selectedBuyer;
     if($selectedBuyer != ""){
     $sqlQuery2 = "SELECT * FROM styles WHERE status='Active' AND buyerID='$selectedBuyer'";
     $returnDataSet2 = mysqli_query($conn,$sqlQuery2);
@@ -46,23 +45,36 @@
     //------------------ Fetch Selected Order to Order Quantity Lable -------------------
     if(isset($_POST['orderNo']) && $_POST['orderNo'] != "")
     {
-        $selectedOrder=$_POST['orderNo'];
-
-        $colorQry = "SELECT * FROM style_colors WHERE orderNoID='$selectedOrder'";
-        $colorResult = mysqli_query($conn, $colorQry);
-
-        $sizeQry = "SELECT * FROM style_sizes WHERE orderNoID='$selectedOrder'";
-        $sizeResult = mysqli_query($conn, $sizeQry);
+        $selectedOrder=$_POST['orderNo']; 
     }
+
+    //------------------ Fetch Colors and Sizes for Selected Order -------------------
+    $colorQry = "SELECT * FROM style_colors WHERE orderNoID='$selectedOrder' AND active=1";
+    $colorResult = mysqli_query($conn, $colorQry);
+
+    //------------------ Fetch Sizes for Selected Order -------------------
+    $sizeQry = "SELECT * FROM style_sizes WHERE orderNoID='$selectedOrder' AND active=1";
+    $sizeResult = mysqli_query($conn, $sizeQry);
 
     //------------------ Fetch Active Vendors for Subcontractor Dropdown -------------------
     $vendorsQuery = "SELECT * FROM vendors WHERE status='Active'";
     $dataSetVendors = mysqli_query($conn, $vendorsQuery);
     
+    if(isset($_POST['vendorid']) && $_POST['vendorid'] != "")
+    {
+        $selectedVendor=$_POST['vendorid']; 
+    }
+
+    echo "selected vendor: ".$selectedVendor;
+    $agrQry = "SELECT A.id AS gp_ID, V.vendor AS VEN, SO.orderNo AS ORDERNO FROM agreements A JOIN vendors V ON A.vendorID=V.vendorID JOIN styleorder SO ON SO.id=A.styleOrderID WHERE A.styleOrderID='$selectedOrder' AND A.vendorID='$selectedVendor' AND A.Status='Active'";
+    $agrResult = mysqli_query($conn, $agrQry);
+
+    
+    
     $activeUser=$_SESSION['_UserID'];   
 
     //------------------ Handle Form Submission -------------------
-    /*if(isset($_POST['btnSubmit'])){
+    if(isset($_POST['btnSubmit'])){
         // Validate required fields
         if(empty($_POST['buyerid']) || empty($_POST['styleNo']) || empty($_POST['orderNo']) || empty($_POST['pieces']) || empty($_POST['vendorid']) || empty($_POST['typeid']) || empty($_POST['totalQty']) || empty($_POST['perDayQty']) || empty($_POST['startingDate']) || empty($_POST['endingDate'])){
             $message = "Please fill in all required fields.";
@@ -83,12 +95,12 @@
 
             $insertQuery = "INSERT INTO `agreements`(vendorID, process, styleOrderID, pcsPerSet, contractTotalQty, dailyQty, startedDate, endDate, creditPeriod, unitPriceFg, unitPriceSample, Status, createdDT, createdBy) 
                             VALUES ('$vendorid','$typeid','$orderNo','$pieces','$totalQty','$perDayQty','$startingDate','$endingDate','$creditPeriod','$finishedPrice','$samplePrice','$status',NOW(),'$activeUser')";
-            */
-            /* INSERT INTO `gatepass`(`gatepassID_1`, `gatepassID_2`, `locationID`, `orderNoID`, `gatepassDate`, `vendorID`, `orderAgreement`, `status`, `cratedDT`, `createdBy`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]','[value-7]','[value-8]','[value-9]','[value-10]')
-INSERT INTO `gatepass_details`(`id`, `gpID`, `cutNo`, `color`, `size`, `matQty`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]')
-How to add autoincremented ‘gatepassID_1’ value into ‘gpID’ column and save concurrently. */
+            
+//              INSERT INTO `gatepass`(`gatepassID_1`, `gatepassID_2`, `locationID`, `orderNoID`, `gatepassDate`, `vendorID`, `orderAgreement`, `status`, `cratedDT`, `createdBy`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]','[value-7]','[value-8]','[value-9]','[value-10]')
+// INSERT INTO `gatepass_details`(`id`, `gpID`, `cutNo`, `color`, `size`, `matQty`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]')
+// How to add autoincremented ‘gatepassID_1’ value into ‘gpID’ column and save concurrently. 
 
-/*$conn->begin_transaction();
+$conn->begin_transaction();
 
 $sql1 = "INSERT INTO gatepass 
 (locationID, orderNoID, gatepassDate, vendorID, orderAgreement, status, cratedDT, createdBy) 
@@ -104,9 +116,9 @@ VALUES ('$last_id','$cutNo','$color','$size','$matQty')";
 
 $conn->query($sql2);
 
-$conn->commit();*/
+$conn->commit();
 
-            /*if(mysqli_query($conn, $insertQuery)){
+            if(mysqli_query($conn, $insertQuery)){
                 echo "<script>
                         setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 1000);
                     </script>";
@@ -116,7 +128,6 @@ $conn->commit();*/
             }
         }
     }
-*/
  ?>
 
 <!DOCTYPE html>
@@ -191,14 +202,15 @@ $conn->commit();*/
 
                     <!-- Have to load agreemtn no when select vendor -->
                     <div class="d-lg-flex mb-3  mt-2">
-                        <div class="form-group col-md-4 me-3">
+                        <div class="form-group col-md-4 me-3 mt-1">
                             <label >Sub Contractor</label>
                             <select class="form-select" name="vendorid" id="vendorSelect" onchange="this.form.submit()"  >
                                 <option selected hidden></option>
                                 <?php 
                                     while($vendor=mysqli_fetch_assoc($dataSetVendors)){
                                         ?>
-                                        <option value="<?php echo $vendor['vendorID']; ?>"><?php echo $vendor['vendor']?></option>
+                                        <option value="<?php echo $vendor['vendorID']; ?>" <?php if(isset($_POST['vendorid']) && $_POST['vendorid']==$vendor['vendorID']) echo "selected"; ?>>
+                                            <?php echo $vendor['vendor']?></option>
                                     <?php
                                     }
                                     ?>
@@ -206,15 +218,14 @@ $conn->commit();*/
                         </div>
                         <div class="form-group col-md-4 me-3 mt-1">
                             <label >Order Agreement No.</label>
-                            <select class="form-select" name="vendorid" id="vendorSelect">
+                            <select class="form-select" name="agrtid" id="agrSelect">
                                 <option selected hidden></option>
                                 <?php 
                                     if($selectedVendor != ""){
-                                        while($vendor=mysqli_fetch_assoc($dataSetVendors)){
+                                        while($agreement=mysqli_fetch_assoc($agrResult)){
                                             ?>
-                                            
-                                            <option value="<?php echo $vendor['vendorID']; ?>" <?php if(isset($_POST['vendorid']) && $selectedVendor == $vendor['vendorID']) echo "selected";?>>
-                                            <?php echo $vendor['vendor']?></option>
+                                            <option value="<?php echo $agreement['gp_ID']; ?>" <?php if(isset($_POST['agrtid']) && $_POST['agrtid']==$agreement['gp_ID']) echo "selected";?>>
+                                            <?php echo "GP ID: ".$agreement['gp_ID']."-".$agreement['VEN']." (".$agreement['ORDERNO'].")"?></option>
                                         <?php
                                         }
                                     }
@@ -236,19 +247,17 @@ $conn->commit();*/
                         
                         <div class="d-lg-flex mb-1 gap-3">
                             <div class="form-group col-md-6 me-3 mt-1">
-                            <label >Color</label>
-                            <select class="form-select" name="colorid" id="color">
-                                <option selected hidden></option>
-                                <?php 
-                                    while($color=mysqli_fetch_assoc($colorResult)){
+                                <label >Color</label>
+                                <select class="form-select" name="colorid" id="colorselect">
+                                    <option selected hidden></option>
+                                    <?php 
+                                        while($color=mysqli_fetch_assoc($colorResult)){
+                                            ?>
+                                            <option value="<?php echo $color['colorID']; ?>" ><?php echo $color['color']?></option>
+                                        <?php
+                                        }
                                         ?>
-                                        <option value="<?php echo $color['colorID']; ?>" 
-                                        <?php if(isset($_POST['colorid']) && $_POST['colorid']==$color['colorID']) echo "selected"; ?>>
-                                        <?php echo $color['color']?></option>
-                                    <?php
-                                    }
-                                    ?>
-                            </select>
+                                </select>
                             </div>
                             <div class="form-group col-md-4 me-3 mt-1">
                                 <label >Size</label>
@@ -257,16 +266,14 @@ $conn->commit();*/
                                     <?php 
                                         while($size=mysqli_fetch_assoc($sizeResult)){
                                             ?>
-                                            <option value="<?php echo $size['sizeID']; ?>" 
-                                            <?php if(isset($_POST['sizeid']) && $_POST['sizeid']==$size['sizeID']) echo "selected"; ?>>
-                                            <?php echo $size['size']?></option>
+                                            <option value="<?php echo $size['sizeID']; ?>"><?php echo $size['size']?></option>
                                         <?php
                                         }
                                         ?>
                                 </select>
                             </div>
                         </div>
-
+<!-- --------------------------------------------------------------------------------------------------------------------- -->
                         <div class="d-lg-flex mb-1 gap-3">
                             <div class="form-group mb-1 col-3">
                                 <label for="cutno">Cut No</label>
