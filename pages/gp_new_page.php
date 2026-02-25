@@ -80,6 +80,7 @@
             $message = "Please fill in all required fields.";
         } else {
             // Prepare and execute insert query
+            $gatepassID2="GP-".date('YmdHis'); // Example gatepassID_2 generation
             $vendorid = $_POST['vendorid'];
             $typeid = $_POST['typeid'];
             $orderNo = $_POST['orderNo'];
@@ -92,40 +93,36 @@
             $finishedPrice = $_POST['finishedPrice'];
             $samplePrice = $_POST['samplePrice'];
             $status = "Active";            
-
-            $insertQuery = "INSERT INTO `agreements`(vendorID, process, styleOrderID, pcsPerSet, contractTotalQty, dailyQty, startedDate, endDate, creditPeriod, unitPriceFg, unitPriceSample, Status, createdDT, createdBy) 
-                            VALUES ('$vendorid','$typeid','$orderNo','$pieces','$totalQty','$perDayQty','$startingDate','$endingDate','$creditPeriod','$finishedPrice','$samplePrice','$status',NOW(),'$activeUser')";
             
 //              INSERT INTO `gatepass`(`gatepassID_1`, `gatepassID_2`, `locationID`, `orderNoID`, `gatepassDate`, `vendorID`, `orderAgreement`, `status`, `cratedDT`, `createdBy`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]','[value-7]','[value-8]','[value-9]','[value-10]')
 // INSERT INTO `gatepass_details`(`id`, `gpID`, `cutNo`, `color`, `size`, `matQty`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]')
 // How to add autoincremented ‘gatepassID_1’ value into ‘gpID’ column and save concurrently. 
 
-$conn->begin_transaction();
+            $conn->begin_transaction();
 
-$sql1 = "INSERT INTO gatepass 
-(locationID, orderNoID, gatepassDate, vendorID, orderAgreement, status, cratedDT, createdBy) 
-VALUES ('$locationID','$orderNoID','$gatepassDate','$vendorID','$orderAgreement','$status','$createdDT','$createdBy')";
+            $sql1 = "INSERT INTO gatepass (gatepassID_2,locationID, orderNoID, gatepassDate, vendorID, orderAgreement, status, cratedDT, createdBy) 
+            VALUES ('$locationID','$orderNoID','$gatepassDate','$vendorID','$orderAgreement','$status','$createdDT','$createdBy')";
 
-$conn->query($sql1);
+            $conn->query($sql1);
 
-$last_id = $conn->insert_id;
+            $last_id = $conn->insert_id;
 
-$sql2 = "INSERT INTO gatepass_details 
-(gpID, cutNo, color, size, matQty) 
-VALUES ('$last_id','$cutNo','$color','$size','$matQty')";
+            $sql2 = "INSERT INTO gatepass_details 
+            (gpID, cutNo, color, size, matQty) 
+            VALUES ('$last_id','$cutNo','$color','$size','$matQty')";
 
-$conn->query($sql2);
+            $conn->query($sql2);
 
-$conn->commit();
+            $conn->commit();
 
-            if(mysqli_query($conn, $insertQuery)){
-                echo "<script>
-                        setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 1000);
-                    </script>";
-                    exit();
-            } else {
-                $message = "Error creating agreement: " . mysqli_error($conn);
-            }
+                        if(mysqli_query($conn, $insertQuery)){
+                            echo "<script>
+                                    setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 1000);
+                                </script>";
+                                exit();
+                        } else {
+                            $message = "Error creating agreement: " . mysqli_error($conn);
+                        }
         }
     }
  ?>
