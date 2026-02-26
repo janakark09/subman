@@ -1,7 +1,8 @@
 <?php
 	include "../includes/db-con.php";
 	
-    $sqlQuery="SELECT GP.gatepassID_1 AS 'gpID1', GP.gatepassID_2 AS 'gpID2', ML.location AS 'LOC', V.vendor AS 'VEN',GP.orderAgreement AS 'AGREEMENT',  FROM  gatepass GP JOIN mast_location AS ML ON GP.locationID=ML.locationID 
+    $sqlQuery="SELECT GP.gatepassID_1 AS 'gpID1', GP.gatepassID_2 AS 'gpID2', ML.location AS 'LOC', V.vendor AS 'VEN',GP.orderAgreement AS 'AGREEMENT', GP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', GP.createdDT AS 'CREATEDDATE' 
+            FROM  gatepass GP JOIN mast_location AS ML ON GP.locationID=ML.locationID  
             JOIN styleorder AS SO ON GP.orderNoID=SO.id JOIN vendors AS V ON GP.vendorID=V.vendorID JOIN agreements AS AG ON GP.orderAgreement=AG.id 
             JOIN users AS U ON GP.createdBy=U.User_ID";
 	$returnDataSet2=mysqli_query($conn,$sqlQuery);

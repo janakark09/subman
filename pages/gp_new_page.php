@@ -8,6 +8,7 @@
     $selectedStyle = "";
     $selectedOrder = "";
     $selectedVendor = "";
+    $userloc="";
     $orderQuantity = 0;
     $piecesPerSet = 0;
     $subconQty = 0;
@@ -65,64 +66,69 @@
         $selectedVendor=$_POST['vendorid']; 
     }
 
-    echo "selected vendor: ".$selectedVendor;
-    $agrQry = "SELECT A.id AS gp_ID, V.vendor AS VEN, SO.orderNo AS ORDERNO FROM agreements A JOIN vendors V ON A.vendorID=V.vendorID JOIN styleorder SO ON SO.id=A.styleOrderID WHERE A.styleOrderID='$selectedOrder' AND A.vendorID='$selectedVendor' AND A.Status='Active'";
+    $agrQry = "SELECT A.id AS agr_ID, V.vendor AS VEN, SO.orderNo AS ORDERNO FROM agreements A JOIN vendors V ON A.vendorID=V.vendorID JOIN styleorder SO ON SO.id=A.styleOrderID WHERE A.styleOrderID='$selectedOrder' AND A.vendorID='$selectedVendor' AND A.Status='Active'";
     $agrResult = mysqli_query($conn, $agrQry);
 
     
     
     $activeUser=$_SESSION['_UserID'];   
 
+    $locQry = "SELECT locationID FROM user_details WHERE User_ID='$activeUser'";
+    $locResult = mysqli_query($conn, $locQry);
+
+    if(mysqli_num_rows($locResult) > 0){
+        $locData = mysqli_fetch_assoc($locResult);
+        $userloc = $locData['locationID'];
+    }
+
     //------------------ Handle Form Submission -------------------
     if(isset($_POST['btnSubmit'])){
+            $gatepassID2=$userloc."-".date('ymd'); // Example gatepassID_2 generation
+            $vendorid = $_POST['vendorid'];
+            $orderNo = $_POST['orderNo'];
+            $gpDate=$_POST['gatepassDate'];
+            $agrID = $_POST['agrtid'];            
+            $status = "Pending";       
+            $cutNo = $_POST['cutno'];
+            $colorid = $_POST['colorid'];
+            $sizeid = $_POST['sizeid'];
+            $matQty = $_POST['matQty']; 
+            
+            //echo "gatepassID2: ".$gatepassID2."vendorid: ".$vendorid."orderNo: ".$orderNo."gpDate: ".$gpDate."agrID: ".$agrID."status: ".$status."cutNo: ".$cutNo."colorid: ".$colorid."sizeid: ".$sizeid;
         // Validate required fields
-        if(empty($_POST['buyerid']) || empty($_POST['styleNo']) || empty($_POST['orderNo']) || empty($_POST['pieces']) || empty($_POST['vendorid']) || empty($_POST['typeid']) || empty($_POST['totalQty']) || empty($_POST['perDayQty']) || empty($_POST['startingDate']) || empty($_POST['endingDate'])){
+        if(empty($vendorid) || empty($orderNo) || empty($gpDate) || empty($agrID) || empty($cutNo) || empty($colorid) || empty($sizeid) || empty($matQty)){
             $message = "Please fill in all required fields.";
         } else {
             // Prepare and execute insert query
-            $gatepassID2="GP-".date('YmdHis'); // Example gatepassID_2 generation
-            $vendorid = $_POST['vendorid'];
-            $typeid = $_POST['typeid'];
-            $orderNo = $_POST['orderNo'];
-            $pieces = $_POST['pieces'];
-            $totalQty = $_POST['totalQty'];
-            $perDayQty = $_POST['perDayQty'];
-            $startingDate = $_POST['startingDate'];
-            $endingDate = $_POST['endingDate'];
-            $creditPeriod = $_POST['creditPeriod'];
-            $finishedPrice = $_POST['finishedPrice'];
-            $samplePrice = $_POST['samplePrice'];
-            $status = "Active";            
+
+            try {
             
-//              INSERT INTO `gatepass`(`gatepassID_1`, `gatepassID_2`, `locationID`, `orderNoID`, `gatepassDate`, `vendorID`, `orderAgreement`, `status`, `cratedDT`, `createdBy`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]','[value-7]','[value-8]','[value-9]','[value-10]')
-// INSERT INTO `gatepass_details`(`id`, `gpID`, `cutNo`, `color`, `size`, `matQty`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]')
-// How to add autoincremented ‘gatepassID_1’ value into ‘gpID’ column and save concurrently. 
+                $conn->begin_transaction();
 
-            $conn->begin_transaction();
+                $sql1 = "INSERT INTO gatepass (gatepassID_2,locationID, orderNoID, gatepassDate, vendorID, orderAgreement, status, createdDT, createdBy) 
+                VALUES ('$gatepassID2','$userloc', '$orderNo', '$gpDate', '$vendorid', '$agrID', '$status', NOW(), '$activeUser')";
 
-            $sql1 = "INSERT INTO gatepass (gatepassID_2,locationID, orderNoID, gatepassDate, vendorID, orderAgreement, status, cratedDT, createdBy) 
-            VALUES ('$locationID','$orderNoID','$gatepassDate','$vendorID','$orderAgreement','$status','$createdDT','$createdBy')";
+                $conn->query($sql1);
 
-            $conn->query($sql1);
+                $last_id = $conn->insert_id;
 
-            $last_id = $conn->insert_id;
+                echo "Last Inserted ID: " . $last_id;
+                $sql2 = "INSERT INTO gatepass_details 
+                (gpID, cutNo, color, size, matQty) 
+                VALUES ('$last_id','$cutNo','$colorid','$sizeid','$matQty')";
 
-            $sql2 = "INSERT INTO gatepass_details 
-            (gpID, cutNo, color, size, matQty) 
-            VALUES ('$last_id','$cutNo','$color','$size','$matQty')";
+                $conn->query($sql2);
 
-            $conn->query($sql2);
-
-            $conn->commit();
-
-                        if(mysqli_query($conn, $insertQuery)){
-                            echo "<script>
-                                    setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 1000);
-                                </script>";
-                                exit();
-                        } else {
-                            $message = "Error creating agreement: " . mysqli_error($conn);
-                        }
+                $conn->commit();
+                echo "<script>
+                    setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 1000);
+                </script>";
+                exit();
+            }
+            catch (Exception $e) {
+                $conn->rollback();
+                $message = "Error creating gatepass: " . $e->getMessage();
+            }
         }
     }
  ?>
@@ -218,23 +224,15 @@
                             <select class="form-select" name="agrtid" id="agrSelect">
                                 <option selected hidden></option>
                                 <?php 
-                                    if($selectedVendor != ""){
+                                    if($selectedOrder != ""){
                                         while($agreement=mysqli_fetch_assoc($agrResult)){
                                             ?>
-                                            <option value="<?php echo $agreement['gp_ID']; ?>" <?php if(isset($_POST['agrtid']) && $_POST['agrtid']==$agreement['gp_ID']) echo "selected";?>>
-                                            <?php echo "GP ID: ".$agreement['gp_ID']."-".$agreement['VEN']." (".$agreement['ORDERNO'].")"?></option>
+                                            <option value="<?php echo $agreement['agr_ID']; ?>" <?php if(isset($_POST['agrtid']) && $_POST['agrtid']==$agreement['agr_ID']) echo "selected";?>>
+                                            <?php echo "GP ID: ".$agreement['agr_ID']."-".$agreement['VEN']." (".$agreement['ORDERNO'].")"?></option>
                                         <?php
                                         }
                                     }
-                                    else{
-                                        while($vendor=mysqli_fetch_assoc($dataSetVendors)){
-                                            ?>
-                                            <option value="<?php echo $vendor['vendorID']; ?>" 
-                                            <?php if(isset($_POST['vendorid']) && $_POST['vendorid']==$vendor['vendorID']) echo "selected"; ?>>
-                                            <?php echo $vendor['vendor']?></option>
-                                        <?php
-                                        }
-                                    }
+                                    
                                     ?>
                             </select>
                         </div>
