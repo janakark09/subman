@@ -26,7 +26,7 @@
     {
         $selectedBuyer=$_POST['buyerid'];
     }
-    echo "selected buyer:".$selectedBuyer;
+    
     if($selectedBuyer != ""){
     $sqlQuery2 = "SELECT * FROM styles WHERE status='Active' AND buyerID='$selectedBuyer'";
     $returnDataSet2 = mysqli_query($conn,$sqlQuery2);

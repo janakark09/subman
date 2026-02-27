@@ -1,8 +1,8 @@
 <?php
 	include "../includes/db-con.php";
 	
-    $sqlQuery="SELECT GP.gatepassID_1 AS 'gpID1', GP.gatepassID_2 AS 'gpID2', ML.location AS 'LOC', V.vendor AS 'VEN',GP.orderAgreement AS 'AGREEMENT', GP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', GP.createdDT AS 'CREATEDDATE' 
-            FROM  gatepass GP JOIN mast_location AS ML ON GP.locationID=ML.locationID  
+    $sqlQuery="SELECT GP.gatepassID_1 AS 'gpID1', GP.gatepassID_2 AS 'gpID2',GP.gatepassDate AS GPDATE,SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDER', ML.location AS 'LOC', V.vendor AS 'VEN',GP.orderAgreement AS 'AGREEMENT', GP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', GP.createdDT AS 'CREATEDDATE' 
+            FROM  gatepass GP JOIN gatepass_details GD ON GP.gatepassID_1=GD.gatepassID_1 JOIN mast_location AS ML ON GP.locationID=ML.locationID  
             JOIN styleorder AS SO ON GP.orderNoID=SO.id JOIN vendors AS V ON GP.vendorID=V.vendorID JOIN agreements AS AG ON GP.orderAgreement=AG.id 
             JOIN users AS U ON GP.createdBy=U.User_ID";
 	$returnDataSet2=mysqli_query($conn,$sqlQuery);
@@ -132,18 +132,19 @@
             try{
 			while($result1=mysqli_fetch_assoc($returnDataSet2))
 			{
-            ?>
-            <tr>
-            	<td class="text-center"><a href="DashBoard.php?activity=editGatepass&selectedID=<?php echo $result1['gpID1']?>"><?php echo $result1['gpID2']."/".$result1['gpID1']?></a></td>
-                <td><?php echo $result1['vendor']?></td>
-                <td><?php echo $result1['address']?></td>
-                <td><?php echo $result1['tel']?></td>
-                <td><?php echo $result1['contactPerson']?></td>
-                <td><?php echo $result1['email']?></td>
-                <td class="text-center"><?php echo $result1['dailyCapacity']?></td>
-                <td class="text-center"><?php echo $result1['status']?></td>      
-            </tr>
-            <?php
+                ?>
+                <tr>
+                    <td class="text-center"><a href="DashBoard.php?activity=editGatepass&selectedID=<?php echo $result1['gpID1']?>"><?php echo $result1['gpID2']."/".$result1['gpID1']?></a></td>
+                    <td><?php echo $result1['STYLE']?></td>
+                    <td><?php echo $result1['ORDER']?></td>
+                    <td><?php echo $result1['GPDATE']?></td>
+                    <td><?php echo $result1['VEN']?></td>
+                    <td><?php echo $result1['contactPerson']?></td>
+                    <td><?php echo $result1['email']?></td>
+                    <td class="text-center"><?php echo $result1['dailyCapacity']?></td>
+                    <td class="text-center"><?php echo $result1['status']?></td>      
+                </tr>
+                <?php
 			}
             }
             catch(Exception $e){

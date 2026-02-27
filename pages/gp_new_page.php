@@ -18,6 +18,10 @@
     $startingDate = "";
     $endingDate = "";
 
+    if($_SERVER['REQUEST_METHOD'] == 'GET'){
+    unset($_SESSION['gp_items']);
+    }
+
     //------------------ Fetch Buyer Name and Style Nos -------------------
     $sqlQuery1="SELECT * FROM  buyer WHERE status='Active'";
     $returnDataSet1=mysqli_query($conn,$sqlQuery1);
@@ -81,6 +85,35 @@
         $userloc = $locData['locationID'];
     }
 
+    if(!isset($_SESSION['gp_items'])){
+    $_SESSION['gp_items'] = array();
+    }
+
+    if(isset($_POST['btnAdd'])){
+
+        $cutNo   = $_POST['cutno'];
+        $colorid = $_POST['colorid'];
+        $sizeid  = $_POST['sizeid'];
+        $matQty  = $_POST['matQty'];
+
+        if(empty($cutNo) || empty($colorid) || empty($sizeid) || empty($matQty)){
+            $message = "Please fill all fields before adding.";
+        } else {
+
+            // Create item array
+            $item = array(
+                "cutNo"   => $cutNo,
+                "colorid" => $colorid,
+                "sizeid"  => $sizeid,
+                "matQty"  => $matQty
+            );
+
+            // Push into session array
+            $_SESSION['gp_items'][] = $item;
+
+            $message = "Item added successfully!";
+        }
+    }
     //------------------ Handle Form Submission -------------------
     if(isset($_POST['btnSubmit'])){
             $gatepassID2=$userloc."-".date('ymd'); // Example gatepassID_2 generation
@@ -96,7 +129,7 @@
             
             //echo "gatepassID2: ".$gatepassID2."vendorid: ".$vendorid."orderNo: ".$orderNo."gpDate: ".$gpDate."agrID: ".$agrID."status: ".$status."cutNo: ".$cutNo."colorid: ".$colorid."sizeid: ".$sizeid;
         // Validate required fields
-        if(empty($vendorid) || empty($orderNo) || empty($gpDate) || empty($agrID) || empty($cutNo) || empty($colorid) || empty($sizeid) || empty($matQty)){
+        if(empty($vendorid) || empty($orderNo) || empty($gpDate) || empty($agrID)){
             $message = "Please fill in all required fields.";
         } else {
             // Prepare and execute insert query
@@ -112,16 +145,21 @@
 
                 $last_id = $conn->insert_id;
 
-                echo "Last Inserted ID: " . $last_id;
-                $sql2 = "INSERT INTO gatepass_details 
-                (gpID, cutNo, color, size, matQty) 
-                VALUES ('$last_id','$cutNo','$colorid','$sizeid','$matQty')";
+                foreach($_SESSION['gp_items'] as $item){
+                    $cutNo   = $item['cutNo'];
+                    $colorid = (int)$item['colorid'];
+                    $sizeid  = (int)$item['sizeid'];
+                    $matQty  = (int)$item['matQty'];
 
-                $conn->query($sql2);
+                    $sql2 = "INSERT INTO gatepass_details (gpID, cutNo, colorID, sizeID, matQty) 
+                            VALUES ('$last_id','$cutNo','$colorid','$sizeid','$matQty')";
+                    $conn->query($sql2);
+                }
 
                 $conn->commit();
+                unset($_SESSION['gp_items']);
                 echo "<script>
-                    setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 1000);
+                    setTimeout(function(){window.location.href = 'home_page.php?activity=gatepass';}, 1000);
                 </script>";
                 exit();
             }
@@ -199,7 +237,8 @@
                     <!-- ---------------------------------------------------------------------------------------- -->
                     <div class="form-group col-lg-2">
                             <label>Gatepass Date</label>
-                            <input type="date" class="form-control" id="gatepassDate" required name="gatepassDate" onchange="calculateEndingDate();">
+                            <input type="date" class="form-control" id="gatepassDate" required name="gatepassDate" onchange="calculateEndingDate();"
+                            value="<?php echo isset($_POST['gatepassDate']) ? $_POST['gatepassDate']: '';?>">
                     </div>
                     <!-- ---------------------------------------------------------------------------------------- -->
 
@@ -272,22 +311,67 @@
                         <div class="d-lg-flex mb-1 gap-3">
                             <div class="form-group mb-1 col-3">
                                 <label for="cutno">Cut No</label>
-                                <input type="text" class="form-control" id="cutno" required name="cutno">
+                                <input type="text" class="form-control" id="cutno" name="cutno">
                             </div>
                             <div class="form-group mb-1 col-3 ">
                                 <label for="matQty">Meterial Sets Quantity</label>
-                                <input type="number" class="form-control" id="matQty" required name="matQty" value="0">
+                                <input type="number" class="form-control" id="matQty" name="matQty" value="0">
                             </div>
                         </div>
                                               
 
                         <div class="d-lg-flex justify-content-center mb-1 mt-3 gap-2">
-                            <input type="submit" value="Save" class="btn btn-primary me-2 save_btn" name="btnSubmit"/>
-                            <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=addagreement'"/>
+                            <input type="submit" value="Add" class="btn btn-primary me-2 save_btn" name="btnAdd"/>
+                            <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=newgatepass'"/>
                         </div>
                     </div>
                     <!-- --------------------------------------------------------------------------------------------------------------------- -->
-                    
+                    <div class="rowcontainer mb-3">
+                        <div class="col-md-12">
+                            <p class="text-danger"><?php echo $message; ?></p>
+                        </div>
+
+                    </div>
+
+                    <div class="table-wrapper  mb-5">
+                        <table class="table1" cellspacing="0" style="min-width:100%;">
+                            <tr class="text-center">
+                                <th>No.</th>
+                                <th>Cut No.</th>
+                                <th>Color</th>
+                                <th>Size</th>
+                                <th>Mat. Qty.</th>		
+                            </tr>
+                            <?php
+                                if(!empty($_SESSION['gp_items'])){
+                                    $no = 1;
+                                    foreach($_SESSION['gp_items'] as $row){
+                                ?>
+                                <tr>
+                                    <td><?php echo $no++; ?></td>
+                                    <td><?php echo $row['cutNo']; ?></td>
+                                    <td><?php 
+                                    $colorName = ''; 
+                                    $sizeName = ''; 
+                                    $colorRes = mysqli_query($conn, "SELECT color FROM style_colors WHERE colorID='".$row['colorid']."'"); 
+                                    if($c = mysqli_fetch_assoc($colorRes)) $colorName = $c['color'];
+                                    $sizeRes = mysqli_query($conn, "SELECT size FROM style_sizes WHERE sizeID='".$row['sizeid']."'"); 
+                                    if($s = mysqli_fetch_assoc($sizeRes)) $sizeName = $s['size'];
+                                    echo $colorName; 
+                                     ?></td>
+                                    <td><?php echo $sizeName; ?></td>
+                                    <td><?php echo $row['matQty']; ?></td>
+                                </tr>
+                                <?php
+                                    }
+                                }
+                            ?>
+                        </table>
+                    </div> 
+                    <div class="d-lg-flex justify-content-center mb-5 mt-3 gap-2">
+                        <input type="submit" value="Save" class="btn btn-primary me-2 save_btn" name="btnSave"/>
+                        <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=newgatepass'"/>
+                    </div>
                 </form>
             </div> 
     </div>
@@ -297,41 +381,6 @@
         document.getElementById('styleSelect').selectedIndex = 0;
         document.getElementById('orderSelect').innerHTML = '<option selected hidden></option>';
     }
-
-    //------------------ Calculate Total Days -------------------
-    function calcDays(){
-        let totalQty = document.getElementById('totalQty').value;
-        let perDayQty = document.getElementById('perDayQty').value;
-        if(totalQty > 0 && perDayQty > 0){
-            var days = Math.ceil(totalQty / perDayQty);
-            document.getElementById('estimatedDays').innerText = "Estimated Days: " + days;
-        } else {
-            document.getElementById('estimatedDays').innerText = "Estimated Days: ";
-        }
-    }
-
-    //------------------ Calculate Ending Date based on Starting Date and Total Days -------------------
-    function calculateEndingDate(){
-    let startDate = document.getElementById('startingDate').value;
-    let totalQty = parseInt(document.getElementById('totalQty').value);
-    let perDayQty = parseInt(document.getElementById('perDayQty').value);
-
-    if(startDate && totalQty > 0 && perDayQty > 0){
-
-        let days = Math.ceil(totalQty / perDayQty);
-
-        let start = new Date(startDate);
-        start.setDate(start.getDate() + (days - 1));
-
-        let yyyy = start.getFullYear();
-        let mm = String(start.getMonth() + 1).padStart(2, '0');
-        let dd = String(start.getDate()).padStart(2, '0');
-
-        let finalDate = yyyy + "-" + mm + "-" + dd;
-
-        document.getElementById('endingDate').value = finalDate;
-    }
-}
 </script>
 </body>
 </html>
