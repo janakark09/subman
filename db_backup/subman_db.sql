@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2026 at 01:16 PM
+-- Generation Time: Mar 02, 2026 at 06:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -102,15 +102,17 @@ CREATE TABLE `gatepass` (
   `orderAgreement` int(32) NOT NULL,
   `status` varchar(20) NOT NULL,
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
-  `createdBy` int(32) NOT NULL
+  `createdBy` int(32) NOT NULL,
+  `approvedBy` int(32) DEFAULT NULL,
+  `approvedDT` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `gatepass`
 --
 
-INSERT INTO `gatepass` (`gatepassID_1`, `gatepassID_2`, `locationID`, `orderNoID`, `gatepassDate`, `vendorID`, `orderAgreement`, `status`, `createdDT`, `createdBy`) VALUES
-(6, '1-260226', 1, 1, '2026-02-28', 102, 2, 'Active', '2026-02-26 17:37:15', 1001);
+INSERT INTO `gatepass` (`gatepassID_1`, `gatepassID_2`, `locationID`, `orderNoID`, `gatepassDate`, `vendorID`, `orderAgreement`, `status`, `createdDT`, `createdBy`, `approvedBy`, `approvedDT`) VALUES
+(11, '1-260302', 1, 1, '2026-03-04', 102, 2, 'Pending', '2026-03-02 21:59:33', 1001, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -122,8 +124,8 @@ CREATE TABLE `gatepass_details` (
   `id` bigint(32) NOT NULL,
   `gpID` int(32) NOT NULL,
   `cutNo` varchar(50) NOT NULL,
-  `color` int(11) NOT NULL,
-  `size` int(11) NOT NULL,
+  `colorID` int(11) NOT NULL,
+  `sizeID` int(11) NOT NULL,
   `matQty` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -131,8 +133,9 @@ CREATE TABLE `gatepass_details` (
 -- Dumping data for table `gatepass_details`
 --
 
-INSERT INTO `gatepass_details` (`id`, `gpID`, `cutNo`, `color`, `size`, `matQty`) VALUES
-(6, 6, '300', 1, 1, 30);
+INSERT INTO `gatepass_details` (`id`, `gpID`, `cutNo`, `colorID`, `sizeID`, `matQty`) VALUES
+(10, 11, '3', 1, 2, 100),
+(11, 11, '3', 2, 1, 200);
 
 -- --------------------------------------------------------
 
@@ -526,15 +529,16 @@ ALTER TABLE `gatepass`
   ADD KEY `FK_Gatepass_Style` (`orderNoID`),
   ADD KEY `FK_Gatepass_Vendor` (`vendorID`),
   ADD KEY `FK_Gatepass_Created` (`createdBy`),
-  ADD KEY `FK_Gatepass_Agreement` (`orderAgreement`);
+  ADD KEY `FK_Gatepass_Agreement` (`orderAgreement`),
+  ADD KEY `FK_Gatepass_Approv` (`approvedBy`);
 
 --
 -- Indexes for table `gatepass_details`
 --
 ALTER TABLE `gatepass_details`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_Gatepass_Color` (`color`),
-  ADD KEY `FK_Gatepass_Size` (`size`),
+  ADD KEY `FK_Gatepass_Color` (`colorID`),
+  ADD KEY `FK_Gatepass_Size` (`sizeID`),
   ADD KEY `FK_Gatepass_gp` (`gpID`);
 
 --
@@ -664,13 +668,13 @@ ALTER TABLE `buyer`
 -- AUTO_INCREMENT for table `gatepass`
 --
 ALTER TABLE `gatepass`
-  MODIFY `gatepassID_1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `gatepassID_1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `gatepass_details`
 --
 ALTER TABLE `gatepass_details`
-  MODIFY `id` bigint(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `grn_details`
@@ -756,6 +760,7 @@ ALTER TABLE `buyer`
 --
 ALTER TABLE `gatepass`
   ADD CONSTRAINT `FK_Gatepass_Agreement` FOREIGN KEY (`orderAgreement`) REFERENCES `agreements` (`id`),
+  ADD CONSTRAINT `FK_Gatepass_Approv` FOREIGN KEY (`approvedBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Gatepass_Created` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Gatepass_LocID` FOREIGN KEY (`locationID`) REFERENCES `mast_location` (`locationID`),
   ADD CONSTRAINT `FK_Gatepass_Style` FOREIGN KEY (`orderNoID`) REFERENCES `styleorder` (`id`),
@@ -765,8 +770,8 @@ ALTER TABLE `gatepass`
 -- Constraints for table `gatepass_details`
 --
 ALTER TABLE `gatepass_details`
-  ADD CONSTRAINT `FK_Gatepass_Color` FOREIGN KEY (`color`) REFERENCES `style_colors` (`colorID`),
-  ADD CONSTRAINT `FK_Gatepass_Size` FOREIGN KEY (`size`) REFERENCES `style_sizes` (`sizeID`),
+  ADD CONSTRAINT `FK_Gatepass_Color` FOREIGN KEY (`colorID`) REFERENCES `style_colors` (`colorID`),
+  ADD CONSTRAINT `FK_Gatepass_Size` FOREIGN KEY (`sizeID`) REFERENCES `style_sizes` (`sizeID`),
   ADD CONSTRAINT `FK_Gatepass_gp` FOREIGN KEY (`gpID`) REFERENCES `gatepass` (`gatepassID_1`);
 
 --

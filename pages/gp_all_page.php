@@ -1,11 +1,23 @@
 <?php
 	include "../includes/db-con.php";
-	
-    $sqlQuery="SELECT GP.gatepassID_1 AS 'gpID1', GP.gatepassID_2 AS 'gpID2',GP.gatepassDate AS GPDATE,SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDER', ML.location AS 'LOC', V.vendor AS 'VEN',GP.orderAgreement AS 'AGREEMENT', GP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', GP.createdDT AS 'CREATEDDATE' 
-            FROM  gatepass GP JOIN gatepass_details GD ON GP.gatepassID_1=GD.gatepassID_1 JOIN mast_location AS ML ON GP.locationID=ML.locationID  
-            JOIN styleorder AS SO ON GP.orderNoID=SO.id JOIN vendors AS V ON GP.vendorID=V.vendorID JOIN agreements AS AG ON GP.orderAgreement=AG.id 
-            JOIN users AS U ON GP.createdBy=U.User_ID";
-	$returnDataSet2=mysqli_query($conn,$sqlQuery);
+
+    $selectedBuyer = "";
+    $selectedStyle = "";
+    $selectedOrder = "";
+    $message="";
+    $allQuery="";
+
+    $allQuery="SELECT GP.gatepassID_1 AS 'gpID1', CONCAT(GP.gatepassID_1,'/', GP.gatepassID_2) AS 'gpID2',GP.gatepassDate AS 'GPDATE',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', ML.location AS 'LOC',
+         V.vendor AS 'VEN',GP.orderAgreement AS 'AGREEMENT',SUM(GD.matQty) AS 'TOTAL', GP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(GP.createdDT,'%d/%m/%y') AS 'CREATEDDATE' 
+                    FROM  gatepass GP JOIN gatepass_details GD ON GP.gatepassID_1=GD.gpID JOIN mast_location AS ML ON GP.locationID=ML.locationID  
+                    JOIN styleorder AS SO ON GP.orderNoID=SO.id JOIN vendors AS V ON GP.vendorID=V.vendorID JOIN agreements AS AG ON GP.orderAgreement=AG.id 
+                    JOIN users AS U ON GP.createdBy=U.User_ID";
+    $returnAll=mysqli_query($conn,$allQuery);
+    
+    if(isset($_POST['btnAll']))
+        {
+            $returnAll=mysqli_query($conn,$allQuery);
+        }
 
     //------------------ Fetch Buyer Name and Style Nos -------------------
     $sqlQuery1="SELECT * FROM  buyer WHERE status='Active'";
@@ -31,21 +43,20 @@
     $returnDataSet3 = mysqli_query($conn,$sqlQuery3);
     }
 
-    //------------------ Fetch Selected Order to Order Quantity Lable -------------------
-    if(isset($_POST['orderNo']) && $_POST['orderNo'] != "")
+    if(isset($_POST['orderNo']))
     {
         $selectedOrder=$_POST['orderNo'];
-        $sqlQuery4 = "SELECT S.orderQty, P.setPieces, P.vendor FROM styleorder AS S LEFT JOIN order_plan AS P ON S.id = P.orderID WHERE S.id='$selectedOrder'";
-        $result4 = mysqli_query($conn, $sqlQuery4);
-        if($result4 && mysqli_num_rows($result4) > 0){
-            $row4 = mysqli_fetch_assoc($result4);
-            $orderQuantity = $row4['orderQty'];
-            $piecesPerSet = $row4['setPieces'];
-            $subconQty = ($piecesPerSet > 0) ? floor($orderQuantity / $piecesPerSet) : 0;
-            $selectedVendor = $row4['vendor'];
-        }
     }
-	
+
+    if(isset($_POST['btnSearch']) && $selectedOrder!=""){
+        $srchQry=$allQuery." WHERE GP.orderNoID='$selectedOrder'";
+        $returnAll=mysqli_query($conn,$srchQry);
+    }
+    elseif(isset($_POST['btnSearch']) && $selectedOrder=="")
+        {
+            $message = "All gate passes Loaded. *Please select a Order No to search.";
+        }
+
 	$activeUser=$_SESSION['_UserID'];
 
  ?>
@@ -61,7 +72,6 @@
 <body>
     <div class="d-flex justify-content-between mb-3">
         <h4>All Gate Passes</h4>
-        <button type="submit" class="btn btn-primary me-2" name="btnAddVen" onclick="window.location.href='home_page.php?activity=addgatepass'">+ Add New Gate Pass</button> 
     </div>
     <form method="POST">
         <div class="container-fluid">
@@ -81,7 +91,7 @@
                                     ?>
                             </select>
                     </div>
-                    <div class="d-lg-flex mb-3  ">
+                    <div class="d-lg-flex mb-3">
                         <div class="form-group col-md-4 me-3">
                             <label >Style No.</label>
                             <select class="form-select" name="styleNo" id="styleSelect" onchange="this.form.submit()">
@@ -97,7 +107,7 @@
                                     ?>
                             </select>
                         </div>
-                        <div class="form-group col-md-4 me-3">
+                        <div class="form-group col-md-4 me-5">
                             <label >Order No.</label>
                             <select class="form-select" name="orderNo" id="orderSelect" onchange="this.form.submit()">
                                 <option selected hidden></option>
@@ -112,11 +122,16 @@
                                     ?>
                             </select>
                         </div>
+                        <div class="form-group col-md-4 me-3 ms-5">
+                            <br>
+                            <button type="Search" class="btn btn-primary me-2 save_btn" name="btnSearch" id="btnSearch">Search</button>
+                            <button type="All" class="btn btn-primary me-2 save_btn" name="btnAll" id="btnAll" onclick="resetStyleAndOrder()">All</button>
+                        </div> 
                     </div>
         </div>
     </form>
     <div class="table-wrapper">
-        <table class="table1" cellspacing="0">
+        <table class="table1" cellspacing="0" style="min-width:100%">
         	<tr class="text-center">
             	<th>Gate Pass No.</th>
                 <th>Style</th>
@@ -126,23 +141,38 @@
                 <th>Total Qty.</th>
                 <th>Created By</th>
                 <th>Created Date</th>	
+                <th>Status</th>
                 <th>Action</th>			
             </tr>
             <?php
             try{
-			while($result1=mysqli_fetch_assoc($returnDataSet2))
+			while($result1=mysqli_fetch_assoc($returnAll))
 			{
                 ?>
                 <tr>
-                    <td class="text-center"><a href="DashBoard.php?activity=editGatepass&selectedID=<?php echo $result1['gpID1']?>"><?php echo $result1['gpID2']."/".$result1['gpID1']?></a></td>
+                    <td class="text-center"><?php
+                        if($result1['STATUS']=="Pending")
+                            {
+                                ?><a href="home_page.php?activity=editGatepass&selectedID=<?php echo $result1['gpID1']?>"><?php echo $result1['gpID2']?></a><?php
+                            }
+                        else
+                            {
+                                echo $result1['gpID2'];
+                            }
+                    ?></td>
                     <td><?php echo $result1['STYLE']?></td>
-                    <td><?php echo $result1['ORDER']?></td>
+                    <td><?php echo $result1['ORDERNO']?></td>
                     <td><?php echo $result1['GPDATE']?></td>
                     <td><?php echo $result1['VEN']?></td>
-                    <td><?php echo $result1['contactPerson']?></td>
-                    <td><?php echo $result1['email']?></td>
-                    <td class="text-center"><?php echo $result1['dailyCapacity']?></td>
-                    <td class="text-center"><?php echo $result1['status']?></td>      
+                    <td><?php echo $result1['TOTAL']?></td>
+                    <td><?php echo $result1['CREATEDBY']?></td>
+                    <td class="text-center"><?php echo $result1['CREATEDDATE']?></td>
+                    <td class="text-center"><?php echo $result1['STATUS']?></td>
+                    <td class="text-center"><?php 
+                            $selected= $result1['gpID1'];
+                            $url = 'gp_view_page.php?activity=viewgp&Criteria=Gatepass&selectedID= '.$selected;
+                            echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">View</a>';
+                    ?></td> 
                 </tr>
                 <?php
 			}
@@ -152,6 +182,15 @@
             }
 			?>
         </table>
-    </div>    
+    </div> 
+    <div class="container text-center" >
+        <label class="text-danger"><?php echo $message?></label>
+    </div>
+    <script>
+    function resetStyleAndOrder() {
+        document.getElementById('styleSelect').selectedIndex = 0;
+        document.getElementById('orderSelect').innerHTML = '<option selected hidden></option>';
+    }
+</script>
 </body>
 </html>

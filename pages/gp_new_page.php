@@ -115,7 +115,7 @@
         }
     }
     //------------------ Handle Form Submission -------------------
-    if(isset($_POST['btnSubmit'])){
+    if(isset($_POST['btnSave'])){
             $gatepassID2=$userloc."-".date('ymd'); // Example gatepassID_2 generation
             $vendorid = $_POST['vendorid'];
             $orderNo = $_POST['orderNo'];
@@ -133,7 +133,7 @@
             $message = "Please fill in all required fields.";
         } else {
             // Prepare and execute insert query
-
+            echo "ok";
             try {
             
                 $conn->begin_transaction();
@@ -144,13 +144,14 @@
                 $conn->query($sql1);
 
                 $last_id = $conn->insert_id;
-
+                echo "last: ".$last_id;
                 foreach($_SESSION['gp_items'] as $item){
                     $cutNo   = $item['cutNo'];
                     $colorid = (int)$item['colorid'];
                     $sizeid  = (int)$item['sizeid'];
                     $matQty  = (int)$item['matQty'];
 
+                    echo "cut:".$cutNo.",color:".$colorid.",size:".$sizeid.",Qty:";
                     $sql2 = "INSERT INTO gatepass_details (gpID, cutNo, colorID, sizeID, matQty) 
                             VALUES ('$last_id','$cutNo','$colorid','$sizeid','$matQty')";
                     $conn->query($sql2);

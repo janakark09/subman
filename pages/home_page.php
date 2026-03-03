@@ -115,7 +115,7 @@
 							data-bs-toggle="dropdown">
 								<img src="../Resources/images/userIcon.png" alt="" width="32" height="32"
 									class="rounded-circle me-2">
-								<strong>mdo</strong>
+								<strong><?php echo $Usrname?></strong>
 							</a>
 							<ul class="dropdown-menu dropdown-menu-dark text-small shadow">
 								<li><a class="dropdown-item" href="home_page.php?activity=acc"><?php echo $userName?></a></li>
@@ -233,6 +233,9 @@
 											break;
 										case 'newgatepass':
 											include ("gp_new_page.php");
+											break;
+										case 'viewgp':
+											include ("gp_view_page.php");
 											break;
 										//------------------------------------------------
 										case 'users':
