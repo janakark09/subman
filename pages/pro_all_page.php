@@ -70,11 +70,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gatepass</title>
+    <title>Production</title>
 </head>
 <body>
     <div class="d-flex justify-content-between mb-3">
-        <h4>All Gate Passes</h4>
+        <h4>All Production Records</h4>
     </div>
     <form method="POST">
         <div class="container-fluid">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 02, 2026 at 06:54 PM
+-- Generation Time: Mar 03, 2026 at 01:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -112,7 +112,8 @@ CREATE TABLE `gatepass` (
 --
 
 INSERT INTO `gatepass` (`gatepassID_1`, `gatepassID_2`, `locationID`, `orderNoID`, `gatepassDate`, `vendorID`, `orderAgreement`, `status`, `createdDT`, `createdBy`, `approvedBy`, `approvedDT`) VALUES
-(11, '1-260302', 1, 1, '2026-03-04', 102, 2, 'Pending', '2026-03-02 21:59:33', 1001, NULL, NULL);
+(11, '1-260302', 1, 1, '2026-03-04', 102, 2, 'Approved', '2026-03-02 21:59:33', 1001, 1001, '2026-03-03 17:49:00'),
+(12, '1-260303', 1, 1, '2026-02-27', 102, 3, 'Approved', '2026-03-03 15:50:50', 1001, 1001, '2026-03-03 17:46:41');
 
 -- --------------------------------------------------------
 
@@ -135,7 +136,11 @@ CREATE TABLE `gatepass_details` (
 
 INSERT INTO `gatepass_details` (`id`, `gpID`, `cutNo`, `colorID`, `sizeID`, `matQty`) VALUES
 (10, 11, '3', 1, 2, 100),
-(11, 11, '3', 2, 1, 200);
+(11, 11, '3', 2, 1, 200),
+(12, 12, '300', 4, 2, 20),
+(13, 12, '200', 2, 2, 10),
+(14, 12, '200', 2, 2, 10),
+(15, 12, '200', 2, 2, 10);
 
 -- --------------------------------------------------------
 
@@ -445,7 +450,7 @@ CREATE TABLE `user_details` (
 --
 
 INSERT INTO `user_details` (`User_ID`, `Address`, `TelNumber`, `Joined_Date`, `locationID`, `venderID`, `acc1`, `acc2`, `acc3`, `acc4`, `acc5`, `acc6`, `acc7`, `acc8`, `acc9`, `acc10`, `acc11`, `acc12`, `acc13`, `acc14`, `acc15`) VALUES
-(1001, 'Bandaragama', '0778520129', '2026-02-02', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1001, 'Bandaragama', '0778520129', '2026-02-02', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, NULL, NULL, NULL),
 (1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (1003, 'Bandaragama', '0778520129', '2026-02-09', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
@@ -668,13 +673,13 @@ ALTER TABLE `buyer`
 -- AUTO_INCREMENT for table `gatepass`
 --
 ALTER TABLE `gatepass`
-  MODIFY `gatepassID_1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `gatepassID_1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `gatepass_details`
 --
 ALTER TABLE `gatepass_details`
-  MODIFY `id` bigint(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `grn_details`

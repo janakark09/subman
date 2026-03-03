@@ -238,6 +238,16 @@
 											include ("gp_view_page.php");
 											break;
 										//------------------------------------------------
+										case 'proRec':
+											include ("pro_all_page.php");
+											break;
+										case 'proAdd':
+											include ("pro_new_page.php");
+											break;
+										case 'proView':
+											include ("pro_view_page.php");
+											break;
+										//------------------------------------------------
 										case 'users':
 											include ('users_all_page.php');
 											break;

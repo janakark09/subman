@@ -165,10 +165,10 @@
                 <div class="collapse submenu" id="productsMenu">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">All Records</a>
+                            <a href="home_page.php?activity=proRec" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='proRec' ? 'active' : '' ?>">All Records</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Add Record</a>
+                            <a href="home_page.php?activity=proAdd" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='proAdd' ? 'active' : '' ?>">Add Record</a>
                         </li>
                     </ul>
                 </div>
