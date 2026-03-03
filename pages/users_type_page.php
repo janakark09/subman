@@ -12,8 +12,8 @@
         $selectedUType=$_POST['usertype'];
         $isActive=isset($_POST['check']) ? 1 : 0;
 
-        echo $selectedUType;
-        echo $isActive;
+        // echo $selectedUType;
+        // echo $isActive;
         $updateQuery="UPDATE user_type SET status='$isActive' WHERE userType='$selectedUType'";
 
         mysqli_query($conn, $updateQuery);

@@ -214,9 +214,9 @@
                             <select class="form-select" name="subcontractor" id="subcontractorSelect">
                                 <option selected hidden></option>
                                 <?php 
-                                    while($location=mysqli_fetch_assoc(result:$returnDataSet3)){
+                                    while($location1=mysqli_fetch_assoc(result:$returnDataSet3)){
                                 ?>
-                                        <option value="<?php echo $location['vendorID']; ?>"><?php echo $location['vendor']?></option>
+                                        <option value="<?php echo $location1['vendorID']; ?>"><?php echo $location1['vendor']?></option>
                                     <?php
                                     }
                                     ?>

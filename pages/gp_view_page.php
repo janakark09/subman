@@ -21,6 +21,7 @@
     $approvedby=" ";
     $approveddt="";
     $accConfirm=0;
+    $status="";
     
     
     $slectedgpID=$_REQUEST['selectedID'];
@@ -50,6 +51,7 @@
             $total=$rowData['TOTAL'];
             $approvedby=$rowData['APPROVED'];
             $approveddt=$rowData['APPDT'];
+            $status=$rowData['STATUS'];
         }
     
     $detailsQuery="SELECT GD.cutNo AS 'CUT',C.color AS 'COLOR',S.size AS 'SIZE', GD.matQty AS 'QTY' FROM gatepass_details GD 
@@ -242,7 +244,8 @@
                             <div class="row justify-content-center gap-3 mt-5 no-print">
                                 <hr>
                                 <?php
-                                    if($accConfirm==1){
+                                    if($accConfirm==1 && $status!="Approved")
+                                    {
                                     ?>
                                     <input type="submit" class="btn btn-primary save_btn" value="Approve" name="btnApprove" id="btnApprove"/>
                                     <?php

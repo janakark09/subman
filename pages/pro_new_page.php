@@ -4,38 +4,25 @@
     $returnDataSet2 = "";
     $DataSet_color = "";
     $DataSet_size   = "";
-    $selectedBuyer = "";
     $selectedStyle = "";
     $selectedOrder = "";
-    $selectedVendor = "";
+    $activeVendor = "";
     $userloc="";
-    $orderQuantity = 0;
-    $piecesPerSet = 0;
-    $subconQty = 0;
-    $totalqty = 0;
-    $dailyQty = 0;
-    $totaldays = 0;
-    $startingDate = "";
-    $endingDate = "";
+
+    $activeUser=$_SESSION['_UserID'];  
 
     if($_SERVER['REQUEST_METHOD'] == 'GET'){
-    unset($_SESSION['gp_items']);
+    unset($_SESSION['pro_items']);
     }
 
-    //------------------ Fetch Buyer Name and Style Nos -------------------
-    $sqlQuery1="SELECT * FROM  buyer WHERE status='Active'";
-    $returnDataSet1=mysqli_query($conn,$sqlQuery1);
-
-    //------------------ Fetch Selected Buyer -------------------
-    if(isset($_POST['buyerid']))
-    {
-        $selectedBuyer=$_POST['buyerid'];
-    }
+    //------------------ Fetch Location Name -------------------
+    $locationQuery="SELECT * FROM  mast_location WHERE status='Active'";
+    $locationDataSet=mysqli_query($conn,$locationQuery);
     
-    if($selectedBuyer != ""){
-    $sqlQuery2 = "SELECT * FROM styles WHERE status='Active' AND buyerID='$selectedBuyer'";
-    $returnDataSet2 = mysqli_query($conn,$sqlQuery2);
-    }
+    //------------------ Fetch Styles  -------------------
+    $styleQuery = "SELECT * FROM styles WHERE status='Active'";
+    $styleDataSet = mysqli_query($conn,$styleQuery);
+
 
     //------------------ Fetch Selected Style -------------------
     if(isset($_POST['styleNo']))
@@ -43,8 +30,8 @@
         $selectedStyle=$_POST['styleNo'];
     }
     if($selectedStyle != ""){
-    $sqlQuery3 = "SELECT * FROM styleorder WHERE Status='Active' AND styleNo='$selectedStyle'";
-    $returnDataSet3 = mysqli_query($conn,$sqlQuery3);
+    $orderQuery = "SELECT * FROM styleorder WHERE Status='Active' AND styleNo='$selectedStyle'";
+    $orderDataSet = mysqli_query($conn,$orderQuery);
     }
 
     //------------------ Fetch Selected Order to Order Quantity Lable -------------------
@@ -65,18 +52,19 @@
     $vendorsQuery = "SELECT * FROM vendors WHERE status='Active'";
     $dataSetVendors = mysqli_query($conn, $vendorsQuery);
     
-    if(isset($_POST['vendorid']) && $_POST['vendorid'] != "")
-    {
-        $selectedVendor=$_POST['vendorid']; 
+    //------------------ Fetch Vendor ID for Active User -------------------
+    $userQuery = "SELECT venderID FROM user_details WHERE User_ID='$activeUser'";
+    $userResult = mysqli_query($conn, $userQuery);
+    if(mysqli_num_rows($userResult) > 0){
+        $userData = mysqli_fetch_assoc($userResult);
+        $activeVendor = $userData['venderID'];
     }
-
-    $agrQry = "SELECT A.id AS agr_ID, V.vendor AS VEN, SO.orderNo AS ORDERNO FROM agreements A JOIN vendors V ON A.vendorID=V.vendorID JOIN styleorder SO ON SO.id=A.styleOrderID WHERE A.styleOrderID='$selectedOrder' AND A.vendorID='$selectedVendor' AND A.Status='Active'";
-    $agrResult = mysqli_query($conn, $agrQry);
-
     
-    
-    $activeUser=$_SESSION['_UserID'];   
+    // ----------------- Fetch Active Agreements for Selected Order and Vendor --------------------
+    $agrQry = "SELECT A.id AS agr_ID, V.vendor AS VEN, SO.orderNo AS ORDERNO FROM agreements A JOIN vendors V ON A.vendorID=V.vendorID JOIN styleorder SO ON SO.id=A.styleOrderID WHERE A.styleOrderID='$selectedOrder' AND A.vendorID='$activeVendor' AND A.Status='Active'";
+    $agrResult = mysqli_query($conn, $agrQry); 
 
+    //------------------ Fetch Location ID for Active User -------------------
     $locQry = "SELECT locationID FROM user_details WHERE User_ID='$activeUser'";
     $locResult = mysqli_query($conn, $locQry);
 
@@ -85,8 +73,9 @@
         $userloc = $locData['locationID'];
     }
 
-    if(!isset($_SESSION['gp_items'])){
-    $_SESSION['gp_items'] = array();
+    //------------------ Handle Add Item to Session -------------------
+    if(!isset($_SESSION['pro_items'])){
+    $_SESSION['pro_items'] = array();
     }
 
     if(isset($_POST['btnAdd'])){
@@ -94,38 +83,48 @@
         $cutNo   = $_POST['cutno'];
         $colorid = $_POST['colorid'];
         $sizeid  = $_POST['sizeid'];
-        $matQty  = $_POST['matQty'];
+        $finishedQty  = $_POST['proQty'];
+        $fabricDamQty = $_POST['fabricDamQty'];
+        $processDamQty = $_POST['processDamQty'];
+        $sampleQty = $_POST['sampleQty'];
 
-        if(empty($cutNo) || empty($colorid) || empty($sizeid) || empty($matQty)){
+        if(empty($cutNo) || empty($colorid) || empty($sizeid)){
             $message = "Please fill all fields before adding.";
-        } else {
+        } 
+        else {
+            if($finishedQty > 0 || $fabricDamQty > 0 || $processDamQty > 0 || $sampleQty > 0){
+                // Create item array
+                $item = array(
+                    "cutNo"   => $cutNo,
+                    "colorid" => $colorid,
+                    "sizeid"  => $sizeid,
+                    "proQty"  => $finishedQty,
+                    "fabricDamQty" => $fabricDamQty,
+                    "processDamQty" => $processDamQty,
+                    "sampleQty" => $sampleQty
+                );
 
-            // Create item array
-            $item = array(
-                "cutNo"   => $cutNo,
-                "colorid" => $colorid,
-                "sizeid"  => $sizeid,
-                "matQty"  => $matQty
-            );
+                // Push into session array
+                $_SESSION['pro_items'][] = $item;
 
-            // Push into session array
-            $_SESSION['gp_items'][] = $item;
-
-            $message = "Item added successfully!";
+                $message = "Item added successfully!";
+            } 
+            else {
+                $message = "At least one of the quantity fields must be greater than zero.";
+                return;
+            }
         }
     }
     //------------------ Handle Form Submission -------------------
     if(isset($_POST['btnSave'])){
-            $gatepassID2=$userloc."-".date('ymd'); // Example gatepassID_2 generation
-            $vendorid = $_POST['vendorid'];
+            $gpRef=$_POST['refno'];
             $orderNo = $_POST['orderNo'];
-            $gpDate=$_POST['gatepassDate'];
-            $agrID = $_POST['agrtid'];            
-            $status = "Pending";       
-            $cutNo = $_POST['cutno'];
-            $colorid = $_POST['colorid'];
-            $sizeid = $_POST['sizeid'];
-            $matQty = $_POST['matQty']; 
+            $gpDate=$_POST['finishingDate'];
+            $locid= $_POST['locationid'];
+            $vendorid = $activeVendor; // Assuming vendor is determined by active user
+            $agrID = $_POST['agrtid'];
+            $remark = $_POST['remark'];            
+            $status = "Pending";
             
             //echo "gatepassID2: ".$gatepassID2."vendorid: ".$vendorid."orderNo: ".$orderNo."gpDate: ".$gpDate."agrID: ".$agrID."status: ".$status."cutNo: ".$cutNo."colorid: ".$colorid."sizeid: ".$sizeid;
         // Validate required fields
@@ -133,34 +132,36 @@
             $message = "Please fill in all required fields.";
         } else {
             // Prepare and execute insert query
-            echo "ok";
+            //echo "ok";
             try {
             
                 $conn->begin_transaction();
 
-                $sql1 = "INSERT INTO gatepass (gatepassID_2,locationID, orderNoID, gatepassDate, vendorID, orderAgreement, status, createdDT, createdBy) 
-                VALUES ('$gatepassID2','$userloc', '$orderNo', '$gpDate', '$vendorid', '$agrID', '$status', NOW(), '$activeUser')";
+                $sql1 = "INSERT INTO sub_production (gatepassRefID, orderNoID, gatepassDate, locationID, vendorID, orderAgreement, comments, status, createdBy)
+                VALUES ('$gpRef', '$orderNo', '$gpDate', '$locid', '$vendorid', '$agrID', '$remark', '$status', '$activeUser')";
 
                 $conn->query($sql1);
 
                 $last_id = $conn->insert_id;
-                echo "last: ".$last_id;
-                foreach($_SESSION['gp_items'] as $item){
+                //echo "last: ".$last_id;
+                foreach($_SESSION['pro_items'] as $item){
                     $cutNo   = $item['cutNo'];
                     $colorid = (int)$item['colorid'];
                     $sizeid  = (int)$item['sizeid'];
-                    $matQty  = (int)$item['matQty'];
+                    $finishedQty  = (int)$item['proQty'];
+                    $fabricDamQty = (int)$item['fabricDamQty'];
+                    $processDamQty = (int)$item['processDamQty'];
+                    $sampleQty = (int)$item['sampleQty'];
 
-                    echo "cut:".$cutNo.",color:".$colorid.",size:".$sizeid.",Qty:";
-                    $sql2 = "INSERT INTO gatepass_details (gpID, cutNo, colorID, sizeID, matQty) 
-                            VALUES ('$last_id','$cutNo','$colorid','$sizeid','$matQty')";
+                    $sql2 = "INSERT INTO sub_pro_details (recID, cutNo, colorID, sizeID, finishedQty, fabDamQty, processDamQty, sampleQty) 
+                            VALUES ('$last_id','$cutNo','$colorid','$sizeid','$finishedQty','$fabricDamQty','$processDamQty','$sampleQty')";
                     $conn->query($sql2);
                 }
 
                 $conn->commit();
-                unset($_SESSION['gp_items']);
+                unset($_SESSION['pro_items']);
                 echo "<script>
-                    setTimeout(function(){window.location.href = 'home_page.php?activity=gatepass';}, 1000);
+                    setTimeout(function(){window.location.href = 'home_page.php?activity=proRec';}, 1000);
                 </script>";
                 exit();
             }
@@ -188,34 +189,32 @@
                 <form method="POST">
                     <!---------------------------------- Buyer Style Order Section -------------------------------------- -->
                     <div class="form-group col-md-4 me-3">
-                            <label >Buyer</label>
-                            <select class="form-select" name="buyerid" id="buyerSelect" onchange="resetStyleAndOrder(); this.form.submit()"  >
+                            <label >Location</label>
+                            <select class="form-select" name="locationid" id="locSelect" onchange="resetStyleAndOrder(); this.form.submit()"  >
                                 <option selected hidden></option>
                                 <?php 
-                                    while($buyer=mysqli_fetch_assoc($returnDataSet1)){
+                                    while($location=mysqli_fetch_assoc($locationDataSet)){
                                         ?>
-                                        <option value="<?php echo $buyer['buyerID']; ?>" 
-                                        <?php if(isset($_POST['buyerid']) && $_POST['buyerid']==$buyer['buyerID']) echo "selected"; ?>>
-                                        <?php echo $buyer['buyerName']?></option>
+                                        <option value="<?php echo $location['locationID']; ?>" 
+                                        <?php if(isset($_POST['locationid']) && $_POST['locationid']==$location['locationID']) echo "selected"; ?>>
+                                        <?php echo $location['location']?></option>
                                     <?php
                                     }
                                     ?>
                             </select>
                     </div>
-                    <!-- ---------------------------------------------------------------------------------------- -->
+                    <!-- ------------------------------------------------------------------ -->
                     <div class="d-lg-flex mb-3  ">
                         <div class="form-group col-md-4 me-3">
                             <label >Style No.</label>
                             <select class="form-select" name="styleNo" id="styleSelect" onchange="this.form.submit()">
                                 <option selected hidden></option>
                                 <?php 
-                                    if($selectedBuyer != ""){
-                                        while($styleno=mysqli_fetch_assoc($returnDataSet2)){
-                                            ?>
-                                            <option value="<?php echo $styleno['styleNo']; ?>" <?php if(isset($_POST['styleNo']) && $_POST['styleNo']==$styleno['styleNo']) echo "selected"; ?>><?php echo $styleno['styleNo']?></option>
-                                        <?php
-                                        }
-                                    }
+                                    while($styleno=mysqli_fetch_assoc($styleDataSet)){
+                                                ?>
+                                                <option value="<?php echo $styleno['styleNo']; ?>" <?php if(isset($_POST['styleNo']) && $_POST['styleNo']==$styleno['styleNo']) echo "selected"; ?>><?php echo $styleno['styleNo']?></option>
+                                            <?php
+                                            }   
                                     ?>
                             </select>
                         </div>
@@ -225,7 +224,7 @@
                                 <option selected hidden></option>
                                 <?php 
                                     if($selectedStyle != ""){
-                                        while($orderno=mysqli_fetch_assoc($returnDataSet3)){
+                                        while($orderno=mysqli_fetch_assoc($orderDataSet)){
                                             ?>
                                             <option value="<?php echo $orderno['id']?>" <?php if(isset($_POST['orderNo']) && $_POST['orderNo']==$orderno['id']) echo "selected"; ?>><?php echo $orderno['orderNo']?></option>
                                         <?php
@@ -235,30 +234,19 @@
                             </select>
                         </div>
                     </div>
-                    <!-- ---------------------------------------------------------------------------------------- -->
-                    <div class="form-group col-lg-2">
-                            <label>Gatepass Date</label>
-                            <input type="date" class="form-control" id="gatepassDate" required name="gatepassDate" onchange="calculateEndingDate();"
-                            value="<?php echo isset($_POST['gatepassDate']) ? $_POST['gatepassDate']: '';?>">
-                    </div>
-                    <!-- ---------------------------------------------------------------------------------------- -->
-
-                    <!-- Have to load agreemtn no when select vendor -->
-                    <div class="d-lg-flex mb-3  mt-2">
-                        <div class="form-group col-md-4 me-3 mt-1">
-                            <label >Sub Contractor</label>
-                            <select class="form-select" name="vendorid" id="vendorSelect" onchange="this.form.submit()"  >
-                                <option selected hidden></option>
-                                <?php 
-                                    while($vendor=mysqli_fetch_assoc($dataSetVendors)){
-                                        ?>
-                                        <option value="<?php echo $vendor['vendorID']; ?>" <?php if(isset($_POST['vendorid']) && $_POST['vendorid']==$vendor['vendorID']) echo "selected"; ?>>
-                                            <?php echo $vendor['vendor']?></option>
-                                    <?php
-                                    }
-                                    ?>
-                            </select>
+                    <!-- ------------------------------------------------------------------ -->
+                     <div class="d-lg-flex mb-3 gap-3" >
+                        <div class="form-group col-lg-2">
+                            <label>Finishing Date</label>
+                            <input type="date" class="form-control" id="finishingDate" required name="finishingDate" 
+                            value="<?php echo isset($_POST['finishingDate']) ? $_POST['finishingDate']: '';?>">
                         </div>
+                        <div class="form-group mb-1 col-3">
+                                <label for="refno">Gatepass Reference No.</label>
+                                <input type="text" class="form-control" id="refno" name="refno">
+                            </div>
+                     </div>
+                    <!-- ------------------------------------------------------------------ -->
                         <div class="form-group col-md-4 me-3 mt-1">
                             <label >Order Agreement No.</label>
                             <select class="form-select" name="agrtid" id="agrSelect">
@@ -268,17 +256,21 @@
                                         while($agreement=mysqli_fetch_assoc($agrResult)){
                                             ?>
                                             <option value="<?php echo $agreement['agr_ID']; ?>" <?php if(isset($_POST['agrtid']) && $_POST['agrtid']==$agreement['agr_ID']) echo "selected";?>>
-                                            <?php echo "GP ID: ".$agreement['agr_ID']."-".$agreement['VEN']." (".$agreement['ORDERNO'].")"?></option>
+                                            <?php echo "Agr. ID: ".$agreement['agr_ID']." (".$agreement['VEN']." - ".$agreement['ORDERNO'].")"?></option>
                                         <?php
                                         }
                                     }
-                                    
                                     ?>
                             </select>
                         </div>
-                    </div>
-                     <!-- --------------------------------------------------------------------------------------------------------------------- -->
-                    <div class="rounded container-fluid p-3 mb-3" style="background-color: lightgrey; min-height: 10em;">
+
+                        <div class="form-group mb-1 col">
+                                <label for="remark">Remarks</label>
+                                <input type="text" class="form-control" id="remark" name="remark">
+                        </div>
+
+                     <!-- ---------------------------------- Colors Sizes and Quantity Section -------------------------------- -->
+                    <div class="rounded container-fluid p-3 mb-3 mt-4" style="background-color: lightgrey; min-height: 10em;">
                         
                         <div class="d-lg-flex mb-1 gap-3">
                             <div class="form-group col-md-6 me-3 mt-1">
@@ -308,22 +300,37 @@
                                 </select>
                             </div>
                         </div>
-<!-- --------------------------------------------------------------------------------------------------------------------- -->
+                        <!-- ------------------------------------------------------------------ -->
                         <div class="d-lg-flex mb-1 gap-3">
                             <div class="form-group mb-1 col-3">
                                 <label for="cutno">Cut No</label>
                                 <input type="text" class="form-control" id="cutno" name="cutno">
                             </div>
                             <div class="form-group mb-1 col-3 ">
-                                <label for="matQty">Meterial Sets Quantity</label>
-                                <input type="number" class="form-control" id="matQty" name="matQty" value="0">
+                                <label for="proQty">Production Qty.(Without Damages and Samples)</label>
+                                <input type="number" class="form-control" id="proQty" name="proQty" value="0">
                             </div>
                         </div>
-                                              
+                        <!-- ------------------------------------------------------------------ -->
+                        <div class="d-lg-flex mb-1 gap-3">
+                            <div class="form-group mb-1 col-3">
+                                <label for="fabDamdQty">Fabric Damaged Qty.</label>
+                                <input type="number" class="form-control" id="fabDamdQty" name="fabricDamQty" value="0">
+                            </div>
+                            <div class="form-group mb-1 col-3 ">
+                                <label for="processDamdQty">Process Damaged Qty.</label>
+                                <input type="number" class="form-control" id="processDamdQty" name="processDamQty" value="0">
+                            </div>
+                            <div class="form-group mb-1 col-3 ">
+                                <label for="sampleQty">Sample Qty.</label>
+                                <input type="number" class="form-control" id="sampleQty" name="sampleQty" value="0">
+                            </div>
+                        </div>                
 
+                        <!-- ------------------------------------------------------------------ -->
                         <div class="d-lg-flex justify-content-center mb-1 mt-3 gap-2">
                             <input type="submit" value="Add" class="btn btn-primary me-2 save_btn" name="btnAdd"/>
-                            <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=newgatepass'"/>
+                            <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=proAdd'"/>
                         </div>
                     </div>
                     <!-- --------------------------------------------------------------------------------------------------------------------- -->
@@ -335,18 +342,21 @@
                     </div>
 
                     <div class="table-wrapper  mb-5">
-                        <table class="table1" cellspacing="0" style="min-width:100%;">
+                        <table class="table1 text-center" cellspacing="0" style="min-width:100%;">
                             <tr class="text-center">
                                 <th>No.</th>
                                 <th>Cut No.</th>
                                 <th>Color</th>
                                 <th>Size</th>
-                                <th>Mat. Qty.</th>		
+                                <th>Production Qty.</th>
+                                <th>Fabric Damaged Qty.</th>
+                                <th>Process Damaged Qty.</th>
+                                <th>Sample Qty.</th>
                             </tr>
                             <?php
-                                if(!empty($_SESSION['gp_items'])){
+                                if(!empty($_SESSION['pro_items'])){
                                     $no = 1;
-                                    foreach($_SESSION['gp_items'] as $row){
+                                    foreach($_SESSION['pro_items'] as $row){
                                 ?>
                                 <tr>
                                     <td><?php echo $no++; ?></td>
@@ -361,7 +371,10 @@
                                     echo $colorName; 
                                      ?></td>
                                     <td><?php echo $sizeName; ?></td>
-                                    <td><?php echo $row['matQty']; ?></td>
+                                    <td><?php echo $row['proQty']; ?></td>
+                                    <td><?php echo $row['fabricDamQty']; ?></td>
+                                    <td><?php echo $row['processDamQty']; ?></td>
+                                    <td><?php echo $row['sampleQty']; ?></td>
                                 </tr>
                                 <?php
                                     }
@@ -371,7 +384,7 @@
                     </div> 
                     <div class="d-lg-flex justify-content-center mb-5 mt-3 gap-2">
                         <input type="submit" value="Save" class="btn btn-primary me-2 save_btn" name="btnSave"/>
-                        <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=newgatepass'"/>
+                        <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=proAdd'"/>
                     </div>
                 </form>
             </div> 

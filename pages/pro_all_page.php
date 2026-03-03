@@ -7,12 +7,15 @@
     $message="";
     $allQuery="";
 
-    $allQuery="SELECT GP.gatepassID_1 AS 'gpID1', CONCAT(GP.gatepassID_1,'/', GP.gatepassID_2) AS 'gpID2',GP.gatepassDate AS 'GPDATE',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', ML.location AS 'LOC',
-         V.vendor AS 'VEN',GP.orderAgreement AS 'AGREEMENT',SUM(GD.matQty) AS 'TOTAL', GP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(GP.createdDT,'%d/%m/%y') AS 'CREATEDDATE' 
-                    FROM  gatepass GP JOIN gatepass_details GD ON GP.gatepassID_1=GD.gpID JOIN mast_location AS ML ON GP.locationID=ML.locationID  
-                    JOIN styleorder AS SO ON GP.orderNoID=SO.id JOIN vendors AS V ON GP.vendorID=V.vendorID JOIN agreements AS AG ON GP.orderAgreement=AG.id 
-                    JOIN users AS U ON GP.createdBy=U.User_ID ";
-    $orderby="GROUP BY GD.gpID ORDER BY GP.gatepassID_1 DESC";
+    $allQuery="SELECT SP.recordID AS 'recID',Sp.gatepassRefID AS 'REF', SP.gatepassDate AS 'GPDATE', SO.styleNo AS 'STYLE', SO.orderNo AS 'ORDERNO', ML.location AS 'LOC',
+         V.vendor AS 'VEN',SP.orderAgreement AS 'AGREEMENT',SUM(PD.finishedQty) AS 'FINQTY',(SUM(PD.fabDamQty)+SUM(PD.processDamQty)) AS 'DAMQTY',SUM(PD.sampleQty) AS 'SMQTY', SP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(SP.cratedDT,'%d/%m/%y') AS 'CREATEDDATE' 
+                    FROM  sub_production SP JOIN sub_pro_details PD ON SP.recordID=PD.recID 
+                    JOIN mast_location AS ML ON SP.locationID=ML.locationID  
+                    JOIN styleorder AS SO ON SP.orderNoID=SO.id 
+                    JOIN vendors AS V ON SP.vendorID=V.vendorID 
+                    JOIN agreements AS AG ON SP.orderAgreement=AG.id 
+                    JOIN users AS U ON SP.createdBy=U.User_ID ";
+    $orderby="GROUP BY PD.recID ORDER BY SP.recordID DESC";
 
     $returnAll=mysqli_query($conn,$allQuery.$orderby);
     
@@ -52,12 +55,12 @@
 
     if(isset($_POST['btnSearch']) && $selectedOrder!=""){
         //echo $selectedOrder;
-        $srchQry=$allQuery." WHERE GP.orderNoID='$selectedOrder' ".$orderby;
+        $srchQry=$allQuery." WHERE SP.orderNoID='$selectedOrder' ".$orderby;
         $returnAll=mysqli_query($conn,$srchQry);
     }
     elseif(isset($_POST['btnSearch']) && $selectedOrder=="")
         {
-            $message = "All gate passes Loaded. *Please select a Order No to search.";
+            $message = "All production records Loaded. *Please select a Order No to search.";
         }
 
 	$activeUser=$_SESSION['_UserID'];
@@ -134,16 +137,18 @@
         </div>
     </form>
     <div class="table-wrapper">
-        <table class="table1" cellspacing="0" style="min-width:100%">
-        	<tr class="text-center">
+        <table class="table1 text-center" cellspacing="0" style="min-width: 100%;">
+        	<tr class="table-header">
             	<th>Gate Pass No.</th>
                 <th>Style</th>
                 <th>Order No.</th>
                 <th>Date</th>
                 <th>Vendor</th>
-                <th>Total Qty.</th>
-                <th>Created By</th>
-                <th>Created Date</th>	
+                <th>Finished Qty.</th>
+                <th>Total Damages</th>
+                <th>Total Samples</th>
+                <th>Entered By</th>
+                <th>Entered Date</th>	
                 <th>Status</th>
                 <th>Action</th>			
             </tr>
@@ -153,27 +158,20 @@
                 {
                     ?>
                     <tr>
-                        <td class="text-center"><?php
-                            if($result1['STATUS']=="Pending")
-                                {
-                                    ?><a href="home_page.php?activity=editGatepass&selectedID=<?php echo $result1['gpID1']?>"><?php echo $result1['gpID2']?></a><?php
-                                }
-                            else
-                                {
-                                    echo $result1['gpID2'];
-                                }
-                        ?></td>
+                        <td class="text-center"><?php echo $result1['recID']?></td>
                         <td><?php echo $result1['STYLE']?></td>
                         <td><?php echo $result1['ORDERNO']?></td>
                         <td><?php echo $result1['GPDATE']?></td>
                         <td><?php echo $result1['VEN']?></td>
-                        <td><?php echo $result1['TOTAL']?></td>
+                        <td><?php echo $result1['FINQTY']?></td>
+                        <td><?php echo $result1['DAMQTY']?></td>
+                        <td><?php echo $result1['SMQTY']?></td>
                         <td><?php echo $result1['CREATEDBY']?></td>
                         <td class="text-center"><?php echo $result1['CREATEDDATE']?></td>
                         <td class="text-center"><?php echo $result1['STATUS']?></td>
                         <td class="text-center"><?php 
-                                $selected= $result1['gpID1'];
-                                $url = 'gp_view_page.php?activity=viewgp&Criteria=Gatepass&selectedID= '.$selected;
+                                $selected= $result1['recID'];
+                                $url = 'pro_view_page.php?activity=proView&Criteria=Production&selectedID= '.$selected;
                                 echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">View</a>';
                         ?></td> 
                     </tr>

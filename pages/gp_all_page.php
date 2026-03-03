@@ -153,16 +153,7 @@
                 {
                     ?>
                     <tr>
-                        <td class="text-center"><?php
-                            if($result1['STATUS']=="Pending")
-                                {
-                                    ?><a href="home_page.php?activity=editGatepass&selectedID=<?php echo $result1['gpID1']?>"><?php echo $result1['gpID2']?></a><?php
-                                }
-                            else
-                                {
-                                    echo $result1['gpID2'];
-                                }
-                        ?></td>
+                        <td class="text-center"><?php echo $result1['gpID2']?></td>
                         <td><?php echo $result1['STYLE']?></td>
                         <td><?php echo $result1['ORDERNO']?></td>
                         <td><?php echo $result1['GPDATE']?></td>

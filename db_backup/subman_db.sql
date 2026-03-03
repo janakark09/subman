@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 03, 2026 at 01:20 PM
+-- Generation Time: Mar 03, 2026 at 06:53 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -112,7 +112,7 @@ CREATE TABLE `gatepass` (
 --
 
 INSERT INTO `gatepass` (`gatepassID_1`, `gatepassID_2`, `locationID`, `orderNoID`, `gatepassDate`, `vendorID`, `orderAgreement`, `status`, `createdDT`, `createdBy`, `approvedBy`, `approvedDT`) VALUES
-(11, '1-260302', 1, 1, '2026-03-04', 102, 2, 'Approved', '2026-03-02 21:59:33', 1001, 1001, '2026-03-03 17:49:00'),
+(11, '1-260302', 1, 1, '2026-03-04', 102, 2, 'Approved', '2026-03-02 21:59:33', 1001, 1001, '2026-03-03 20:26:30'),
 (12, '1-260303', 1, 1, '2026-02-27', 102, 3, 'Approved', '2026-03-03 15:50:50', 1001, 1001, '2026-03-03 17:46:41');
 
 -- --------------------------------------------------------
@@ -370,23 +370,51 @@ CREATE TABLE `sub_production` (
   `locationID` int(32) NOT NULL,
   `vendorID` int(32) NOT NULL,
   `orderAgreement` int(32) NOT NULL,
-  `cutNo` varchar(50) NOT NULL,
-  `color` int(32) NOT NULL,
-  `size` int(32) NOT NULL,
-  `finishedQty` double NOT NULL,
-  `fabDamQty` double DEFAULT NULL,
-  `emdDamQty` double NOT NULL,
-  `sampleQty` double NOT NULL,
-  `comments` varchar(250) NOT NULL,
+  `comments` varchar(250) DEFAULT NULL,
   `status` varchar(20) NOT NULL,
   `cratedDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL,
-  `recFnishedQty` double NOT NULL,
-  `recDamQty` double NOT NULL,
-  `recSampleQty` double NOT NULL,
-  `grnCode1` int(32) NOT NULL,
-  `grnCode2` varchar(10) NOT NULL
+  `grnCode1` int(32) DEFAULT NULL,
+  `grnCode2` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sub_production`
+--
+
+INSERT INTO `sub_production` (`recordID`, `gatepassRefID`, `orderNoID`, `gatepassDate`, `locationID`, `vendorID`, `orderAgreement`, `comments`, `status`, `cratedDT`, `createdBy`, `grnCode1`, `grnCode2`) VALUES
+(2, '365665', 1, '2026-03-12', 2, 102, 2, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Pending', '2026-03-03 22:54:27', 1002, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sub_pro_details`
+--
+
+CREATE TABLE `sub_pro_details` (
+  `id` int(32) NOT NULL,
+  `recID` int(32) NOT NULL,
+  `cutNo` varchar(50) NOT NULL,
+  `colorID` int(32) NOT NULL,
+  `sizeID` int(32) NOT NULL,
+  `finishedQty` double DEFAULT NULL,
+  `fabDamQty` double DEFAULT NULL,
+  `processDamQty` double DEFAULT NULL,
+  `sampleQty` double DEFAULT NULL,
+  `recFnishedQty` double DEFAULT NULL,
+  `recDamQty` double DEFAULT NULL,
+  `recSampleQty` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sub_pro_details`
+--
+
+INSERT INTO `sub_pro_details` (`id`, `recID`, `cutNo`, `colorID`, `sizeID`, `finishedQty`, `fabDamQty`, `processDamQty`, `sampleQty`, `recFnishedQty`, `recDamQty`, `recSampleQty`) VALUES
+(1, 2, '3', 1, 1, 100, 10, 3, 3, NULL, NULL, NULL),
+(2, 2, '3', 1, 1, 100, 10, 3, 3, NULL, NULL, NULL),
+(3, 2, '3', 1, 1, 100, 10, 3, 3, NULL, NULL, NULL),
+(4, 2, '3', 1, 1, 100, 10, 3, 3, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -412,8 +440,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`User_ID`, `Name`, `Email`, `Fname`, `Lname`, `fullName`, `User_Type`, `Password`, `Member_Status`) VALUES
 (1001, 'admin', 'it@originalapparel.lk', 'System', 'Admin', 'System Admin', 'administrator', '202cb962ac59075b964b07152d234b70', 'Active'),
-(1002, 'janakar', 'janakark09@gmail.com', 'A.D.', 'Kumara', 'A.D. Janaka Ruwan Kumara', 'administrator', '202cb962ac59075b964b07152d234b70', 'Active'),
-(1003, 'testuser', 'test@originalapparel.lk', 'Test', 'User', 'Test User', 'Employee', '202cb962ac59075b964b07152d234b70', 'Active');
+(1002, 'janakar', 'janakark09@gmail.com', 'A.D.', 'Kumara', 'A.D. Janaka Ruwan Kumara', 'Subcontractor', '202cb962ac59075b964b07152d234b70', 'Active'),
+(1003, 'testuser', 'test@originalapparel.lk', 'Test', 'User', 'Test User', 'Employee', '202cb962ac59075b964b07152d234b70', 'Active'),
+(1004, 'nimals', 'sdfsdfs@dsfsdf.lk', 'Nimal', 'Shantha', 'Numal Shantha', 'Subcontractor', '202cb962ac59075b964b07152d234b70', 'Active');
 
 -- --------------------------------------------------------
 
@@ -451,8 +480,9 @@ CREATE TABLE `user_details` (
 
 INSERT INTO `user_details` (`User_ID`, `Address`, `TelNumber`, `Joined_Date`, `locationID`, `venderID`, `acc1`, `acc2`, `acc3`, `acc4`, `acc5`, `acc6`, `acc7`, `acc8`, `acc9`, `acc10`, `acc11`, `acc12`, `acc13`, `acc14`, `acc15`) VALUES
 (1001, 'Bandaragama', '0778520129', '2026-02-02', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, NULL, NULL, NULL),
-(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(1003, 'Bandaragama', '0778520129', '2026-02-09', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 0, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1003, 'Bandaragama', '0778520129', '2026-02-09', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1004, 'dsf dsf sdf sdf', '354356356', '2026-03-03', 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -471,7 +501,8 @@ CREATE TABLE `user_type` (
 
 INSERT INTO `user_type` (`userType`, `status`) VALUES
 ('administrator', 1),
-('Employee', 1);
+('Employee', 1),
+('Subcontractor', 1);
 
 -- --------------------------------------------------------
 
@@ -620,10 +651,17 @@ ALTER TABLE `sub_production`
   ADD KEY `FK_Pro_Loc` (`locationID`),
   ADD KEY `FK_Pro_Vendor` (`vendorID`),
   ADD KEY `FK_Pro_Agree` (`orderAgreement`),
-  ADD KEY `FK_Pro_Color` (`color`),
-  ADD KEY `FK_Pro_Size` (`size`),
   ADD KEY `FK_Pro_Create` (`createdBy`),
   ADD KEY `FK_Pro_Grn` (`grnCode1`);
+
+--
+-- Indexes for table `sub_pro_details`
+--
+ALTER TABLE `sub_pro_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_Prodtl_Prorec` (`recID`),
+  ADD KEY `FK_Prodtl_color` (`colorID`),
+  ADD KEY `FK_Prodtl_size` (`sizeID`);
 
 --
 -- Indexes for table `users`
@@ -727,13 +765,19 @@ ALTER TABLE `style_sizes`
 -- AUTO_INCREMENT for table `sub_production`
 --
 ALTER TABLE `sub_production`
-  MODIFY `recordID` int(32) NOT NULL AUTO_INCREMENT;
+  MODIFY `recordID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `sub_pro_details`
+--
+ALTER TABLE `sub_pro_details`
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `User_ID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1004;
+  MODIFY `User_ID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1005;
 
 --
 -- AUTO_INCREMENT for table `vendors`
@@ -831,13 +875,19 @@ ALTER TABLE `style_sizes`
 --
 ALTER TABLE `sub_production`
   ADD CONSTRAINT `FK_Pro_Agree` FOREIGN KEY (`orderAgreement`) REFERENCES `agreements` (`id`),
-  ADD CONSTRAINT `FK_Pro_Color` FOREIGN KEY (`color`) REFERENCES `style_colors` (`colorID`),
   ADD CONSTRAINT `FK_Pro_Create` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Pro_Grn` FOREIGN KEY (`grnCode1`) REFERENCES `grn_details` (`grnCode1`),
   ADD CONSTRAINT `FK_Pro_Loc` FOREIGN KEY (`locationID`) REFERENCES `mast_location` (`locationID`),
   ADD CONSTRAINT `FK_Pro_OrderNo` FOREIGN KEY (`orderNoID`) REFERENCES `styleorder` (`id`),
-  ADD CONSTRAINT `FK_Pro_Size` FOREIGN KEY (`size`) REFERENCES `style_sizes` (`sizeID`),
   ADD CONSTRAINT `FK_Pro_Vendor` FOREIGN KEY (`vendorID`) REFERENCES `vendors` (`vendorID`);
+
+--
+-- Constraints for table `sub_pro_details`
+--
+ALTER TABLE `sub_pro_details`
+  ADD CONSTRAINT `FK_Prodtl_Prorec` FOREIGN KEY (`recID`) REFERENCES `sub_production` (`recordID`),
+  ADD CONSTRAINT `FK_Prodtl_color` FOREIGN KEY (`colorID`) REFERENCES `style_colors` (`colorID`),
+  ADD CONSTRAINT `FK_Prodtl_size` FOREIGN KEY (`sizeID`) REFERENCES `style_sizes` (`sizeID`);
 
 --
 -- Constraints for table `users`

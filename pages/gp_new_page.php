@@ -9,14 +9,6 @@
     $selectedOrder = "";
     $selectedVendor = "";
     $userloc="";
-    $orderQuantity = 0;
-    $piecesPerSet = 0;
-    $subconQty = 0;
-    $totalqty = 0;
-    $dailyQty = 0;
-    $totaldays = 0;
-    $startingDate = "";
-    $endingDate = "";
 
     if($_SERVER['REQUEST_METHOD'] == 'GET'){
     unset($_SESSION['gp_items']);
@@ -122,10 +114,10 @@
             $gpDate=$_POST['gatepassDate'];
             $agrID = $_POST['agrtid'];            
             $status = "Pending";       
-            $cutNo = $_POST['cutno'];
-            $colorid = $_POST['colorid'];
-            $sizeid = $_POST['sizeid'];
-            $matQty = $_POST['matQty']; 
+            // $cutNo = $_POST['cutno'];
+            // $colorid = $_POST['colorid'];
+            // $sizeid = $_POST['sizeid'];
+            // $matQty = $_POST['matQty']; 
             
             //echo "gatepassID2: ".$gatepassID2."vendorid: ".$vendorid."orderNo: ".$orderNo."gpDate: ".$gpDate."agrID: ".$agrID."status: ".$status."cutNo: ".$cutNo."colorid: ".$colorid."sizeid: ".$sizeid;
         // Validate required fields
@@ -133,7 +125,6 @@
             $message = "Please fill in all required fields.";
         } else {
             // Prepare and execute insert query
-            echo "ok";
             try {
             
                 $conn->begin_transaction();
@@ -144,14 +135,13 @@
                 $conn->query($sql1);
 
                 $last_id = $conn->insert_id;
-                echo "last: ".$last_id;
                 foreach($_SESSION['gp_items'] as $item){
                     $cutNo   = $item['cutNo'];
                     $colorid = (int)$item['colorid'];
                     $sizeid  = (int)$item['sizeid'];
                     $matQty  = (int)$item['matQty'];
 
-                    echo "cut:".$cutNo.",color:".$colorid.",size:".$sizeid.",Qty:";
+                    //echo "cut:".$cutNo.",color:".$colorid.",size:".$sizeid.",Qty:";
                     $sql2 = "INSERT INTO gatepass_details (gpID, cutNo, colorID, sizeID, matQty) 
                             VALUES ('$last_id','$cutNo','$colorid','$sizeid','$matQty')";
                     $conn->query($sql2);
@@ -268,7 +258,7 @@
                                         while($agreement=mysqli_fetch_assoc($agrResult)){
                                             ?>
                                             <option value="<?php echo $agreement['agr_ID']; ?>" <?php if(isset($_POST['agrtid']) && $_POST['agrtid']==$agreement['agr_ID']) echo "selected";?>>
-                                            <?php echo "GP ID: ".$agreement['agr_ID']."-".$agreement['VEN']." (".$agreement['ORDERNO'].")"?></option>
+                                            <?php echo "Ag. ID: ".$agreement['agr_ID']."-".$agreement['VEN']." (".$agreement['ORDERNO'].")"?></option>
                                         <?php
                                         }
                                     }
