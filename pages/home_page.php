@@ -248,6 +248,16 @@
 											include ("pro_view_page.php");
 											break;
 										//------------------------------------------------
+										case 'grnAll':
+											include ("grn_all_page.php");
+											break;
+										case 'grnUpdate':
+											include ("grn_add_page.php");
+											break;
+										case 'payments':
+											include ("payments_page.php");
+											break;
+										//------------------------------------------------
 										case 'users':
 											include ('users_all_page.php');
 											break;

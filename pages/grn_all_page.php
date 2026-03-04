@@ -8,10 +8,14 @@
     $allQuery="";
 
     $allQuery="SELECT SP.recordID AS 'recID',Sp.gatepassRefID AS 'REF', SP.gatepassDate AS 'GPDATE', SO.styleNo AS 'STYLE', SO.orderNo AS 'ORDERNO', ML.location AS 'LOC',
-         V.vendor AS 'VEN',SP.orderAgreement AS 'AGREEMENT',SUM(PD.finishedQty) AS 'FINQTY',(SUM(PD.fabDamQty)+SUM(PD.processDamQty)) AS 'DAMQTY',SUM(PD.sampleQty) AS 'SMQTY', SP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(SP.cratedDT,'%d/%m/%y') AS 'CREATEDDATE' 
+         V.vendor AS 'VEN',SP.orderAgreement AS 'AGREEMENT',SUM(PD.finishedQty) AS 'FINQTY',(SUM(PD.fabDamQty)+SUM(PD.processDamQty)) AS 'DAMQTY',SUM(PD.sampleQty) AS 'SMQTY', 
+         SUM(PD.recFnishedQty) AS 'RECFINQTY',SUM(PD.recDamQty) AS 'RECDAMQTY',SUM(PD.recSampleQty) AS 'RECSMQTY',
+         SP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(SP.cratedDT,'%d/%m/%y') AS 'CREATEDDATE' 
                     FROM  sub_production SP JOIN sub_pro_details PD ON SP.recordID=PD.recID 
-                    JOIN mast_location AS ML ON SP.locationID=ML.locationID JOIN styleorder AS SO ON SP.orderNoID=SO.id JOIN vendors AS V ON SP.vendorID=V.vendorID 
-                    JOIN agreements AS AG ON SP.orderAgreement=AG.id JOIN users AS U ON SP.createdBy=U.User_ID ";
+                    JOIN mast_location AS ML ON SP.locationID=ML.locationID JOIN styleorder AS SO ON SP.orderNoID=SO.id 
+                    JOIN vendors AS V ON SP.vendorID=V.vendorID 
+                    JOIN agreements AS AG ON SP.orderAgreement=AG.id 
+                    JOIN users AS U ON SP.createdBy=U.User_ID WHERE SP.status='Approved' AND SO.Status='Active' ";
     $orderby="GROUP BY PD.recID ORDER BY SP.recordID DESC";
 
     $returnAll=mysqli_query($conn,$allQuery.$orderby);
@@ -60,7 +64,23 @@
             $message = "All production records Loaded. *Please select a Order No to search.";
         }
 
-	$activeUser=$_SESSION['_UserID'];
+    if(isset($_POST['btnSave']) && isset($_POST['addRecord']) && !empty($_POST['addRecord']))
+    {
+        $receivedFinQty = $_POST['receivedFinQty'];
+        $receivedDamQty = $_POST['receivedDamQty'];
+        $receivedSmQty = $_POST['receivedSmQty'];
+        foreach($_POST['addRecord'] as $recID){
+            //echo "Record ID: " . $recID . ", Received Finished Qty: " . $receivedFinQty . ", Received Damaged Qty: " . $receivedDamQty . ", Received Sample Qty: " . $receivedSmQty . "<br>";
+            $updateQuery = "UPDATE sub_production SET receivedFinQty='$receivedFinQty', receivedDamQty='$receivedDamQty', receivedSmQty='$receivedSmQty' WHERE recID='$recID'";
+            if(mysqli_query($conn, $updateQuery)){
+                $message = "Selected records have been added to GRN successfully.";
+            } else {
+                $message = "Error: " . mysqli_error($conn);
+            }
+        }
+    }
+
+
 
  ?>
  
@@ -70,11 +90,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Production</title>
+    <title>GRN Add</title>
 </head>
 <body>
     <div class="d-flex justify-content-between mb-3">
-        <h4>All Production Records</h4>
+        <h4>Add GRN Records</h4>
     </div>
     <form method="POST">
         <div class="container-fluid">
@@ -132,45 +152,49 @@
                         </div> 
                     </div>
         </div>
-    </form>
+        
     <div class="table-wrapper">
-        <table class="table1 text-center" cellspacing="0" style="min-width: max;">
+        <table class="table1 text-center" cellspacing="0" style="font-size: 9pt;">
         	<tr class="table-header">
             	<th>Record No.</th>
                 <th>Style</th>
                 <th>Order No.</th>
-                <th>Date</th>
+                <th>Finish Date</th>
                 <th>Vendor</th>
                 <th>Finished Qty.</th>
+                <th>Received Finished Qty.</th>
                 <th>Total Damages</th>
+                <th>Received Damages</th>
                 <th>Total Samples</th>
-                <th>Entered By</th>
-                <th>Entered Date</th>	
-                <th>Status</th>
-                <th>Action</th>			
+                <th>Received Samples</th>			
             </tr>
             <?php
             try{
                 while($result1=mysqli_fetch_assoc($returnAll))
                 {
                     ?>
-                    <tr>
-                        <td class="text-center"><?php echo $result1['recID']?></td>
+                    <tr class="flex align-items-center">
+                        <td class="text-center">
+                            <?php
+                                if($result1['RECFINQTY'] > $result1['FINQTY'] || $result1['RECDAMQTY'] < $result1['DAMQTY'] || $result1['RECSMQTY'] < $result1['SMQTY']){
+                                ?>    
+                                <a href="home_page.php?activity=grnUpdate&selectedID=<?php echo $result1['recID']?>" style='color:green;'><?php echo $result1['recID']; ?></a>
+                                <?php
+                                } else {
+                                    echo $result1['recID'];
+                                }
+                            ?>
+                        </td>
                         <td><?php echo $result1['STYLE']?></td>
                         <td><?php echo $result1['ORDERNO']?></td>
-                        <td><?php echo $result1['GPDATE']?></td>
+                        <td class="text-nowrap"><?php echo $result1['GPDATE']?></td>
                         <td><?php echo $result1['VEN']?></td>
                         <td><?php echo $result1['FINQTY']?></td>
+                        <td><?php echo $result1['RECFINQTY']?></td>
                         <td><?php echo $result1['DAMQTY']?></td>
+                        <td><?php echo $result1['RECDAMQTY']?></td>
                         <td><?php echo $result1['SMQTY']?></td>
-                        <td><?php echo $result1['CREATEDBY']?></td>
-                        <td class="text-center"><?php echo $result1['CREATEDDATE']?></td>
-                        <td class="text-center"><?php echo $result1['STATUS']?></td>
-                        <td class="text-center"><?php 
-                                $selected= $result1['recID'];
-                                $url = 'pro_view_page.php?activity=proView&Criteria=Production&selectedID= '.$selected;
-                                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">View</a>';
-                        ?></td> 
+                        <td><?php echo $result1['RECSMQTY']?></td>
                     </tr>
                     <?php
                 }
@@ -181,6 +205,11 @@
 			?>
         </table>
     </div> 
+    <div class="d-lg-flex justify-content-center mb-5 mt-3 gap-2">
+        <input type="submit" value="Save" class="btn btn-primary me-2 save_btn" name="btnSave"/>
+        <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=grnAll'"/>
+    </div>
+    </form>
     <div class="container text-center" >
         <label class="text-danger"><?php echo $message?></label>
     </div>

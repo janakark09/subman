@@ -116,7 +116,7 @@
     <form method="POST">
         <div class="container ps-5 pe-5">
             <div class="ms-5 me-5 ps-5 pe-5">
-                <div class="d-flex row" style="min-height:175px;">
+                <div class="d-flex row" style="padding-bottom:25px;">
                                 <div class="col-3 text-center">
                                     <img src="../Resources/images/logo.png" alt="Logo" class="img-fluid"  />
                                 </div>
@@ -127,8 +127,8 @@
                                 <div class="col-3"></div>
                             </div>
                             <div><h3 class="text-center title mb-2">GATE PASS</h3></div>
-                            <div class="row no-wrap1">
-                                <div class="col-md-6 ps-4 mb-3">
+                            <div class="row no-wrap1 ">
+                                <div class="col-md-6 ps-4 mb-1 ">
                                     <table class="w-100" style="border:1px;">
                                         <tbody>
                                             <tr><td>Gate Pass No</td><td>:</td><td> <?php echo $gpID;?></td></tr>
@@ -139,7 +139,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-md-6 ps-4 mb-3">
+                                <div class="col-md-6 ps-4 mb-1">
                                     <table class="w-100" style="border:1px;">
                                         <tbody>
                                             <tr><td>Gate Pass Date</td><td>:</td><td> <?php echo $date;?></td></tr>
@@ -153,7 +153,7 @@
 
                             <!---------------------------------- Buyer Style Order Section -------------------------------------- -->
 
-                            <div style="height:50px; font-family: times-new-roman;"><h4 class="text-center mt-5"><u>Style Order Details</u></h4></div>
+                            <div style="height:50px; font-family: times-new-roman;"><h4 class="text-center mt-3"><u>Style Order Details</u></h4></div>
                             <div class="row text-center">
                                 <div class="col ps-4">
                                     <table class="w-100 table">

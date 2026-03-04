@@ -184,10 +184,10 @@
                 <div class="collapse submenu" id="financeMenu">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">GRN</a>
+                            <a href="home_page.php?activity=grnAll" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='grnAll' ? 'active' : '' ?>">GRN</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Payments</a>
+                            <a href="home_page.php?activity=payments" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='payments' ? 'active' : '' ?>">Payments</a>
                         </li>
                     </ul>
                 </div>

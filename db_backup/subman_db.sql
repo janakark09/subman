@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 03, 2026 at 06:53 PM
+-- Generation Time: Mar 04, 2026 at 01:47 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -374,6 +374,8 @@ CREATE TABLE `sub_production` (
   `status` varchar(20) NOT NULL,
   `cratedDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL,
+  `approvedBy` int(32) DEFAULT NULL,
+  `approvedDT` datetime DEFAULT NULL,
   `grnCode1` int(32) DEFAULT NULL,
   `grnCode2` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -382,8 +384,8 @@ CREATE TABLE `sub_production` (
 -- Dumping data for table `sub_production`
 --
 
-INSERT INTO `sub_production` (`recordID`, `gatepassRefID`, `orderNoID`, `gatepassDate`, `locationID`, `vendorID`, `orderAgreement`, `comments`, `status`, `cratedDT`, `createdBy`, `grnCode1`, `grnCode2`) VALUES
-(2, '365665', 1, '2026-03-12', 2, 102, 2, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Pending', '2026-03-03 22:54:27', 1002, NULL, NULL);
+INSERT INTO `sub_production` (`recordID`, `gatepassRefID`, `orderNoID`, `gatepassDate`, `locationID`, `vendorID`, `orderAgreement`, `comments`, `status`, `cratedDT`, `createdBy`, `approvedBy`, `approvedDT`, `grnCode1`, `grnCode2`) VALUES
+(2, '365665', 1, '2026-03-12', 2, 102, 2, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-03 22:54:27', 1002, 1002, '2026-03-04 13:13:45', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -480,7 +482,7 @@ CREATE TABLE `user_details` (
 
 INSERT INTO `user_details` (`User_ID`, `Address`, `TelNumber`, `Joined_Date`, `locationID`, `venderID`, `acc1`, `acc2`, `acc3`, `acc4`, `acc5`, `acc6`, `acc7`, `acc8`, `acc9`, `acc10`, `acc11`, `acc12`, `acc13`, `acc14`, `acc15`) VALUES
 (1001, 'Bandaragama', '0778520129', '2026-02-02', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, NULL, NULL, NULL),
-(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 0, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 0, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0),
 (1003, 'Bandaragama', '0778520129', '2026-02-09', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (1004, 'dsf dsf sdf sdf', '354356356', '2026-03-03', 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
@@ -652,7 +654,8 @@ ALTER TABLE `sub_production`
   ADD KEY `FK_Pro_Vendor` (`vendorID`),
   ADD KEY `FK_Pro_Agree` (`orderAgreement`),
   ADD KEY `FK_Pro_Create` (`createdBy`),
-  ADD KEY `FK_Pro_Grn` (`grnCode1`);
+  ADD KEY `FK_Pro_Grn` (`grnCode1`),
+  ADD KEY `FK_Pro_Approve` (`approvedBy`);
 
 --
 -- Indexes for table `sub_pro_details`
@@ -875,6 +878,7 @@ ALTER TABLE `style_sizes`
 --
 ALTER TABLE `sub_production`
   ADD CONSTRAINT `FK_Pro_Agree` FOREIGN KEY (`orderAgreement`) REFERENCES `agreements` (`id`),
+  ADD CONSTRAINT `FK_Pro_Approve` FOREIGN KEY (`approvedBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Pro_Create` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Pro_Grn` FOREIGN KEY (`grnCode1`) REFERENCES `grn_details` (`grnCode1`),
   ADD CONSTRAINT `FK_Pro_Loc` FOREIGN KEY (`locationID`) REFERENCES `mast_location` (`locationID`),
