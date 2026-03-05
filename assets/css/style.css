@@ -153,6 +153,10 @@ body
 	border-color:#666666;
 	padding: 10px;
 }
+.tbl-num-cell{
+	width: 180px; 
+	max-width: 200px;
+}
 
 /*------------------------------------------ Report tables ---------------------------------------------------*/
 .report-table

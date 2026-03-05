@@ -19,12 +19,13 @@
     $status="";
     $createdby="";
     $createddt="";
-    $approvedby="";
-    $approveddt="";
+    // $approvedby="";
+    // $approveddt="";
     
     $user="";
     $accConfirm=0;
     $message="";
+    $saved=0;
     
     
     $slectedrecID=$_REQUEST['selectedID'];
@@ -62,8 +63,8 @@
             $status=$rowData['STATUS'];
             $createdby=$rowData['CREATEDBY'];
             $createddt=$rowData['CREATEDDT'];
-            $approvedby=$rowData['APPROVED'];
-            $approveddt=$rowData['APPDT'];
+            // $approvedby=$rowData['APPROVED'];
+            // $approveddt=$rowData['APPDT'];
             // $tel=$rowData['TEL'];
             // $person=$rowData['CONP'];
         }
@@ -84,21 +85,30 @@
             $accConfirm=$rowData['APP1'];
 
         }
-
-    if(isset($_POST['btnApprove']))
+    if(isset($_POST['btnSave']))
         {
-            $updateQuery="UPDATE sub_production SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE recordID='$slectedrecID'";
-            $updateRes=mysqli_query($conn,$updateQuery);
-            if($updateRes)
+            $recFQty=$_POST['recFQty'];
+            $recDQty=$_POST['recDQty'];
+            $recSQty=$_POST['recSQty'];
+            $updateRecQuery="INSERT INTO grn_details(grnCode2, proRecNo, locationID, invoiceDate, invoiceNo, fgUnitPrice, fgValue, sampleUnitPrice, 
+                        sampleValue, createdDT, createdBy, status) 
+                        VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]','[value-7]','[value-8]','[value-9]','[value-10]',
+                        '[value-11]','[value-12]','[value-13]','[value-14]','[value-15]','[value-16]','[value-17]')";
+            $updateRec=mysqli_query($conn,$updateRecQuery);
+            if($updateRec)
                 {
-                    echo "<script>
-                    setTimeout(function(){window.location.href = 'home_page.php?activity=proRec';}, 1000);
-                    </script>";
-                    exit();
+                    for($i=0;$i<count($recFQty);$i++)
+                        {
+                            //echo $recFQty[$i]."-".$recDQty[$i]."-".$recSQty[$i]."<br>";
+                            $updateDetailsQuery="UPDATE sub_pro_details SET recFnishedQty='$recFQty[$i]', recDamQty='$recDQty[$i]', recSampleQty='$recSQty[$i]' WHERE recID='$recID' LIMIT 1 OFFSET $i";
+                            mysqli_query($conn,$updateDetailsQuery);
+                        }
+                    $message="Record Saved Successfully!";
+                    $saved=1;
                 }
             else
                 {
-                    $message="Error while approving the production record. Try again.";
+                    $message="Error Saving Record!";
                 }
         }
  ?>
@@ -128,10 +138,10 @@
 
 </head>
 <body>
-    <div class="container-fluid">
+    <div class="w-100">
         <form method="POST">
-            <div class="container ps-5 pe-5 report-container">
-                <div class="container">
+            <div class="report-container">
+                <div class="w-100 report-content">
                     <div class="mb-5">
                         <h4>Goods Received Note (GRN)</h4>  
                     </div>
@@ -183,7 +193,28 @@
                                         </table>
                                     </div>
                                 </div>
-                                
+                                <div class="d-lg-flex mt-3 mb-3 gap-3" >
+                                    <div class="form-group col-lg-2">
+                                        <label>Invoice Date</label>
+                                        <input type="date" class="form-control" id="invDate" required name="invDate" 
+                                        value="<?php echo isset($_POST['invDate']) ? $_POST['inveDate']: '';?>">
+                                    </div>
+                                    <div class="form-group mb-1 col-3">
+                                            <label for="invno">Invoice No.</label>
+                                            <input type="text" class="form-control" id="invno" name="invno">
+                                        </div>
+                                </div>
+
+                                <div class="d-lg-flex mt-3 mb-3 gap-3" >
+                                    <div class="form-group mb-1 col-2">
+                                        <label for="finUprice">Finished good Unit Price</label>
+                                        <input type="number" class="form-control" id="finUprice" name="finUprice">
+                                    </div>
+                                    <div class="form-group mb-1 col-2">
+                                        <label for="samUprice">Sample Unit Price</label>
+                                        <input type="number" class="form-control" id="samUprice" name="samUprice">
+                                    </div>
+                                </div>
                                 <!---------------------------------- Item Details Section -------------------------------------- -->
 
                                 <div style="height:50px; font-family: times-new-roman;"><h4 class="text-center mt-5"><u>Parts Details</u></h4></div>
@@ -196,11 +227,11 @@
                                                 <th>Color.</th>
                                                 <th>Size</th>
                                                 <th>Finished</th>
-                                                <th>Received Finished</th>
+                                                <th class="tbl-num-cell">Received Finished</th>
                                                 <th>Damages</th>
-                                                <th>Received Damages</th>
+                                                <th class="tbl-num-cell">Received Damages</th>
                                                 <th>Samples</th>
-                                                <th>Received Samples</th>
+                                                <th class="tbl-num-cell">Received Samples</th>
                                             </tr>
                                             <?php
                                             while($details=mysqli_fetch_assoc($detailsData))
@@ -212,11 +243,11 @@
                                                 <td><?php echo $details['COLOR'];?></td>
                                                 <td><?php echo $details['SIZE'];?></td>
                                                 <td><?php echo $details['FQTY'];?></td>
-                                                <td style="max-width: 50px;"><input class="form-control" type="text" name="recFQty[]" value="<?php echo $details['RECFQTY'];?>" /></td>
+                                                <td class="tbl-num-cell"><input class="form-control text-end" type="text" name="recFQty[]" value="<?php echo $details['RECFQTY'];?>" /></td>
                                                 <td><?php echo $details['DQTY'];?></td>
-                                                <td style="max-width: 50px;"><input class="form-control" type="text" name="recDQty[]" value="<?php echo $details['RECDQTY'];?>" /></td>
+                                                <td class="tbl-num-cell"><input class="form-control text-end" type="text" name="recDQty[]" value="<?php echo $details['RECDQTY'];?>" /></td>
                                                 <td><?php echo $details['SQTY'];?></td>
-                                                <td style="max-width: 50px;"><input class="form-control" type="text" name="recSQty[]" value="<?php echo $details['RECSQTY'];?>" /></td>
+                                                <td class="tbl-num-cell"><input class="form-control text-end" type="text" name="recSQty[]" value="<?php echo $details['RECSQTY'];?>" /></td>
                                             </tr>
                                             <?php
                                                 }
@@ -238,13 +269,19 @@
                                 <div class="row justify-content-center gap-3 mt-5 no-print">
                                     <hr>
                                     <?php
-                                        if($accConfirm==1 && $status!="Approved"){
+                                        if($accConfirm==1 && $status!="Primary" && $saved==0)
+                                         {
                                         ?>
-                                        <input type="submit" class="btn btn-primary save_btn" value="Approve" name="btnApprove" id="btnApprove"/>
+                                            <input type="submit" class="btn btn-primary save_btn" value="Save" name="btnSave" id="btnSave"/>
                                         <?php
                                         }
-                                    ?>
-                                    <button type="button" class="btn btn-success save_btn" onclick="window.print()">Print</button>
+                                        if($saved==1 && $status!="Approved")
+                                         {
+                                        ?>
+                                            <button type="button" class="btn btn-success save_btn" onclick="window.print()">Print</button>
+                                        <?php
+                                         }
+                                    ?><button type="button" class="btn btn-secondary save_btn" onclick="window.location.href='home_page.php?activity=grnAll'">Close</button>
                                 </div>
                 </div>
                 

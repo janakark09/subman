@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2026 at 01:47 PM
+-- Generation Time: Mar 05, 2026 at 01:23 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -151,16 +151,17 @@ INSERT INTO `gatepass_details` (`id`, `gpID`, `cutNo`, `colorID`, `sizeID`, `mat
 CREATE TABLE `grn_details` (
   `grnCode1` int(32) NOT NULL,
   `grnCode2` varchar(10) NOT NULL,
+  `proRecNo` int(32) NOT NULL,
   `locationID` int(32) NOT NULL,
-  `venorID` int(32) NOT NULL,
   `invoiceDate` date NOT NULL,
   `invoiceNo` varchar(50) NOT NULL,
-  `fgUnitPrice` double NOT NULL,
-  `fgGrnQty` double NOT NULL,
-  `fgValue` double NOT NULL,
+  `recFnishedQty` double DEFAULT NULL,
+  `fgUnitPrice` double DEFAULT NULL,
+  `fgValue` double DEFAULT NULL,
+  `recDamQty` double DEFAULT NULL,
   `sampleUnitPrice` double NOT NULL,
-  `fgSampleQty` double NOT NULL,
   `sampleValue` double NOT NULL,
+  `recSampleQty` double NOT NULL,
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL,
   `status` varchar(50) NOT NULL,
@@ -375,17 +376,15 @@ CREATE TABLE `sub_production` (
   `cratedDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL,
   `approvedBy` int(32) DEFAULT NULL,
-  `approvedDT` datetime DEFAULT NULL,
-  `grnCode1` int(32) DEFAULT NULL,
-  `grnCode2` varchar(10) DEFAULT NULL
+  `approvedDT` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sub_production`
 --
 
-INSERT INTO `sub_production` (`recordID`, `gatepassRefID`, `orderNoID`, `gatepassDate`, `locationID`, `vendorID`, `orderAgreement`, `comments`, `status`, `cratedDT`, `createdBy`, `approvedBy`, `approvedDT`, `grnCode1`, `grnCode2`) VALUES
-(2, '365665', 1, '2026-03-12', 2, 102, 2, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-03 22:54:27', 1002, 1002, '2026-03-04 13:13:45', NULL, NULL);
+INSERT INTO `sub_production` (`recordID`, `gatepassRefID`, `orderNoID`, `gatepassDate`, `locationID`, `vendorID`, `orderAgreement`, `comments`, `status`, `cratedDT`, `createdBy`, `approvedBy`, `approvedDT`) VALUES
+(2, '365665', 1, '2026-03-12', 2, 102, 2, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-03 22:54:27', 1002, 1002, '2026-03-04 13:13:45');
 
 -- --------------------------------------------------------
 
@@ -585,8 +584,8 @@ ALTER TABLE `gatepass_details`
 ALTER TABLE `grn_details`
   ADD PRIMARY KEY (`grnCode1`),
   ADD KEY `FK_Grn_Uid` (`createdBy`),
-  ADD KEY `FK_Grn_location` (`locationID`),
-  ADD KEY `FK_Grn_VandorID` (`venorID`);
+  ADD KEY `FK_Grn_pro` (`proRecNo`),
+  ADD KEY `FK_Grn_loc` (`locationID`);
 
 --
 -- Indexes for table `mast_location`
@@ -654,7 +653,6 @@ ALTER TABLE `sub_production`
   ADD KEY `FK_Pro_Vendor` (`vendorID`),
   ADD KEY `FK_Pro_Agree` (`orderAgreement`),
   ADD KEY `FK_Pro_Create` (`createdBy`),
-  ADD KEY `FK_Pro_Grn` (`grnCode1`),
   ADD KEY `FK_Pro_Approve` (`approvedBy`);
 
 --
@@ -831,8 +829,8 @@ ALTER TABLE `gatepass_details`
 --
 ALTER TABLE `grn_details`
   ADD CONSTRAINT `FK_Grn_Uid` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
-  ADD CONSTRAINT `FK_Grn_VandorID` FOREIGN KEY (`venorID`) REFERENCES `vendors` (`vendorID`),
-  ADD CONSTRAINT `FK_Grn_location` FOREIGN KEY (`locationID`) REFERENCES `mast_location` (`locationID`);
+  ADD CONSTRAINT `FK_Grn_loc` FOREIGN KEY (`locationID`) REFERENCES `mast_location` (`locationID`),
+  ADD CONSTRAINT `FK_Grn_pro` FOREIGN KEY (`proRecNo`) REFERENCES `sub_production` (`recordID`);
 
 --
 -- Constraints for table `mast_location`
@@ -880,7 +878,6 @@ ALTER TABLE `sub_production`
   ADD CONSTRAINT `FK_Pro_Agree` FOREIGN KEY (`orderAgreement`) REFERENCES `agreements` (`id`),
   ADD CONSTRAINT `FK_Pro_Approve` FOREIGN KEY (`approvedBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Pro_Create` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
-  ADD CONSTRAINT `FK_Pro_Grn` FOREIGN KEY (`grnCode1`) REFERENCES `grn_details` (`grnCode1`),
   ADD CONSTRAINT `FK_Pro_Loc` FOREIGN KEY (`locationID`) REFERENCES `mast_location` (`locationID`),
   ADD CONSTRAINT `FK_Pro_OrderNo` FOREIGN KEY (`orderNoID`) REFERENCES `styleorder` (`id`),
   ADD CONSTRAINT `FK_Pro_Vendor` FOREIGN KEY (`vendorID`) REFERENCES `vendors` (`vendorID`);
