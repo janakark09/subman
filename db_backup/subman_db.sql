@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2026 at 01:23 PM
+-- Generation Time: Mar 05, 2026 at 07:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -167,6 +167,13 @@ CREATE TABLE `grn_details` (
   `status` varchar(50) NOT NULL,
   `receiptID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `grn_details`
+--
+
+INSERT INTO `grn_details` (`grnCode1`, `grnCode2`, `proRecNo`, `locationID`, `invoiceDate`, `invoiceNo`, `recFnishedQty`, `fgUnitPrice`, `fgValue`, `recDamQty`, `sampleUnitPrice`, `sampleValue`, `recSampleQty`, `createdDT`, `createdBy`, `status`, `receiptID`) VALUES
+(7, '2026', 2, 1, '2026-03-06', '323', 250, 323.25, 80812.5, 31, 10.25, 71.75, 7, '2026-03-06 00:27:45', 1002, 'Pending', 0);
 
 -- --------------------------------------------------------
 
@@ -412,10 +419,10 @@ CREATE TABLE `sub_pro_details` (
 --
 
 INSERT INTO `sub_pro_details` (`id`, `recID`, `cutNo`, `colorID`, `sizeID`, `finishedQty`, `fabDamQty`, `processDamQty`, `sampleQty`, `recFnishedQty`, `recDamQty`, `recSampleQty`) VALUES
-(1, 2, '3', 1, 1, 100, 10, 3, 3, NULL, NULL, NULL),
-(2, 2, '3', 1, 1, 100, 10, 3, 3, NULL, NULL, NULL),
-(3, 2, '3', 1, 1, 100, 10, 3, 3, NULL, NULL, NULL),
-(4, 2, '3', 1, 1, 100, 10, 3, 3, NULL, NULL, NULL);
+(1, 2, '3', 1, 1, 100, 10, 3, 3, 30, 10, 0),
+(2, 2, '3', 1, 1, 100, 10, 3, 3, 45, 8, 2),
+(3, 2, '3', 1, 1, 100, 10, 3, 3, 75, 3, 2),
+(4, 2, '3', 1, 1, 100, 10, 3, 3, 100, 10, 3);
 
 -- --------------------------------------------------------
 
@@ -481,9 +488,9 @@ CREATE TABLE `user_details` (
 
 INSERT INTO `user_details` (`User_ID`, `Address`, `TelNumber`, `Joined_Date`, `locationID`, `venderID`, `acc1`, `acc2`, `acc3`, `acc4`, `acc5`, `acc6`, `acc7`, `acc8`, `acc9`, `acc10`, `acc11`, `acc12`, `acc13`, `acc14`, `acc15`) VALUES
 (1001, 'Bandaragama', '0778520129', '2026-02-02', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, NULL, NULL, NULL),
-(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 0, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0),
+(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 1, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0),
 (1003, 'Bandaragama', '0778520129', '2026-02-09', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(1004, 'dsf dsf sdf sdf', '354356356', '2026-03-03', 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+(1004, 'dsf dsf sdf sdf', '354356356', '2026-03-03', 2, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -724,7 +731,7 @@ ALTER TABLE `gatepass_details`
 -- AUTO_INCREMENT for table `grn_details`
 --
 ALTER TABLE `grn_details`
-  MODIFY `grnCode1` int(32) NOT NULL AUTO_INCREMENT;
+  MODIFY `grnCode1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `mast_location`

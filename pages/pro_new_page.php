@@ -238,7 +238,7 @@
                      <div class="d-lg-flex mb-3 gap-3" >
                         <div class="form-group col-lg-2">
                             <label>Finishing Date</label>
-                            <input type="date" class="form-control" id="finishingDate" required name="finishingDate" 
+                            <input type="date" min="<?php echo $todayStr; ?>" class="form-control" id="finishingDate" required name="finishingDate" 
                             value="<?php echo isset($_POST['finishingDate']) ? $_POST['finishingDate']: '';?>">
                         </div>
                         <div class="form-group mb-1 col-3">
@@ -308,22 +308,22 @@
                             </div>
                             <div class="form-group mb-1 col-3 ">
                                 <label for="proQty">Production Qty.(Without Damages and Samples)</label>
-                                <input type="number" class="form-control" id="proQty" name="proQty" value="0">
+                                <input type="number" min="0" class="form-control" id="proQty" name="proQty" value="0">
                             </div>
                         </div>
                         <!-- ------------------------------------------------------------------ -->
                         <div class="d-lg-flex mb-1 gap-3">
                             <div class="form-group mb-1 col-3">
                                 <label for="fabDamdQty">Fabric Damaged Qty.</label>
-                                <input type="number" class="form-control" id="fabDamdQty" name="fabricDamQty" value="0">
+                                <input type="number" min="0" class="form-control" id="fabDamdQty" name="fabricDamQty" value="0">
                             </div>
                             <div class="form-group mb-1 col-3 ">
                                 <label for="processDamdQty">Process Damaged Qty.</label>
-                                <input type="number" class="form-control" id="processDamdQty" name="processDamQty" value="0">
+                                <input type="number" min="0" class="form-control" id="processDamdQty" name="processDamQty" value="0">
                             </div>
                             <div class="form-group mb-1 col-3 ">
                                 <label for="sampleQty">Sample Qty.</label>
-                                <input type="number" class="form-control" id="sampleQty" name="sampleQty" value="0">
+                                <input type="number" min="0" class="form-control" id="sampleQty" name="sampleQty" value="0">
                             </div>
                         </div>                
 

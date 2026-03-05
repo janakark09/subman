@@ -242,11 +242,11 @@
                     <div class="d-lg-flex mb-1 gap-3">
                         <div class="form-group mb-1 ">
                             <label for="totalQty">Contract Total Quantity</label>
-                            <input type="number" class="form-control" id="totalQty" required name="totalQty" onchange="calcDays(); calculateEndingDate();" value="<?php echo ($totalqty > 0) ? $totalqty : ''; ?>">
+                            <input type="number" min="0" class="form-control" id="totalQty" required name="totalQty" onchange="calcDays(); calculateEndingDate();" value="<?php echo ($totalqty > 0) ? $totalqty : ''; ?>">
                         </div>
                         <div class="form-group mb-1">
                             <label for="perDayQty">Per Day Quantity</label>
-                            <input type="number" class="form-control" id="perDayQty" required name="perDayQty" onchange="calcDays(); calculateEndingDate();" value="<?php echo ($dailyQty > 0) ? $dailyQty : ''; ?>">
+                            <input type="number" min="0" class="form-control" id="perDayQty" required name="perDayQty" onchange="calcDays(); calculateEndingDate();" value="<?php echo ($dailyQty > 0) ? $dailyQty : ''; ?>">
                         </div>
                     </div>
                     <lable class="fw-bold" id="estimatedDays">Estimated Days: <span id="estimatedDays"><?php echo ($totaldays > 0) ? $totaldays : ''; ?></span></lable>
@@ -255,7 +255,7 @@
                     <div class="d-lg-flex mb-1 gap-3">
                         <div class="form-group col-lg-2">
                             <label>Starting Date</label>
-                            <input type="date" class="form-control" id="startingDate" required name="startingDate" onchange="calculateEndingDate();">
+                            <input type="date" min="<?php echo $todayStr;?>" class="form-control" id="startingDate" required name="startingDate" onchange="calculateEndingDate();">
                         </div>
                         <div class="form-group mb-3">
                         <br>    
@@ -263,21 +263,21 @@
                         </div>
                         <div class="form-group me-5 col-lg-2">
                             <label>Ending Date</label>
-                            <input type="date" class="form-control" id="endingDate" required name="endingDate" value="<?php echo ($endingDate != "") ? $endingDate : ''; ?>">
+                            <input type="date" min="<?php echo $todayStr;?>" class="form-control" id="endingDate" required name="endingDate" value="<?php echo ($endingDate != "") ? $endingDate : ''; ?>">
                         </div>
                     </div>
                     <div class="d-lg-flex mb-1 gap-3">
                         <div class="form-group mb-1 ">
                             <label for="totalQty">Credit Period (Days)</label>
-                            <input type="number" class="form-control" id="creditPeriod" required name="creditPeriod" value="0">
+                            <input type="number" min="0" class="form-control" id="creditPeriod" required name="creditPeriod" value="0">
                         </div>
                         <div class="form-group mb-1">
                             <label for="perDayQty">Finished Goods Unit Price rate(Rs)</label>
-                            <input type="number" class="form-control" id="finishedPrice" required name="finishedPrice" value="0">
+                            <input type="number" min="0" class="form-control" id="finishedPrice" required name="finishedPrice" value="0">
                         </div>
                         <div class="form-group mb-1">
                             <label for="perDayQty">Sample Goods Unit Price rate(Rs)</label>
-                            <input type="number" class="form-control" id="samplePrice" required name="samplePrice" value="0">
+                            <input type="number" min="0" class="form-control" id="samplePrice" required name="samplePrice" value="0">
                         </div>
                     </div>
                     <div class="d-lg-flex justify-content-center mb-5 gap-2">

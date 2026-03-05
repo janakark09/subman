@@ -158,7 +158,7 @@
                     </div>
                     <div class="form-group me-5 col-lg-2">
                         <label>Delivery Date</label>
-                        <input type="date" class="form-control" id="deliveryDate" required name="deliveryDate">
+                        <input type="date" min="<?php echo $todayStr;?>" class="form-control" id="deliveryDate" required name="deliveryDate">
                     </div>
                 <!-- ------------------------------------------- -->
                     <div class="form-row mb-2">

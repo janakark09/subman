@@ -16,16 +16,23 @@
     $proQty="";
     $damQty="";
     $sampleQty="";
-    $status="";
+    $proRecStatus="";
     $createdby="";
     $createddt="";
     // $approvedby="";
     // $approveddt="";
     
     $user="";
-    $accConfirm=0;
+    $UsrLoc="";
     $message="";
+    $InvNo="";
     $saved=0;
+    $fgValue=0;
+    $sampleValue=0;
+    $fgUnitPrice=0;
+    $totalRecFQty=0;
+    $sampleUnitPrice=0;
+    $totalRecSQty=0;
     
     
     $slectedrecID=$_REQUEST['selectedID'];
@@ -60,7 +67,7 @@
             $proQty=$rowData['FINQTY'];
             $damQty=$rowData['DAMQTY'];
             $sampleQty=$rowData['SMQTY'];
-            $status=$rowData['STATUS'];
+            $proRecStatus=$rowData['STATUS'];
             $createdby=$rowData['CREATEDBY'];
             $createddt=$rowData['CREATEDDT'];
             // $approvedby=$rowData['APPROVED'];
@@ -69,46 +76,82 @@
             // $person=$rowData['CONP'];
         }
     
-    $detailsQuery="SELECT PD.cutNo AS 'CUT',C.color AS 'COLOR',S.size AS 'SIZE', PD.finishedQty AS 'FQTY', PD.recFnishedQty AS 'RECFQTY', PD.processDamQty AS 'DQTY', PD.recDamQty AS 'RECDQTY', PD.sampleQty AS 'SQTY', PD.recSampleQty AS 'RECSQTY' FROM sub_pro_details PD 
+    $detailsQuery="SELECT PD.id AS 'ID',PD.cutNo AS 'CUT',C.color AS 'COLOR',S.size AS 'SIZE', PD.finishedQty AS 'FQTY', PD.recFnishedQty AS 'RECFQTY', (PD.processDamQty+PD.fabDamQty) AS 'DQTY', PD.recDamQty AS 'RECDQTY', PD.sampleQty AS 'SQTY', PD.recSampleQty AS 'RECSQTY' FROM sub_pro_details PD 
                 JOIN style_colors C ON PD.colorID=C.colorID JOIN style_sizes S ON PD.sizeID=S.sizeID  WHERE PD.recID='$slectedrecID'";
 
     $detailsData=mysqli_query($conn,$detailsQuery);
 
+    // ----------------------- Get active user details -------------------------------------------
 	$activeUser=$_SESSION['_UserID'];
 
-    $userQuery="SELECT CONCAT(U.Fname,' ',U.Lname) AS 'CURRENTU', UD.acc10 AS 'APP1' FROM users U JOIN user_details UD ON U.User_ID=UD.User_ID WHERE U.User_ID='$activeUser'";
+    $userQuery="SELECT 	locationID FROM user_details WHERE User_ID='$activeUser'";
     $userData=mysqli_query($conn,$userQuery);
     if($userData && mysqli_num_rows($userData)==1)
         {
             $rowData=mysqli_fetch_assoc($userData);
-            $user=$rowData['CURRENTU'];
-            $accConfirm=$rowData['APP1'];
+            $UsrLoc=$rowData['locationID'];
 
         }
-    if(isset($_POST['btnSave']))
+
+    if(isset($_POST['btnCal']))
         {
             $recFQty=$_POST['recFQty'];
             $recDQty=$_POST['recDQty'];
             $recSQty=$_POST['recSQty'];
-            $updateRecQuery="INSERT INTO grn_details(grnCode2, proRecNo, locationID, invoiceDate, invoiceNo, fgUnitPrice, fgValue, sampleUnitPrice, 
-                        sampleValue, createdDT, createdBy, status) 
-                        VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]','[value-7]','[value-8]','[value-9]','[value-10]',
-                        '[value-11]','[value-12]','[value-13]','[value-14]','[value-15]','[value-16]','[value-17]')";
+            $ROWID=$_POST['rowID'];
+            $totalRecFQty=array_sum($recFQty);
+            $totalRecDQty=array_sum($recDQty);
+            $totalRecSQty=array_sum($recSQty);
+
+            $fgUnitPrice=$_POST['finUprice'];
+            $fgValue=(double)$fgUnitPrice*(double)$totalRecFQty;
+            $sampleUnitPrice=$_POST['samUprice'];
+            $sampleValue=(double)$sampleUnitPrice*(double)$totalRecSQty;
+        }
+    // ------------------------------ Save Record --------------------------------------
+    if(isset($_POST['btnSave']))
+        {
+            
+            $recFQty=$_POST['recFQty'];
+            $recDQty=$_POST['recDQty'];
+            $recSQty=$_POST['recSQty'];
+            $ROWID=$_POST['rowID'];
+            $totalRecFQty=array_sum($recFQty);
+            $totalRecDQty=array_sum($recDQty);
+            $totalRecSQty=array_sum($recSQty);
+
+            $InvDate=$_POST['invDate'];
+            $InvNo=$_POST['invno'];
+            $fgUnitPrice=$_POST['finUprice'];
+            $fgValue=(double)$fgUnitPrice*(double)$totalRecFQty;
+            $sampleUnitPrice=$_POST['samUprice'];
+             $sampleValue=(double)$sampleUnitPrice*(double)$totalRecSQty;
+
+            //echo $totalRecFQty."-".$totalRecDQty."-".$totalRecSQty."<br>".count($recFQty)."-".count($recDQty)."-".count($recSQty);
+            echo $UsrLoc;
+            $updateRecQuery="INSERT INTO grn_details(grnCode2, proRecNo, locationID, invoiceDate, invoiceNo, recFnishedQty, fgUnitPrice, fgValue, recDamQty, sampleUnitPrice, 
+                        sampleValue, recSampleQty, createdDT, createdBy, status) 
+                        VALUES ('".date('Y')."', '$recID', '$UsrLoc', STR_TO_DATE('$InvDate','%Y-%m-%d'), '$InvNo', '$totalRecFQty', '$fgUnitPrice', '$fgValue', '$totalRecDQty', '$sampleUnitPrice', '$sampleValue', '$totalRecSQty', NOW(), '$activeUser', 'Pending')";
             $updateRec=mysqli_query($conn,$updateRecQuery);
             if($updateRec)
                 {
-                    for($i=0;$i<count($recFQty);$i++)
+                    for($i=0;$i<count($ROWID);$i++)
                         {
                             //echo $recFQty[$i]."-".$recDQty[$i]."-".$recSQty[$i]."<br>";
-                            $updateDetailsQuery="UPDATE sub_pro_details SET recFnishedQty='$recFQty[$i]', recDamQty='$recDQty[$i]', recSampleQty='$recSQty[$i]' WHERE recID='$recID' LIMIT 1 OFFSET $i";
+                            $updateDetailsQuery="UPDATE sub_pro_details SET recFnishedQty='$recFQty[$i]', recDamQty='$recDQty[$i]', recSampleQty='$recSQty[$i]' WHERE id='$ROWID[$i]'";
                             mysqli_query($conn,$updateDetailsQuery);
                         }
                     $message="Record Saved Successfully!";
                     $saved=1;
+                    echo "<script>
+                        setTimeout(function(){window.location.href = 'home_page.php?activity=grnAll';}, 1000);
+                    </script>";
+                    exit(); 
                 }
             else
                 {
                     $message="Error Saving Record!";
+                    $saved=0;
                 }
         }
  ?>
@@ -196,23 +239,35 @@
                                 <div class="d-lg-flex mt-3 mb-3 gap-3" >
                                     <div class="form-group col-lg-2">
                                         <label>Invoice Date</label>
-                                        <input type="date" class="form-control" id="invDate" required name="invDate" 
-                                        value="<?php echo isset($_POST['invDate']) ? $_POST['inveDate']: '';?>">
+                                        <input type="date" class="form-control" id="invDate" required name="invDate"/>
                                     </div>
                                     <div class="form-group mb-1 col-3">
                                             <label for="invno">Invoice No.</label>
-                                            <input type="text" class="form-control" id="invno" name="invno">
+                                            <input type="text" class="form-control" id="invno" name="invno" required/>
                                         </div>
                                 </div>
 
                                 <div class="d-lg-flex mt-3 mb-3 gap-3" >
                                     <div class="form-group mb-1 col-2">
                                         <label for="finUprice">Finished good Unit Price</label>
-                                        <input type="number" class="form-control" id="finUprice" name="finUprice">
+                                        <input type="number" class="form-control" min="0" id="finUprice" name="finUprice" step="0.01" value="0.00">
                                     </div>
                                     <div class="form-group mb-1 col-2">
                                         <label for="samUprice">Sample Unit Price</label>
-                                        <input type="number" class="form-control" id="samUprice" name="samUprice">
+                                        <input type="number" class="form-control" min="0" id="samUprice" name="samUprice" step="0.01" value="0.00">
+                                    </div>
+                                    <div class="form-group mb-1 col-2">
+                                        <br>
+                                        <input type="submit" class="btn btn-primary" value="Calc" name="btnCal" id="btnCal"/>
+                                    </div>
+                                </div>
+                                <div class="d-lg-flex mt-3 mb-3 gap-3" >
+                                    <div class="form-group mb-1 col-2">
+                                        <label for="finUprice">Finished good Value: <?php echo $fgValue; ?></label>
+                                        <label for="samUprice">Sample Value: <?php echo $sampleValue; ?></label>
+                                    </div>
+                                    <div class="form-group mb-1 col-2">
+                                        
                                     </div>
                                 </div>
                                 <!---------------------------------- Item Details Section -------------------------------------- -->
@@ -222,6 +277,7 @@
                                     <div class="col ps-4 table-responsive">
                                         <table class="w-100 table1" style="min-width:100%;">
                                             <tr>
+                                                <th hidden></th>
                                                 <th>No.</th>
                                                 <th>Cut No.</th>
                                                 <th>Color.</th>
@@ -238,16 +294,17 @@
                                                 {
                                             ?>
                                             <tr>
-                                                <td><?php echo $no++; ?></td>
+                                                <td hidden><input type="text" name="rowID[]" value="<?php echo $details['ID']; ?>"></td>    
+                                                <td><?php echo $no++ ?></td>
                                                 <td><?php echo $details['CUT'];?></td>
                                                 <td><?php echo $details['COLOR'];?></td>
                                                 <td><?php echo $details['SIZE'];?></td>
                                                 <td><?php echo $details['FQTY'];?></td>
-                                                <td class="tbl-num-cell"><input class="form-control text-end" type="text" name="recFQty[]" value="<?php echo $details['RECFQTY'];?>" /></td>
+                                                <td class="tbl-num-cell"><input class="form-control text-end" type="number" step="0.5" min="0" max="<?php echo (double)$details['FQTY']-(double)$details['RECFQTY'];?>" name="recFQty[]" value="<?php echo (double)$details['FQTY']-(double)$details['RECFQTY'];?>" /></td>
                                                 <td><?php echo $details['DQTY'];?></td>
-                                                <td class="tbl-num-cell"><input class="form-control text-end" type="text" name="recDQty[]" value="<?php echo $details['RECDQTY'];?>" /></td>
+                                                <td class="tbl-num-cell"><input class="form-control text-end" type="number" step="0.5" min="0" max="<?php echo (double)$details['DQTY']-(double)$details['RECDQTY'];?>" name="recDQty[]" value="<?php echo (double)$details['DQTY']-(double)$details['RECDQTY'];?>" /></td>
                                                 <td><?php echo $details['SQTY'];?></td>
-                                                <td class="tbl-num-cell"><input class="form-control text-end" type="text" name="recSQty[]" value="<?php echo $details['RECSQTY'];?>" /></td>
+                                                <td class="tbl-num-cell"><input class="form-control text-end" type="number" step="0.5" min="0" max="<?php echo (double)$details['SQTY']-(double)$details['RECSQTY'];?>" name="recSQty[]" value="<?php echo (double)$details['SQTY']-(double)$details['RECSQTY'];?>" /></td>
                                             </tr>
                                             <?php
                                                 }
@@ -268,20 +325,9 @@
                                 
                                 <div class="row justify-content-center gap-3 mt-5 no-print">
                                     <hr>
-                                    <?php
-                                        if($accConfirm==1 && $status!="Primary" && $saved==0)
-                                         {
-                                        ?>
-                                            <input type="submit" class="btn btn-primary save_btn" value="Save" name="btnSave" id="btnSave"/>
-                                        <?php
-                                        }
-                                        if($saved==1 && $status!="Approved")
-                                         {
-                                        ?>
-                                            <button type="button" class="btn btn-success save_btn" onclick="window.print()">Print</button>
-                                        <?php
-                                         }
-                                    ?><button type="button" class="btn btn-secondary save_btn" onclick="window.location.href='home_page.php?activity=grnAll'">Close</button>
+                                    <input type="submit" class="btn btn-primary save_btn" value="Save" name="btnSave" id="btnSave"/>
+                                    <button type="clear" class="btn btn-secondary save_btn">Clear</button>
+                                    <button type="exit" class="btn btn-secondary save_btn" onclick="window.location.href='home_page.php?activity=grnAll'">Close</button>
                                 </div>
                 </div>
                 

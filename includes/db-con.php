@@ -6,6 +6,7 @@
 	$userName="root";
 	$password="";
 	$dbName="subman_db";
+	$todayStr=date('Y-m-d');
 
 	$conn= mysqli_connect($serverName,$userName,$password,$dbName);
 	
