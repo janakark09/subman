@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2026 at 07:59 PM
+-- Generation Time: Mar 06, 2026 at 01:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -173,7 +173,9 @@ CREATE TABLE `grn_details` (
 --
 
 INSERT INTO `grn_details` (`grnCode1`, `grnCode2`, `proRecNo`, `locationID`, `invoiceDate`, `invoiceNo`, `recFnishedQty`, `fgUnitPrice`, `fgValue`, `recDamQty`, `sampleUnitPrice`, `sampleValue`, `recSampleQty`, `createdDT`, `createdBy`, `status`, `receiptID`) VALUES
-(7, '2026', 2, 1, '2026-03-06', '323', 250, 323.25, 80812.5, 31, 10.25, 71.75, 7, '2026-03-06 00:27:45', 1002, 'Pending', 0);
+(7, '2026', 2, 1, '2026-03-06', '323', 250, 323.25, 80812.5, 31, 10.25, 71.75, 7, '2026-03-06 00:27:45', 1002, 'Pending', 0),
+(8, '2026', 2, 1, '2026-03-06', '365', 70, 150, 10500, 3, 120, 360, 3, '2026-03-06 08:22:33', 1002, 'Pending', 0),
+(9, '2026', 2, 1, '2026-03-13', '3323', 80, 150, 12000, 18, 130, 260, 2, '2026-03-06 08:24:14', 1002, 'Pending', 0);
 
 -- --------------------------------------------------------
 
@@ -419,10 +421,10 @@ CREATE TABLE `sub_pro_details` (
 --
 
 INSERT INTO `sub_pro_details` (`id`, `recID`, `cutNo`, `colorID`, `sizeID`, `finishedQty`, `fabDamQty`, `processDamQty`, `sampleQty`, `recFnishedQty`, `recDamQty`, `recSampleQty`) VALUES
-(1, 2, '3', 1, 1, 100, 10, 3, 3, 30, 10, 0),
-(2, 2, '3', 1, 1, 100, 10, 3, 3, 45, 8, 2),
-(3, 2, '3', 1, 1, 100, 10, 3, 3, 75, 3, 2),
-(4, 2, '3', 1, 1, 100, 10, 3, 3, 100, 10, 3);
+(1, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
+(2, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
+(3, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
+(4, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3);
 
 -- --------------------------------------------------------
 
@@ -731,7 +733,7 @@ ALTER TABLE `gatepass_details`
 -- AUTO_INCREMENT for table `grn_details`
 --
 ALTER TABLE `grn_details`
-  MODIFY `grnCode1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `grnCode1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `mast_location`

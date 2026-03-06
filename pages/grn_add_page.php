@@ -128,7 +128,6 @@
              $sampleValue=(double)$sampleUnitPrice*(double)$totalRecSQty;
 
             //echo $totalRecFQty."-".$totalRecDQty."-".$totalRecSQty."<br>".count($recFQty)."-".count($recDQty)."-".count($recSQty);
-            echo $UsrLoc;
             $updateRecQuery="INSERT INTO grn_details(grnCode2, proRecNo, locationID, invoiceDate, invoiceNo, recFnishedQty, fgUnitPrice, fgValue, recDamQty, sampleUnitPrice, 
                         sampleValue, recSampleQty, createdDT, createdBy, status) 
                         VALUES ('".date('Y')."', '$recID', '$UsrLoc', STR_TO_DATE('$InvDate','%Y-%m-%d'), '$InvNo', '$totalRecFQty', '$fgUnitPrice', '$fgValue', '$totalRecDQty', '$sampleUnitPrice', '$sampleValue', '$totalRecSQty', NOW(), '$activeUser', 'Pending')";
@@ -138,7 +137,7 @@
                     for($i=0;$i<count($ROWID);$i++)
                         {
                             //echo $recFQty[$i]."-".$recDQty[$i]."-".$recSQty[$i]."<br>";
-                            $updateDetailsQuery="UPDATE sub_pro_details SET recFnishedQty='$recFQty[$i]', recDamQty='$recDQty[$i]', recSampleQty='$recSQty[$i]' WHERE id='$ROWID[$i]'";
+                            $updateDetailsQuery="UPDATE sub_pro_details SET recFnishedQty=recFnishedQty+'$recFQty[$i]', recDamQty=recDamQty+'$recDQty[$i]', recSampleQty=recSampleQty+'$recSQty[$i]' WHERE id='$ROWID[$i]'";
                             mysqli_query($conn,$updateDetailsQuery);
                         }
                     $message="Record Saved Successfully!";
