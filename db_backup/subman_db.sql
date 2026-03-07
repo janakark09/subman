@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2026 at 03:28 PM
+-- Generation Time: Mar 07, 2026 at 08:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -172,7 +172,7 @@ CREATE TABLE `grn_details` (
   `status` varchar(50) NOT NULL,
   `approvedBy` int(32) DEFAULT NULL,
   `approvedDT` datetime DEFAULT NULL,
-  `receiptID` int(11) NOT NULL
+  `receiptID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -180,8 +180,7 @@ CREATE TABLE `grn_details` (
 --
 
 INSERT INTO `grn_details` (`grnCode1`, `grnCode2`, `proRecNo`, `locationID`, `VendorID`, `invoiceDate`, `invoiceNo`, `recFnishedQty`, `fgUnitPrice`, `fgValue`, `recDamQty`, `sampleUnitPrice`, `sampleValue`, `recSampleQty`, `vat`, `createdDT`, `createdBy`, `status`, `approvedBy`, `approvedDT`, `receiptID`) VALUES
-(12, '2026', 2, 1, 102, '2026-03-07', '121212', 200, 125, 25000, 34, 100, 700.5, 7, 0, '2026-03-07 14:27:17', 1002, 'Approved', 1002, '2026-03-07 15:24:44', 0),
-(22, '2026', 2, 1, 102, '2026-03-11', '121212', 150, 125, 18750, 8, 100, 400, 4, 0, '2026-03-07 14:46:44', 1002, 'Approved', 1002, '2026-03-07 15:39:33', 0);
+(22, '2026', 2, 1, 102, '2026-03-11', '121212', 150, 125, 18750, 8, 100, 400, 4, 0, '2026-03-07 14:46:44', 1002, 'Approved', 1002, '2026-03-07 15:39:33', NULL);
 
 -- --------------------------------------------------------
 
@@ -202,10 +201,6 @@ CREATE TABLE `grn_details1` (
 --
 
 INSERT INTO `grn_details1` (`prodetailsID`, `grnNo`, `recFinQty`, `recDamQty`, `SampleQty`) VALUES
-(1, 12, 100, 13, 3),
-(2, 12, 0, 8, 1),
-(3, 12, 70, 0, 0),
-(4, 12, 30, 13, 3),
 (2, 22, 70, 5, 1),
 (3, 22, 30, 3, 3),
 (4, 22, 50, 0, 0);
@@ -285,7 +280,9 @@ CREATE TABLE `payments` (
   `netValue` double NOT NULL,
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL,
-  `Status` varchar(50) NOT NULL
+  `Status` varchar(50) NOT NULL,
+  `approvedBy` int(32) DEFAULT NULL,
+  `approvedDT` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -657,7 +654,8 @@ ALTER TABLE `grn_details`
   ADD KEY `FK_Grn_Uid` (`createdBy`),
   ADD KEY `FK_Grn_pro` (`proRecNo`),
   ADD KEY `FK_Grn_loc` (`locationID`),
-  ADD KEY `FK_Grn_Appby` (`approvedBy`);
+  ADD KEY `FK_Grn_Appby` (`approvedBy`),
+  ADD KEY `FK_Grn_Recept` (`receiptID`);
 
 --
 -- Indexes for table `grn_details1`
@@ -688,7 +686,8 @@ ALTER TABLE `payments`
   ADD PRIMARY KEY (`receiptID`),
   ADD KEY `FK_Payment_mothod` (`payMenthod`),
   ADD KEY `FK_Payment_user` (`createdBy`),
-  ADD KEY `FK_Payment_vendor` (`VendorID`);
+  ADD KEY `FK_Payment_vendor` (`VendorID`),
+  ADD KEY `FK_Payment_appr` (`approvedBy`);
 
 --
 -- Indexes for table `payment_methods`
@@ -917,6 +916,7 @@ ALTER TABLE `gatepass_details`
 --
 ALTER TABLE `grn_details`
   ADD CONSTRAINT `FK_Grn_Appby` FOREIGN KEY (`approvedBy`) REFERENCES `users` (`User_ID`),
+  ADD CONSTRAINT `FK_Grn_Recept` FOREIGN KEY (`receiptID`) REFERENCES `payments` (`receiptID`),
   ADD CONSTRAINT `FK_Grn_Uid` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Grn_loc` FOREIGN KEY (`locationID`) REFERENCES `mast_location` (`locationID`),
   ADD CONSTRAINT `FK_Grn_pro` FOREIGN KEY (`proRecNo`) REFERENCES `sub_production` (`recordID`);
@@ -946,6 +946,7 @@ ALTER TABLE `order_plan`
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
+  ADD CONSTRAINT `FK_Payment_appr` FOREIGN KEY (`approvedBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Payment_mothod` FOREIGN KEY (`payMenthod`) REFERENCES `payment_methods` (`methodID`),
   ADD CONSTRAINT `FK_Payment_user` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Payment_vendor` FOREIGN KEY (`VendorID`) REFERENCES `vendors` (`vendorID`);

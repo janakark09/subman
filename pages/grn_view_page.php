@@ -24,7 +24,7 @@
     $status="";
     
     
-    echo $slectedgrnID=$_REQUEST['selectedID'];
+    $slectedgrnID=$_REQUEST['selectedID'];
 
     $grnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',SP.recordID AS 'PROID',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
                 DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
@@ -89,6 +89,26 @@
                 {
                     $message="Error while approving the GRN. Try again.";
                 }
+        }
+
+    if(isset($_POST['btnDel']))
+        {
+            $deleteQry1="DELETE FROM grn_details1 WHERE grnNo='$slectedgrnID'";
+            if($deleteRes1=mysqli_query($conn,$deleteQry1)){
+                $deleteQuery="DELETE FROM grn_details WHERE grnCode1='$slectedgrnID'";
+                $deleteRes=mysqli_query($conn,$deleteQuery);
+                if($deleteRes)
+                    {
+                        echo "<script>
+                        setTimeout(function(){window.location.href = 'home_page.php?activity=grnList';}, 1000);
+                        </script>";
+                        exit();
+                    }
+                else
+                    {
+                        $message="Error while deleting the GRN. Try again.";
+                    }
+                }            
         }
  ?>
  
@@ -249,6 +269,7 @@
                                     if($accConfirm==1 && $status!="Approved"){
                                     ?>
                                     <input type="submit" class="btn btn-primary save_btn" value="Approve" name="btnApprove" id="btnApprove"/>
+                                    <input type="submit" class="btn btn-primary save_btn" value="Delete" name="btnDel" id="btnDel"/>
                                     <?php
                                     }
                                 ?>
