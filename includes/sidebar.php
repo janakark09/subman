@@ -187,7 +187,13 @@
                             <a href="home_page.php?activity=grnAll" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='grnAll' ? 'active' : '' ?>">GRN</a>
                         </li>
                         <li class="nav-item">
-                            <a href="home_page.php?activity=payments" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='payments' ? 'active' : '' ?>">Payments</a>
+                            <a href="home_page.php?activity=grnList" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='grnList' ? 'active' : '' ?>">GRN List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="home_page.php?activity=payAdd" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='payAdd' ? 'active' : '' ?>">Payments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="home_page.php?activity=payList" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='payList' ? 'active' : '' ?>">Payments List</a>
                         </li>
                     </ul>
                 </div>

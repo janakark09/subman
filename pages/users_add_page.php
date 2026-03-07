@@ -1,6 +1,7 @@
 <?php
 	include "../includes/db-con.php";
     $message="";
+    $NewID=0;
 
     //------------------ Generate New User ID --------------------------------
     $Query_id="SELECT MAX(User_ID) FROM users";

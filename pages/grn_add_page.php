@@ -39,7 +39,7 @@
 
     $recQuery="SELECT SP.recordID AS 'recID',Sp.gatepassRefID AS 'REF', SP.gatepassDate AS 'GPDATE', SO.styleNo AS 'STYLE', SO.orderNo AS 'ORDERNO', ML.location AS 'LOC', ML.address AS 'ADDR',
                 V.vendor AS 'VEN',V.address AS 'VADDR',V.tel AS 'VTEL',V.fax AS 'VFAX',V.email AS 'VEMAIL', SP.orderAgreement AS 'AGREEMENT',SUM(PD.finishedQty) AS 'FINQTY',(SUM(PD.fabDamQty)+SUM(PD.processDamQty)) AS 'DAMQTY',SUM(PD.sampleQty) AS 'SMQTY', 
-                SP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(SP.cratedDT,'%d/%m/%y') AS 'CREATEDDT', approvedBy AS 'APPROVED', DATE_FORMAT(SP.approvedDT,'%d/%m/%y') AS 'APPDT' 
+                SP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(SP.cratedDT,'%d/%m/%y') AS 'CREATEDDT' 
                     FROM  sub_production SP JOIN sub_pro_details PD ON SP.recordID=PD.recID 
                     JOIN mast_location AS ML ON SP.locationID=ML.locationID  
                     JOIN styleorder AS SO ON SP.orderNoID=SO.id 
@@ -119,6 +119,7 @@
             $totalRecFQty=array_sum($recFQty);
             $totalRecDQty=array_sum($recDQty);
             $totalRecSQty=array_sum($recSQty);
+            $last_id="";
 
             $InvDate=$_POST['invDate'];
             $InvNo=$_POST['invno'];
@@ -127,29 +128,53 @@
             $sampleUnitPrice=$_POST['samUprice'];
              $sampleValue=(double)$sampleUnitPrice*(double)$totalRecSQty;
 
-            //echo $totalRecFQty."-".$totalRecDQty."-".$totalRecSQty."<br>".count($recFQty)."-".count($recDQty)."-".count($recSQty);
-            $updateRecQuery="INSERT INTO grn_details(grnCode2, proRecNo, locationID, invoiceDate, invoiceNo, recFnishedQty, fgUnitPrice, fgValue, recDamQty, sampleUnitPrice, 
-                        sampleValue, recSampleQty, createdDT, createdBy, status) 
-                        VALUES ('".date('Y')."', '$recID', '$UsrLoc', STR_TO_DATE('$InvDate','%Y-%m-%d'), '$InvNo', '$totalRecFQty', '$fgUnitPrice', '$fgValue', '$totalRecDQty', '$sampleUnitPrice', '$sampleValue', '$totalRecSQty', NOW(), '$activeUser', 'Pending')";
-            $updateRec=mysqli_query($conn,$updateRecQuery);
-            if($updateRec)
-                {
-                    for($i=0;$i<count($ROWID);$i++)
-                        {
-                            //echo $recFQty[$i]."-".$recDQty[$i]."-".$recSQty[$i]."<br>";
-                            $updateDetailsQuery="UPDATE sub_pro_details SET recFnishedQty=recFnishedQty+'$recFQty[$i]', recDamQty=recDamQty+'$recDQty[$i]', recSampleQty=recSampleQty+'$recSQty[$i]' WHERE id='$ROWID[$i]'";
-                            mysqli_query($conn,$updateDetailsQuery);
-                        }
-                    $message="Record Saved Successfully!";
-                    $saved=1;
-                    echo "<script>
-                        setTimeout(function(){window.location.href = 'home_page.php?activity=grnAll';}, 1000);
-                    </script>";
-                    exit(); 
+             try{
+                $conn->begin_transaction();
+
+                //echo $totalRecFQty."-".$totalRecDQty."-".$totalRecSQty."<br>".count($recFQty)."-".count($recDQty)."-".count($recSQty);
+                $updateRecQuery="INSERT INTO grn_details(grnCode2, proRecNo, locationID, invoiceDate, invoiceNo, recFnishedQty, fgUnitPrice, fgValue, recDamQty, sampleUnitPrice, 
+                            sampleValue, recSampleQty, createdDT, createdBy, status) 
+                            VALUES ('".date('Y')."', '$recID', '$UsrLoc', STR_TO_DATE('$InvDate','%Y-%m-%d'), '$InvNo', '$totalRecFQty', '$fgUnitPrice', '$fgValue', '$totalRecDQty', '$sampleUnitPrice', '$sampleValue', '$totalRecSQty', NOW(), '$activeUser', 'Pending')";
+                $conn->query($updateRecQuery);
+                $last_id = $conn->insert_id;
+
+                if($last_id!="")
+                    {
+                        for($i=0;$i<count($ROWID);$i++)
+                            {
+                                if($recFQty[$i]==0 && $recDQty[$i]==0 && $recSQty[$i]==0)
+                                    {
+                                        $message="No items received for record no: $recID. Record not saved!";
+                                        $saved=0;
+                                    }
+                                else
+                                    {
+                                        $conn->begin_transaction();
+                                        //echo $recFQty[$i]."-".$recDQty[$i]."-".$recSQty[$i]."<br>";
+                                        $updateDetailsQuery="UPDATE sub_pro_details SET recFnishedQty=recFnishedQty+'$recFQty[$i]', recDamQty=recDamQty+'$recDQty[$i]', recSampleQty=recSampleQty+'$recSQty[$i]' WHERE id='$ROWID[$i]'";
+                                        $conn->query($updateDetailsQuery);
+                                        $createGRNQuery="INSERT INTO grn_details1(prodetailsID, grnNo, recFinQty, recDamQty, SampleQty) VALUES ('$ROWID[$i]', '$last_id', '$recFQty[$i]', '$recDQty[$i]', '$recSQty[$i]')";
+                                        $conn->query($createGRNQuery);
+                                    }
+                                
+                            }
+                        $conn->commit();
+                        $message="Record Saved Successfully!";
+                        $saved=1;
+                        echo "<script>
+                            setTimeout(function(){window.location.href = 'home_page.php?activity=grnAll';}, 1000);
+                        </script>";
+                        exit(); 
+                    }
+                else
+                    {
+                        $message="Error Saving Record!";
+                        $saved=0;
+                    }
                 }
-            else
+             catch(Exception $e)
                 {
-                    $message="Error Saving Record!";
+                    $message="Error: ".$e->getMessage();
                     $saved=0;
                 }
         }
@@ -293,7 +318,7 @@
                                                 {
                                             ?>
                                             <tr>
-                                                <td hidden><input type="text" name="rowID[]" value="<?php echo $details['ID']; ?>"></td>    
+                                                <td hidden><input type="text" name="rowID[]" value="<?php echo $details['ID']; ?>"></td>   
                                                 <td><?php echo $no++ ?></td>
                                                 <td><?php echo $details['CUT'];?></td>
                                                 <td><?php echo $details['COLOR'];?></td>

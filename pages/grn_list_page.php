@@ -5,24 +5,19 @@
     $selectedStyle = "";
     $selectedOrder = "";
     $message="";
-    $allQuery="";
+    $allgrnQuery="";
 
-    $allQuery="SELECT SP.recordID AS 'recID',Sp.gatepassRefID AS 'REF', SP.gatepassDate AS 'GPDATE', SO.styleNo AS 'STYLE', SO.orderNo AS 'ORDERNO', ML.location AS 'LOC',
-         V.vendor AS 'VEN',SP.orderAgreement AS 'AGREEMENT',SUM(PD.finishedQty) AS 'FINQTY',(SUM(PD.fabDamQty)+SUM(PD.processDamQty)) AS 'DAMQTY',SUM(PD.sampleQty) AS 'SMQTY', 
-         SUM(PD.recFnishedQty) AS 'RECFINQTY',SUM(PD.recDamQty) AS 'RECDAMQTY',SUM(PD.recSampleQty) AS 'RECSMQTY',
-         SP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(SP.cratedDT,'%d/%m/%y') AS 'CREATEDDATE' 
-                    FROM  sub_production SP JOIN sub_pro_details PD ON SP.recordID=PD.recID 
-                    JOIN mast_location AS ML ON SP.locationID=ML.locationID JOIN styleorder AS SO ON SP.orderNoID=SO.id 
-                    JOIN vendors AS V ON SP.vendorID=V.vendorID 
-                    JOIN agreements AS AG ON SP.orderAgreement=AG.id 
-                    JOIN users AS U ON SP.createdBy=U.User_ID WHERE SP.status='Approved' AND SO.Status='Active' ";
-    $orderby="GROUP BY PD.recID ORDER BY SP.recordID DESC";
+    $allgrnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',SP.recordID AS 'PROID',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
+                DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
+                (GD.fgValue+GD.sampleValue+GD.vat) AS 'GRNVAL', DATE_FORMAT(GD.createdDT,'%d/%m/%y') AS 'GRNDATE', CONCAT(U.Fname, ' ', U.Lname) AS 'GRNBY', GD.status AS 'STATUS'
+                FROM grn_details GD JOIN sub_production SP ON GD.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
+                JOIN mast_location ML ON SP.locationID=ML.locationID JOIN vendors V ON SP.vendorID=V.vendorID JOIN users U ON SP.createdBy=U.User_ID";
 
-    $returnAll=mysqli_query($conn,$allQuery.$orderby);
+    $returnAll=mysqli_query($conn,$allgrnQuery);
     
     if(isset($_POST['btnAll']))
         {
-            $returnAll=mysqli_query($conn,$allQuery.$orderby);
+            $returnAll=mysqli_query($conn,$allgrnQuery);
         }
 
     //------------------ Fetch Buyer Name and Style Nos -------------------
@@ -56,7 +51,7 @@
 
     if(isset($_POST['btnSearch']) && $selectedOrder!=""){
         //echo $selectedOrder;
-        $srchQry=$allQuery." AND SP.orderNoID='$selectedOrder' ".$orderby;
+        $srchQry=$allQuery." WHERE SP.orderNoID='$selectedOrder' ";
         $returnAll=mysqli_query($conn,$srchQry);
     }
     elseif(isset($_POST['btnSearch']) && $selectedOrder=="")
@@ -64,23 +59,7 @@
             $message = "All production records Loaded. *Please select a Order No to search.";
         }
 
-    if(isset($_POST['btnSave']) && isset($_POST['addRecord']) && !empty($_POST['addRecord']))
-    {
-        $receivedFinQty = $_POST['receivedFinQty'];
-        $receivedDamQty = $_POST['receivedDamQty'];
-        $receivedSmQty = $_POST['receivedSmQty'];
-        foreach($_POST['addRecord'] as $recID){
-            //echo "Record ID: " . $recID . ", Received Finished Qty: " . $receivedFinQty . ", Received Damaged Qty: " . $receivedDamQty . ", Received Sample Qty: " . $receivedSmQty . "<br>";
-            $updateQuery = "UPDATE sub_production SET receivedFinQty='$receivedFinQty', receivedDamQty='$receivedDamQty', receivedSmQty='$receivedSmQty' WHERE recID='$recID'";
-            if(mysqli_query($conn, $updateQuery)){
-                $message = "Selected records have been added to GRN successfully.";
-            } else {
-                $message = "Error: " . mysqli_error($conn);
-            }
-        }
-    }
-
-
+    $activeUser=$_SESSION['_UserID'];
 
  ?>
  
@@ -90,11 +69,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRN Add</title>
+    <title>GRN List</title>
 </head>
 <body>
     <div class="d-flex justify-content-between mb-3">
-        <h4>Add GRN Records</h4>
+        <h4>All GRN List</h4>
     </div>
     <form method="POST">
         <div class="container-fluid">
@@ -156,18 +135,21 @@
     <div class="table-wrapper">
         <table class="table1 text-center" cellspacing="0" style="font-size: 9pt;">
         	<tr class="table-header">
-                <th>GRN</th>
-            	<th>Record No.</th>
+                <th hidden></th>
+                <th>GRN No.</th>
+            	<th>Product. ID</th>
                 <th>Style</th>
-                <th>Order No.</th>
-                <th>Finish Date</th>
+                <th>Order</th>
+                <th>Invoice Date</th>
                 <th>Vendor</th>
                 <th>Finished Qty.</th>
-                <th>Received Finished Qty.</th>
-                <th>Total Damages</th>
-                <th>Received Damages</th>
-                <th>Total Samples</th>
-                <th>Received Samples</th>			
+                <th>Damage Qty.</th>
+                <th>Sample Qty.</th>
+                <th>GRN Value</th>
+                <th>Status</th>
+                <th>Created Date</th>
+                <th>Created By</th>
+                <th>View</th>			
             </tr>
             <?php
             try{
@@ -175,28 +157,25 @@
                 {
                     ?>
                     <tr class="flex align-items-center">
-                        <td>
-                        <?php
-                                if($result1['RECFINQTY'] > $result1['FINQTY'] || $result1['RECDAMQTY'] < $result1['DAMQTY'] || $result1['RECSMQTY'] < $result1['SMQTY']){
-                                ?>    
-                                <button type="button" name="addGRN" value="addGRN" class="btn btn-success" onclick="window.location.href='home_page.php?activity=grnUpdate&selectedID=<?php echo $result1['recID']?>'">ADD</button></td>
-                                <?php
-                                } else {
-                                    echo 'Finished';
-                                }
-                            ?>    
-                         </td>
-                        <td class="text-center"><?php echo $result1['recID']; ?></td>
+                        <td hidden><input type="text" name="grnID" value="<?php echo $result1['CODE1']; ?>"></td> 
+                        <td class="text-center"><?php echo $result1['CODE2']; ?></td>
+                        <td><?php echo $result1['PROID']?></td>
                         <td><?php echo $result1['STYLE']?></td>
                         <td><?php echo $result1['ORDERNO']?></td>
-                        <td class="text-nowrap"><?php echo $result1['GPDATE']?></td>
+                        <td ><?php echo $result1['INVDATE']?></td>
                         <td><?php echo $result1['VEN']?></td>
-                        <td><?php echo $result1['FINQTY']?></td>
-                        <td><?php echo $result1['RECFINQTY']?></td>
-                        <td><?php echo $result1['DAMQTY']?></td>
-                        <td><?php echo $result1['RECDAMQTY']?></td>
-                        <td><?php echo $result1['SMQTY']?></td>
-                        <td><?php echo $result1['RECSMQTY']?></td>
+                        <td><?php echo $result1['RECFQTY']?></td>
+                        <td><?php echo $result1['RECDQTY']?></td>
+                        <td><?php echo $result1['RECSQTY']?></td>
+                        <td class="decimal-data"><?php echo $result1['GRNVAL']?></td>
+                        <td><?php echo $result1['STATUS']?></td>
+                        <td><?php echo $result1['GRNDATE']?></td>
+                        <td><?php echo $result1['GRNBY']?></td>
+                        <td class="text-center"><?php 
+                                $selected= $result1['CODE1'];
+                                $url = 'grn_view_page.php?activity=grnView&Criteria=Grn&selectedID= '.$selected;
+                                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">View</a>';
+                        ?></td> 
                     </tr>
                     <?php
                 }
@@ -207,7 +186,10 @@
 			?>
         </table>
     </div> 
-
+    <!-- <div class="d-lg-flex justify-content-center mb-5 mt-3 gap-2">
+        <input type="submit" value="Save" class="btn btn-primary me-2 save_btn" name="btnSave"/>
+        <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=grnAll'"/>
+    </div> -->
     </form>
     <div class="container text-center" >
         <label class="text-danger"><?php echo $message?></label>
@@ -217,6 +199,15 @@
         document.getElementById('styleSelect').selectedIndex = 0;
         document.getElementById('orderSelect').innerHTML = '<option selected hidden></option>';
     }
+    let cells = document.querySelectorAll(".decimal-data");
+        cells.forEach(function(cell) {
+        let number = Number(cell.textContent);
+        cell.textContent = number.toLocaleString('en-US', {
+            style: 'decimal',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    });
 </script>
 </body>
 </html>

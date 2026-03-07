@@ -2,76 +2,64 @@
 	include "../includes/db-con.php";
     session_start();
 
-    $no = 1;
-    $recID="";
-    $gpRef="";
-    $gpDate="";
-    $style="";
-    $order="";
-    $location="";
-    $address="";
+    $gpID="";
     $vendor="";
-    $venAddrs="";
-    $venTel="";
-    $agreement="";
-    $proQty="";
-    $damQty="";
-    $sampleQty="";
-    $status="";
+    $message="";
+    $address="";
+    $tel="";
+    $person="";
+    $date="";
+    $location="";
     $createdby="";
     $createddt="";
-    $approvedby="";
-    $approveddt="";
-    
+    $style="";
+    $order="";
+    $agreement="";
+    $total="";
+    $no = 1;
     $user="";
+    $approvedby=" ";
+    $approveddt="";
     $accConfirm=0;
-    $message="";
+    $status="";
     
     
-    $slectedrecID=$_REQUEST['selectedID'];
+    echo $slectedgrnID=$_REQUEST['selectedID'];
 
-    $recQuery="SELECT SP.recordID AS 'recID',Sp.gatepassRefID AS 'REF', SP.gatepassDate AS 'GPDATE', SO.styleNo AS 'STYLE', SO.orderNo AS 'ORDERNO', ML.location AS 'LOC', ML.address AS 'ADDR',
-                V.vendor AS 'VEN',V.address AS 'VADDR',V.tel AS 'VTEL',V.fax AS 'VFAX',V.email AS 'VEMAIL', SP.orderAgreement AS 'AGREEMENT',SUM(PD.finishedQty) AS 'FINQTY',(SUM(PD.fabDamQty)+SUM(PD.processDamQty)) AS 'DAMQTY',SUM(PD.sampleQty) AS 'SMQTY', 
-                SP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(SP.cratedDT,'%d/%m/%y') AS 'CREATEDDT', approvedBy AS 'APPROVED', DATE_FORMAT(SP.approvedDT,'%d/%m/%y') AS 'APPDT' 
-                    FROM  sub_production SP JOIN sub_pro_details PD ON SP.recordID=PD.recID 
-                    JOIN mast_location AS ML ON SP.locationID=ML.locationID  
-                    JOIN styleorder AS SO ON SP.orderNoID=SO.id 
-                    JOIN vendors AS V ON SP.vendorID=V.vendorID 
-                    JOIN agreements AS AG ON SP.orderAgreement=AG.id 
-                    JOIN users AS U ON SP.createdBy=U.User_ID WHERE SP.recordID='$slectedrecID'";
-                    
-    $selectedData=mysqli_query($conn,$recQuery);
+    $grnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',SP.recordID AS 'PROID',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
+                DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
+                SUM(GD.fgValue+GD.sampleValue+GD.vat) AS 'GRNVAL', DATE_FORMAT(GD.createdDT,'%d/%m/%y') AS 'GRNDATE', GD.createdBy AS 'GRNBY', GD.status AS 'STATUS',
+                ML.location AS 'LOC', A.id AS 'AGREEMENT', GD.approvedBy AS 'APPROVED', DATE_FORMAT(GD.approvedDT,'%d/%m/%y') AS 'APPDT'
+                FROM grn_details GD JOIN sub_production SP ON GD.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
+                JOIN mast_location ML ON SP.locationID=ML.locationID JOIN vendors V ON SP.vendorID=V.vendorID JOIN users U ON SP.createdBy=U.User_ID 
+                JOIN agreements A ON SO.id=A.styleOrderID WHERE GD.grnCode1='$slectedgrnID'";
+    $selectedData=mysqli_query($conn,$grnQuery);
+
     if($selectedData && mysqli_num_rows($selectedData)==1)
         {
             $rowData=mysqli_fetch_assoc($selectedData);
-            $recID=$rowData['recID'];
-            $gpRef=$rowData['REF'];
-            $gpDate=$rowData['GPDATE'];
+            $grnID=$rowData['CODE2'];
+            $vendor=$rowData['VEN'];
+            $proid=$rowData['PROID'];
+            $invdate=$rowData['INVDATE'];
+            $recfinqty=$rowData['RECFQTY']; 
+            $recdamqty=$rowData['RECDQTY'];
+            $recsamqty=$rowData['RECSQTY'];
+            $grnval=$rowData['GRNVAL'];
+            $grnby=$rowData['GRNBY'];
+            $grndt=$rowData['GRNDATE'];
+            $location=$rowData['LOC'];
             $style=$rowData['STYLE'];
             $order=$rowData['ORDERNO'];
-            $location=$rowData['LOC'];
-            $address=$rowData['ADDR'];
-            $vendor=$rowData['VEN'];
-            $venAddrs=$rowData['VADDR'];
-            $venTel=$rowData['VTEL'];
-            $venFax=$rowData['VFAX'];
-            $venEmail=$rowData['VEMAIL'];
             $agreement=$rowData['AGREEMENT'];
-            $proQty=$rowData['FINQTY'];
-            $damQty=$rowData['DAMQTY'];
-            $sampleQty=$rowData['SMQTY'];
-            $status=$rowData['STATUS'];
-            $createdby=$rowData['CREATEDBY'];
-            $createddt=$rowData['CREATEDDT'];
             $approvedby=$rowData['APPROVED'];
             $approveddt=$rowData['APPDT'];
-            // $tel=$rowData['TEL'];
-            // $person=$rowData['CONP'];
+            $status=$rowData['STATUS'];
         }
     
-    $detailsQuery="SELECT PD.cutNo AS 'CUT',C.color AS 'COLOR',S.size AS 'SIZE', PD.finishedQty AS 'FQTY', PD.processDamQty AS 'DQTY', PD.sampleQty AS 'SQTY' FROM sub_pro_details PD 
-                JOIN style_colors C ON PD.colorID=C.colorID JOIN style_sizes S ON PD.sizeID=S.sizeID  WHERE PD.recID='$slectedrecID'";
-
+    $detailsQuery="SELECT GD1.prodetailsID AS 'PROID', PD.cutNO AS 'CUT', C.color AS 'COLOR',S.size AS 'SIZE', GD1.recFinQty AS 'FQTY', GD1.recDamQty AS 'DQTY', GD1.SampleQty AS 'SQTY' 
+                FROM grn_details1 GD1 JOIN sub_pro_details PD ON GD1.prodetailsID=PD.id
+                JOIN style_colors C ON PD.colorID=C.colorID JOIN style_sizes S ON PD.sizeID=S.sizeID  WHERE GD1.grnNo='$slectedgrnID'";
     $detailsData=mysqli_query($conn,$detailsQuery);
 
 	$activeUser=$_SESSION['_UserID'];
@@ -88,18 +76,18 @@
 
     if(isset($_POST['btnApprove']))
         {
-            $updateQuery="UPDATE sub_production SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE recordID='$slectedrecID'";
+            $updateQuery="UPDATE grn_details SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE grnCode1='$slectedgrnID'";
             $updateRes=mysqli_query($conn,$updateQuery);
             if($updateRes)
                 {
                     echo "<script>
-                    setTimeout(function(){window.location.href = 'home_page.php?activity=proRec';}, 1000);
+                    setTimeout(function(){window.location.href = 'home_page.php?activity=grnList';}, 1000);
                     </script>";
                     exit();
                 }
             else
                 {
-                    $message="Error while approving the production record. Try again.";
+                    $message="Error while approving the GRN. Try again.";
                 }
         }
  ?>
@@ -110,7 +98,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Production view</title>
+    <title>GRN view</title>
 
     <!--bootstrap-->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
@@ -137,28 +125,29 @@
                                     <img src="../Resources/images/logo.png" alt="Logo" class="img-fluid"  />
                                 </div>
                                 <div class="col-6 text-center pt-3">
-                                    <h3><?php echo $vendor; ?></h3>
-                                    <p class="text-center"><?php echo $venAddrs; ?><br><b>Tel : </b><?php echo $venTel;?> <b>Fax : </b><?php echo $venFax;?> <br><b>E-Mail : </b><?php echo $venEmail;?></p>
+                                    <h3>Original Apparel (Pvt) Ltd</h3>
+                                    <p class="text-center">246/03 Welmilla, Aluthgama,  Bandaragama Bandaragama Sri Lanka.<br><b>Tel : </b>(122)(+94)11 7577700 <b>Fax : </b>(122)(+94)382291763 <br><b>E-Mail : </b>info@originalapparel.lk <b>Web : </b>www.originalapparel.lk</p>
                                 </div>
                                 <div class="col-3"></div>
-                            <div><h3 class="text-center title mb-2">SUBCONTRACT PRODUCTION SHEET</h3></div>
-                            <div class="row no-wrap1">
-                                <div class="col-md-6 ps-4 mb-3">
+                            <div><h3 class="text-center title mb-2">GOOD RECEIVED NOTE (GRN)</h3></div>
+                            <div class="row no-wrap1 ">
+                                <div class="col-md-6 ps-4 mb-1 ">
                                     <table class="w-100" style="border:1px;">
                                         <tbody>
-                                            <tr><td>Record No.</td><td>:</td><td> <?php echo $recID;?></td></tr>
-                                            <tr><td>Gate pass to</td><td>:</td><td> <?php echo $location;?></td></tr>
-                                            <tr><td>Address</td><td>:</td><td> <?php echo $address;?></td></tr>
+                                            <tr><td>GRN No</td><td>:</td><td> <?php echo $grnID;?></td></tr>
+                                            <tr><td>Sub Contractor</td><td>:</td><td> <?php echo $vendor;?></td></tr>
+                                            <tr><td>Production Rec. No.</td><td>:</td><td> <a href="#"><?php echo $proid;?></a></td></tr>
+                                            <tr><td>Invoice Date</td><td>:</td><td> <?php echo $invdate;?></td></tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-md-6 ps-4 mb-3">
+                                <div class="col-md-6 ps-4 mb-1">
                                     <table class="w-100" style="border:1px;">
                                         <tbody>
-                                            <tr><td>Finishing Date</td><td>:</td><td> <?php echo $gpDate;?></td></tr>
-                                            <tr><td>Ref. No.</td><td>:</td><td> <?php echo $gpRef;?></td></tr>
-                                            <tr><td>Entered By</td><td>:</td><td> <?php echo $createdby;?></td></tr>
-                                            <tr><td>Entered Date/Time</td><td>:</td><td> <?php echo $createddt;?></td></tr>
+                                            <tr><td>Location</td><td>:</td><td> <?php echo $location;?></td></tr>
+                                            <tr><td>Created By</td><td>:</td><td> <?php echo $grnby;?></td></tr>
+                                            <tr><td>GRN Date/Time</td><td>:</td><td> <?php echo $grndt;?></td></tr>
+                                            <tr><td>Status</td><td>:</td><td> <?php echo $status;?></td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -166,36 +155,31 @@
 
                             <!---------------------------------- Buyer Style Order Section -------------------------------------- -->
 
-                            <div style="height:50px; font-family: times-new-roman;"><h4 class="text-center mt-3"><u>Order Details</u></h4></div>
+                            <div style="height:50px; font-family: times-new-roman;"><h4 class="text-center mt-3"><u>Style Order Details</u></h4></div>
                             <div class="row text-center">
                                 <div class="col ps-4">
                                     <table class="w-100 table">
                                         <tr>
                                             <th>Style No.</th>
                                             <th>Order No.</th>
-                                            <th>Agr. No</th>
-                                            <th>Total(Finished)</th>
-                                            <th>Total(Damages)</th>
-                                            <th>Total(Sample)</th>
+                                            <th>Agreement No</th>
+                                            <th>Total GRN Value</th>
                                         </tr>
                                         <tr>
                                             <td><?php echo $style;?></td>
                                             <td><?php echo $order;?></td>
                                             <td><?php echo $agreement;?></td>
-                                            <td><?php echo $proQty;?></td>
-                                            <td><?php echo $damQty;?></td>
-                                            <td><?php echo $sampleQty;?></td>
+                                            <td><?php echo $grnval;?></td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
-                            
                             <!---------------------------------- Item Details Section -------------------------------------- -->
 
                             <div style="height:50px; font-family: times-new-roman;"><h4 class="text-center mt-5"><u>Parts Details</u></h4></div>
                             <div class="row text-center">
                                 <div class="col ps-4">
-                                    <table class="w-100 report-table">
+                                    <table class="w-100 report-table text-center">
                                         <tr>
                                             <th>No.</th>
                                             <th>Cut No.</th>
@@ -223,9 +207,9 @@
                                         ?>
                                         <tr>
                                             <td class="dark-cell" colspan="4">Total</td>
-                                            <td class="dark-bg-cell"><?php echo $proQty;?></td>
-                                            <td class="dark-bg-cell"><?php echo $damQty;?></td>
-                                            <td class="dark-bg-cell"><?php echo $sampleQty;?></td>
+                                            <td class="dark-bg-cell"><?php echo $recfinqty;?></td>
+                                            <td class="dark-bg-cell"><?php echo $recdamqty;?></td>
+                                            <td class="dark-bg-cell"><?php echo $recsamqty;?></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -255,11 +239,6 @@
                                         <label class="mt-4">........................................</label><br>
                                         <label>Checked by</label><br>
                                     </td>
-                                    <td>
-                                        <label></label><br>
-                                        <label class="mt-4">........................................</label><br>
-                                        <label>Received by</label><br>
-                                    </td>
                                 </tr>
                             </table>
                             </div>
@@ -275,7 +254,7 @@
                                 ?>
                                 <button type="button" class="btn btn-success save_btn" onclick="window.print()">Print</button>
                             </div>
-                </div>  
+                            </div>
             </div>
             
         </div>

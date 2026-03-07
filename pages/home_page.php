@@ -254,8 +254,20 @@
 										case 'grnUpdate':
 											include ("grn_add_page.php");
 											break;
-										case 'payments':
-											include ("payments_page.php");
+										case 'grnList':
+											include ("grn_list_page.php");
+											break;
+										case 'grnView':
+											include ("grn_view_page.php");
+											break;
+										case 'payAdd':
+											include ("payment_add_page.php");
+											break;
+										case 'payList':
+											include ("payment_list_page.php");
+											break;
+										case 'payView':
+											include ("payment_view_page.php");
 											break;
 										//------------------------------------------------
 										case 'users':

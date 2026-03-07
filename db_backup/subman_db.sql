@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 06, 2026 at 01:17 PM
+-- Generation Time: Mar 07, 2026 at 03:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -135,12 +135,15 @@ CREATE TABLE `gatepass_details` (
 --
 
 INSERT INTO `gatepass_details` (`id`, `gpID`, `cutNo`, `colorID`, `sizeID`, `matQty`) VALUES
-(10, 11, '3', 1, 2, 100),
-(11, 11, '3', 2, 1, 200),
-(12, 12, '300', 4, 2, 20),
-(13, 12, '200', 2, 2, 10),
-(14, 12, '200', 2, 2, 10),
-(15, 12, '200', 2, 2, 10);
+(11, 11, '3', 1, 2, 100),
+(16, 11, '3', 1, 2, 100),
+(17, 11, '3', 1, 2, 100),
+(18, 11, '3', 1, 2, 100),
+(19, 12, '4', 4, 2, 20),
+(20, 12, '4', 4, 2, 20),
+(21, 12, '4', 2, 2, 10),
+(22, 12, '4', 4, 2, 20),
+(23, 12, '4', 4, 2, 20);
 
 -- --------------------------------------------------------
 
@@ -153,6 +156,7 @@ CREATE TABLE `grn_details` (
   `grnCode2` varchar(10) NOT NULL,
   `proRecNo` int(32) NOT NULL,
   `locationID` int(32) NOT NULL,
+  `VendorID` int(32) NOT NULL,
   `invoiceDate` date NOT NULL,
   `invoiceNo` varchar(50) NOT NULL,
   `recFnishedQty` double DEFAULT NULL,
@@ -162,9 +166,12 @@ CREATE TABLE `grn_details` (
   `sampleUnitPrice` double NOT NULL,
   `sampleValue` double NOT NULL,
   `recSampleQty` double NOT NULL,
+  `vat` double NOT NULL,
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL,
   `status` varchar(50) NOT NULL,
+  `approvedBy` int(32) DEFAULT NULL,
+  `approvedDT` datetime DEFAULT NULL,
   `receiptID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -172,10 +179,36 @@ CREATE TABLE `grn_details` (
 -- Dumping data for table `grn_details`
 --
 
-INSERT INTO `grn_details` (`grnCode1`, `grnCode2`, `proRecNo`, `locationID`, `invoiceDate`, `invoiceNo`, `recFnishedQty`, `fgUnitPrice`, `fgValue`, `recDamQty`, `sampleUnitPrice`, `sampleValue`, `recSampleQty`, `createdDT`, `createdBy`, `status`, `receiptID`) VALUES
-(7, '2026', 2, 1, '2026-03-06', '323', 250, 323.25, 80812.5, 31, 10.25, 71.75, 7, '2026-03-06 00:27:45', 1002, 'Pending', 0),
-(8, '2026', 2, 1, '2026-03-06', '365', 70, 150, 10500, 3, 120, 360, 3, '2026-03-06 08:22:33', 1002, 'Pending', 0),
-(9, '2026', 2, 1, '2026-03-13', '3323', 80, 150, 12000, 18, 130, 260, 2, '2026-03-06 08:24:14', 1002, 'Pending', 0);
+INSERT INTO `grn_details` (`grnCode1`, `grnCode2`, `proRecNo`, `locationID`, `VendorID`, `invoiceDate`, `invoiceNo`, `recFnishedQty`, `fgUnitPrice`, `fgValue`, `recDamQty`, `sampleUnitPrice`, `sampleValue`, `recSampleQty`, `vat`, `createdDT`, `createdBy`, `status`, `approvedBy`, `approvedDT`, `receiptID`) VALUES
+(12, '2026', 2, 1, 102, '2026-03-07', '121212', 200, 125, 25000, 34, 100, 700.5, 7, 0, '2026-03-07 14:27:17', 1002, 'Approved', 1002, '2026-03-07 15:24:44', 0),
+(22, '2026', 2, 1, 102, '2026-03-11', '121212', 150, 125, 18750, 8, 100, 400, 4, 0, '2026-03-07 14:46:44', 1002, 'Approved', 1002, '2026-03-07 15:39:33', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `grn_details1`
+--
+
+CREATE TABLE `grn_details1` (
+  `prodetailsID` int(32) NOT NULL,
+  `grnNo` int(32) NOT NULL,
+  `recFinQty` double DEFAULT NULL,
+  `recDamQty` double DEFAULT NULL,
+  `SampleQty` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `grn_details1`
+--
+
+INSERT INTO `grn_details1` (`prodetailsID`, `grnNo`, `recFinQty`, `recDamQty`, `SampleQty`) VALUES
+(1, 12, 100, 13, 3),
+(2, 12, 0, 8, 1),
+(3, 12, 70, 0, 0),
+(4, 12, 30, 13, 3),
+(2, 22, 70, 5, 1),
+(3, 22, 30, 3, 3),
+(4, 22, 50, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -241,14 +274,43 @@ INSERT INTO `order_plan` (`orderID`, `setPieces`, `subDuration`, `vendor`, `star
 
 CREATE TABLE `payments` (
   `receiptID` int(32) NOT NULL,
-  `date` datetime NOT NULL DEFAULT current_timestamp(),
-  `refNo` varchar(50) NOT NULL,
-  `unitPriceFg` double NOT NULL,
-  `unitPriceSample` double NOT NULL,
+  `date` datetime NOT NULL,
+  `VendorID` int(32) NOT NULL,
+  `payMenthod` int(32) NOT NULL,
+  `accountdetails` varchar(50) DEFAULT NULL,
+  `refNo` varchar(50) DEFAULT NULL,
+  `grossValue` double DEFAULT NULL,
+  `vat` double NOT NULL,
+  `vatValue` double NOT NULL,
+  `netValue` double NOT NULL,
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
   `createdBy` int(32) NOT NULL,
   `Status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_methods`
+--
+
+CREATE TABLE `payment_methods` (
+  `methodID` int(32) NOT NULL,
+  `paymethod` varchar(20) NOT NULL,
+  `status` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payment_methods`
+--
+
+INSERT INTO `payment_methods` (`methodID`, `paymethod`, `status`) VALUES
+(1, 'Cheque', 1),
+(2, 'At site', 1),
+(3, 'Bank Deposit', 1),
+(4, 'Bank Transfer', 1),
+(5, 'COD', 1),
+(6, 'FOC', 1);
 
 -- --------------------------------------------------------
 
@@ -422,9 +484,9 @@ CREATE TABLE `sub_pro_details` (
 
 INSERT INTO `sub_pro_details` (`id`, `recID`, `cutNo`, `colorID`, `sizeID`, `finishedQty`, `fabDamQty`, `processDamQty`, `sampleQty`, `recFnishedQty`, `recDamQty`, `recSampleQty`) VALUES
 (1, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
-(2, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
-(3, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
-(4, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3);
+(2, 2, '3', 1, 1, 100, 10, 3, 3, NULL, 13, 2),
+(3, 2, '3', 1, 1, 100, 10, 3, 3, 100, NULL, NULL),
+(4, 2, '3', 1, 1, 100, 10, 3, 3, 80, 13, 3);
 
 -- --------------------------------------------------------
 
@@ -594,7 +656,15 @@ ALTER TABLE `grn_details`
   ADD PRIMARY KEY (`grnCode1`),
   ADD KEY `FK_Grn_Uid` (`createdBy`),
   ADD KEY `FK_Grn_pro` (`proRecNo`),
-  ADD KEY `FK_Grn_loc` (`locationID`);
+  ADD KEY `FK_Grn_loc` (`locationID`),
+  ADD KEY `FK_Grn_Appby` (`approvedBy`);
+
+--
+-- Indexes for table `grn_details1`
+--
+ALTER TABLE `grn_details1`
+  ADD KEY `FK_GRN1_Prodetails` (`prodetailsID`),
+  ADD KEY `FK_GRN1_grnid` (`grnNo`);
 
 --
 -- Indexes for table `mast_location`
@@ -615,7 +685,16 @@ ALTER TABLE `order_plan`
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
-  ADD PRIMARY KEY (`receiptID`);
+  ADD PRIMARY KEY (`receiptID`),
+  ADD KEY `FK_Payment_mothod` (`payMenthod`),
+  ADD KEY `FK_Payment_user` (`createdBy`),
+  ADD KEY `FK_Payment_vendor` (`VendorID`);
+
+--
+-- Indexes for table `payment_methods`
+--
+ALTER TABLE `payment_methods`
+  ADD PRIMARY KEY (`methodID`);
 
 --
 -- Indexes for table `process_type`
@@ -727,13 +806,13 @@ ALTER TABLE `gatepass`
 -- AUTO_INCREMENT for table `gatepass_details`
 --
 ALTER TABLE `gatepass_details`
-  MODIFY `id` bigint(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `grn_details`
 --
 ALTER TABLE `grn_details`
-  MODIFY `grnCode1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `grnCode1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `mast_location`
@@ -742,10 +821,10 @@ ALTER TABLE `mast_location`
   MODIFY `locationID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `payments`
+-- AUTO_INCREMENT for table `payment_methods`
 --
-ALTER TABLE `payments`
-  MODIFY `receiptID` int(32) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `payment_methods`
+  MODIFY `methodID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `process_type`
@@ -837,9 +916,17 @@ ALTER TABLE `gatepass_details`
 -- Constraints for table `grn_details`
 --
 ALTER TABLE `grn_details`
+  ADD CONSTRAINT `FK_Grn_Appby` FOREIGN KEY (`approvedBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Grn_Uid` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Grn_loc` FOREIGN KEY (`locationID`) REFERENCES `mast_location` (`locationID`),
   ADD CONSTRAINT `FK_Grn_pro` FOREIGN KEY (`proRecNo`) REFERENCES `sub_production` (`recordID`);
+
+--
+-- Constraints for table `grn_details1`
+--
+ALTER TABLE `grn_details1`
+  ADD CONSTRAINT `FK_GRN1_Prodetails` FOREIGN KEY (`prodetailsID`) REFERENCES `sub_pro_details` (`id`),
+  ADD CONSTRAINT `FK_GRN1_grnid` FOREIGN KEY (`grnNo`) REFERENCES `grn_details` (`grnCode1`);
 
 --
 -- Constraints for table `mast_location`
@@ -854,6 +941,14 @@ ALTER TABLE `order_plan`
   ADD CONSTRAINT `FK_plan_orderNo` FOREIGN KEY (`orderID`) REFERENCES `styleorder` (`id`),
   ADD CONSTRAINT `FK_plan_user` FOREIGN KEY (`plannedBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_plan_vendor` FOREIGN KEY (`vendor`) REFERENCES `vendors` (`vendorID`);
+
+--
+-- Constraints for table `payments`
+--
+ALTER TABLE `payments`
+  ADD CONSTRAINT `FK_Payment_mothod` FOREIGN KEY (`payMenthod`) REFERENCES `payment_methods` (`methodID`),
+  ADD CONSTRAINT `FK_Payment_user` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
+  ADD CONSTRAINT `FK_Payment_vendor` FOREIGN KEY (`VendorID`) REFERENCES `vendors` (`vendorID`);
 
 --
 -- Constraints for table `styleorder`
