@@ -26,7 +26,7 @@
     
     $slectedgpID=$_REQUEST['selectedID'];
 
-    $gpQuery="SELECT GP.gatepassID_1 AS 'gpID1', CONCAT(GP.gatepassID_1,'/', GP.gatepassID_2) AS 'gpID2',GP.gatepassDate AS 'GPDATE',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', ML.location AS 'LOC', 
+    $gpQuery="SELECT GP.gatepassID_1 AS 'gpID1', CONCAT(GP.gatepassID_2,'/', GP.gatepassID_1) AS 'gpID2',GP.gatepassDate AS 'GPDATE',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', ML.location AS 'LOC', 
         V.vendor AS 'VEN',V.address AS 'ADDR',V.tel AS 'TEL',V.contactPerson AS 'CONP',GP.orderAgreement AS 'AGREEMENT',SUM(GD.matQty) AS 'TOTAL', GP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', 
             DATE_FORMAT(GP.createdDT,'%d/%m/%y %h:%m %p') AS 'CREATEDDATE',GP.approvedBy AS 'APPROVED',DATE_FORMAT(GP.approvedDT,'%d/%m/%y %h:%m %p') AS 'APPDT' 
                     FROM  gatepass GP JOIN gatepass_details GD ON GP.gatepassID_1=GD.gpID JOIN mast_location AS ML ON GP.locationID=ML.locationID  
@@ -60,7 +60,7 @@
 
 	$activeUser=$_SESSION['_UserID'];
 
-    $userQuery="SELECT CONCAT(U.Fname,' ',U.Lname) AS 'CURRENTU', UD.acc10 AS 'APP1' FROM users U JOIN user_details UD ON U.User_ID=UD.User_ID WHERE U.User_ID='$activeUser'";
+    $userQuery="SELECT CONCAT(U.Fname,' ',U.Lname) AS 'CURRENTU', UD.acc13 AS 'APP1' FROM users U JOIN user_details UD ON U.User_ID=UD.User_ID WHERE U.User_ID='$activeUser'";
     $userData=mysqli_query($conn,$userQuery);
     if($userData && mysqli_num_rows($userData)==1)
         {

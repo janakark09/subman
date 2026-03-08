@@ -49,7 +49,8 @@
         
                     if($result1)
                     {
-                        $message="Style Order added successfully.";
+                        // $message="Style Order added successfully.";
+                        echo "<script>alert('Style Order added successfully!');</script>";
                     }
                     else
                     {

@@ -57,7 +57,7 @@
         
                     if($result1)
                     {
-                        $message="Subcontractor added successfully.";
+                        echo "<script>alert('Subcontractor added successfully!');</script>";
                     }
                     else
                     {

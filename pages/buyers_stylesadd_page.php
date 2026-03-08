@@ -38,7 +38,7 @@
         
                     if($result1)
                     {
-                        $message="Garment Style added successfully.";
+                        echo "<script>alert('Garment Style added successfully!');</script>";
                     }
                     else
                     {

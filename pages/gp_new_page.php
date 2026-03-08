@@ -149,9 +149,9 @@
 
                 $conn->commit();
                 unset($_SESSION['gp_items']);
-                echo "<script>
-                    setTimeout(function(){window.location.href = 'home_page.php?activity=gatepass';}, 1000);
-                </script>";
+                
+                echo "<script>alert('Gate Pass Created successfully!');
+                setTimeout(function(){window.location.href = 'home_page.php?activity=gatepass';}, 500)</script>";
                 exit();
             }
             catch (Exception $e) {

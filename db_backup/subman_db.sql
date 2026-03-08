@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2026 at 08:34 PM
+-- Generation Time: Mar 08, 2026 at 06:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -54,7 +54,8 @@ CREATE TABLE `agreements` (
 INSERT INTO `agreements` (`id`, `vendorID`, `process`, `styleOrderID`, `pcsPerSet`, `contractTotalQty`, `dailyQty`, `startedDate`, `endDate`, `creditPeriod`, `unitPriceFg`, `unitPriceSample`, `Status`, `createdDT`, `createdBy`) VALUES
 (1, 101, 1, 1, 2, 10000, 100, '2026-02-13', '2026-05-23', 30, 30, 20, 'Active', '2026-02-13 12:39:43', 1001),
 (2, 102, 1, 1, 2, 20000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:41:39', 1001),
-(3, 102, 1, 1, 2, 20000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:45:36', 1001);
+(3, 102, 1, 1, 2, 20000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:45:36', 1001),
+(4, 101, 1, 1, 2, 25000, 30, '2026-03-08', '2028-06-18', 30, 150, 30, 'Active', '2026-03-08 22:13:37', 1002);
 
 -- --------------------------------------------------------
 
@@ -180,7 +181,7 @@ CREATE TABLE `grn_details` (
 --
 
 INSERT INTO `grn_details` (`grnCode1`, `grnCode2`, `proRecNo`, `locationID`, `VendorID`, `invoiceDate`, `invoiceNo`, `recFnishedQty`, `fgUnitPrice`, `fgValue`, `recDamQty`, `sampleUnitPrice`, `sampleValue`, `recSampleQty`, `vat`, `createdDT`, `createdBy`, `status`, `approvedBy`, `approvedDT`, `receiptID`) VALUES
-(22, '2026', 2, 1, 102, '2026-03-11', '121212', 150, 125, 18750, 8, 100, 400, 4, 0, '2026-03-07 14:46:44', 1002, 'Approved', 1002, '2026-03-07 15:39:33', NULL);
+(22, '2026', 2, 1, 102, '2026-03-11', '121212', 150, 125, 18750, 8, 100, 400, 4, 0, '2026-03-07 14:46:44', 1002, 'Approved', 1002, '2026-03-07 15:39:33', 1001);
 
 -- --------------------------------------------------------
 
@@ -284,6 +285,13 @@ CREATE TABLE `payments` (
   `approvedBy` int(32) DEFAULT NULL,
   `approvedDT` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`receiptID`, `date`, `VendorID`, `payMenthod`, `accountdetails`, `refNo`, `grossValue`, `vat`, `vatValue`, `netValue`, `createdDT`, `createdBy`, `Status`, `approvedBy`, `approvedDT`) VALUES
+(1001, '2026-03-09 00:00:00', 102, 1, 'sad', '365665', 19150, 18, 3447, 22597, '2026-03-08 08:59:59', 1002, 'Approved', 1002, '2026-03-08 09:00:02');
 
 -- --------------------------------------------------------
 
@@ -511,7 +519,11 @@ INSERT INTO `users` (`User_ID`, `Name`, `Email`, `Fname`, `Lname`, `fullName`, `
 (1001, 'admin', 'it@originalapparel.lk', 'System', 'Admin', 'System Admin', 'administrator', '202cb962ac59075b964b07152d234b70', 'Active'),
 (1002, 'janakar', 'janakark09@gmail.com', 'A.D.', 'Kumara', 'A.D. Janaka Ruwan Kumara', 'Subcontractor', '202cb962ac59075b964b07152d234b70', 'Active'),
 (1003, 'testuser', 'test@originalapparel.lk', 'Test', 'User', 'Test User', 'Employee', '202cb962ac59075b964b07152d234b70', 'Active'),
-(1004, 'nimals', 'sdfsdfs@dsfsdf.lk', 'Nimal', 'Shantha', 'Numal Shantha', 'Subcontractor', '202cb962ac59075b964b07152d234b70', 'Active');
+(1004, 'nimals', 'sdfsdfs@dsfsdf.lk', 'Nimal', 'Shantha', 'Numal Shantha', 'Subcontractor', '202cb962ac59075b964b07152d234b70', 'Active'),
+(1005, 'user6', 'sdfsdf@dsfsdf.lk', 'user6', 'user6', ' sdfsd', 'administrator', '202cb962ac59075b964b07152d234b70', 'Active'),
+(1006, 'fghfgh', 'fghfg@fdgdrf.lk', 'fthfg', 'fgh', 'fghfg', 'administrator', '202cb962ac59075b964b07152d234b70', 'Active'),
+(1007, 'user7', 'fghfg@fdgdfgxx.lk', 'user7xxx', 'user7xxxx', 'fhg fgh fgh xxx', 'Employee', 'caf1a3dfb505ffed0d024130f58c5cfa', 'Active'),
+(1008, 'subcon1', 'sadd@dsfsd.lk', 'subcon1', 'sda', 'asd', 'Subcontractor', '202cb962ac59075b964b07152d234b70', 'Active');
 
 -- --------------------------------------------------------
 
@@ -526,32 +538,46 @@ CREATE TABLE `user_details` (
   `Joined_Date` date NOT NULL DEFAULT current_timestamp(),
   `locationID` int(32) DEFAULT NULL,
   `venderID` int(32) DEFAULT NULL,
-  `acc1` tinyint(1) DEFAULT NULL,
-  `acc2` tinyint(1) DEFAULT NULL,
-  `acc3` tinyint(1) DEFAULT NULL,
-  `acc4` tinyint(1) DEFAULT NULL,
-  `acc5` tinyint(1) DEFAULT NULL,
-  `acc6` tinyint(1) DEFAULT NULL,
-  `acc7` tinyint(1) DEFAULT NULL,
-  `acc8` tinyint(1) DEFAULT NULL,
-  `acc9` tinyint(1) DEFAULT NULL,
-  `acc10` tinyint(1) DEFAULT NULL,
-  `acc11` tinyint(1) DEFAULT NULL,
-  `acc12` tinyint(1) DEFAULT NULL,
-  `acc13` tinyint(1) DEFAULT NULL,
-  `acc14` tinyint(1) DEFAULT NULL,
-  `acc15` tinyint(1) DEFAULT NULL
+  `acc1` tinyint(1) DEFAULT NULL COMMENT 'Dashboard',
+  `acc2` tinyint(1) DEFAULT NULL COMMENT 'Merchandising',
+  `acc3` tinyint(1) DEFAULT NULL COMMENT 'Buyers Management',
+  `acc4` tinyint(1) DEFAULT NULL COMMENT 'Style Order Management',
+  `acc5` tinyint(1) DEFAULT NULL COMMENT 'Merchandising Approvals',
+  `acc6` tinyint(1) DEFAULT NULL COMMENT 'Planning',
+  `acc7` tinyint(1) DEFAULT NULL COMMENT 'Confirm Planning',
+  `acc8` tinyint(1) DEFAULT NULL COMMENT 'Subcontractor Management',
+  `acc9` tinyint(1) DEFAULT NULL COMMENT 'Agreements',
+  `acc10` tinyint(1) DEFAULT NULL COMMENT 'Approve Agreements',
+  `acc11` tinyint(1) DEFAULT NULL COMMENT 'Gate Passes',
+  `acc12` tinyint(1) DEFAULT NULL COMMENT 'GatePass List',
+  `acc13` tinyint(1) DEFAULT NULL COMMENT 'GatePass Approval',
+  `acc14` tinyint(1) DEFAULT NULL COMMENT 'Pro Rec',
+  `acc15` tinyint(1) DEFAULT NULL COMMENT 'Pro Rec List',
+  `acc16` tinyint(1) DEFAULT NULL COMMENT 'Pro Rec Approve',
+  `acc17` tinyint(1) DEFAULT NULL COMMENT 'GRN',
+  `acc18` tinyint(1) DEFAULT NULL COMMENT 'GRN Listing',
+  `acc19` tinyint(1) DEFAULT NULL COMMENT 'GRN Approval',
+  `acc20` tinyint(1) DEFAULT NULL COMMENT 'Payment Receipt',
+  `acc21` tinyint(1) DEFAULT NULL COMMENT 'Payment list',
+  `acc22` tinyint(1) DEFAULT NULL COMMENT 'Payment Approve',
+  `acc23` tinyint(1) DEFAULT NULL COMMENT 'Reports',
+  `acc24` tinyint(1) DEFAULT NULL COMMENT 'User',
+  `acc25` tinyint(1) DEFAULT NULL COMMENT 'Location'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_details`
 --
 
-INSERT INTO `user_details` (`User_ID`, `Address`, `TelNumber`, `Joined_Date`, `locationID`, `venderID`, `acc1`, `acc2`, `acc3`, `acc4`, `acc5`, `acc6`, `acc7`, `acc8`, `acc9`, `acc10`, `acc11`, `acc12`, `acc13`, `acc14`, `acc15`) VALUES
-(1001, 'Bandaragama', '0778520129', '2026-02-02', 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, NULL, NULL, NULL),
-(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 1, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0),
-(1003, 'Bandaragama', '0778520129', '2026-02-09', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(1004, 'dsf dsf sdf sdf', '354356356', '2026-03-03', 2, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `user_details` (`User_ID`, `Address`, `TelNumber`, `Joined_Date`, `locationID`, `venderID`, `acc1`, `acc2`, `acc3`, `acc4`, `acc5`, `acc6`, `acc7`, `acc8`, `acc9`, `acc10`, `acc11`, `acc12`, `acc13`, `acc14`, `acc15`, `acc16`, `acc17`, `acc18`, `acc19`, `acc20`, `acc21`, `acc22`, `acc23`, `acc24`, `acc25`) VALUES
+(1001, 'Bandaragama', '0778520129', '2026-02-02', 1, NULL, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 1, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1003, 'Bandaragama', '0778520129', '2026-02-09', 1, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1004, 'dsf dsf sdf sdf', '354356356', '2026-03-03', 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1005, ' sdf sdf sdfsdf', '35435465', '2026-03-08', 2, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1006, 'fghfgh', 'fhgjfg', '2026-03-08', 9, NULL, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1007, 'f gh fgh xxxx', '546565xx', '2026-03-08', 3, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0),
+(1008, 'asdsa', '2546546', '2026-03-08', 0, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -787,7 +813,7 @@ ALTER TABLE `vendors`
 -- AUTO_INCREMENT for table `agreements`
 --
 ALTER TABLE `agreements`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `buyer`
@@ -865,7 +891,7 @@ ALTER TABLE `sub_pro_details`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `User_ID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1005;
+  MODIFY `User_ID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1009;
 
 --
 -- AUTO_INCREMENT for table `vendors`

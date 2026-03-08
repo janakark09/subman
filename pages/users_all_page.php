@@ -5,6 +5,26 @@
 	$returnDataSet2=mysqli_query($conn,$sqlQuery);
 	
 	$activeUser=$_SESSION['_UserID'];
+
+    if(isset($_GET['action']) && $_GET['action'] == "delete")
+        {
+            $userID = $_GET['selectedID'];
+            deleteUser($conn, $userID);
+        }
+    function deleteUser($conn, $userID)
+        {
+            $sqlDeleteUser = "DELETE FROM users WHERE User_ID = '$userID'";
+            $sqlDeleteUserDetails = "DELETE FROM user_details WHERE User_ID = '$userID'";
+            if(mysqli_query($conn, $sqlDeleteUser) && mysqli_query($conn, $sqlDeleteUserDetails))
+            {
+                echo "<script>alert('User deleted successfully.'); window.location.href='home_page.php?activity=users';</script>";
+            }
+            else
+            {
+                echo "<script>alert('Error deleting user: " . mysqli_error($conn) . "');</script>";
+            }
+        }
+
  ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,7 +56,7 @@
             <tr>
             	<td>
                 <?php if($result1['User_ID']!=$activeUser){ ?>
-                <a href="DashBoard.php?activity=editUser&selectedID=<?php echo $result1['User_ID']?>"><?php echo $result1['User_ID']?></a>
+                <a href="home_page.php?activity=edituser&selectedID=<?php echo $result1['User_ID']?>"><?php echo $result1['User_ID']?></a>
                 <?php }
 				else
 				{
@@ -47,7 +67,12 @@
                 <td><?php echo $result1['Email']?></td>
                 <td><?php echo $result1['User_Type']?></td>
                 <td><?php echo $result1['Member_Status']?></td>
-                <td><a href="DashBoard.php?activity=delete&Criteria=User&selectedID=<?php echo $result1['User_ID']?>">Delete</a></td>
+                <td>
+                    <a href="home_page.php?action=del&selectedID=<?php echo $result1['User_ID']?>"
+                    onclick="return confirm('Are you sure you want to delete this user?');">
+                    Delete
+                    </a>
+                </td>
 				
             <tr>
             <?php

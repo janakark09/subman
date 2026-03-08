@@ -16,11 +16,14 @@
         // echo $isActive;
         $updateQuery="UPDATE user_type SET status='$isActive' WHERE userType='$selectedUType'";
 
-        mysqli_query($conn, $updateQuery);
+        if(mysqli_query($conn, $updateQuery))
+            {
+                echo "<script>alert('User Type Updated successfully!');
+                setTimeout(function(){window.location.href = 'home_page.php?activity=usertype';}, 500)</script>";
+                    exit();
+            }
 
-        echo "<script>
-        setTimeout(function(){window.location.href = 'home_page.php?activity=usertype';}, 1000);
-      </script>";
+       
     }
  ?>
 <!DOCTYPE html>

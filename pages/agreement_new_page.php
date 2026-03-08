@@ -112,9 +112,8 @@
                             VALUES ('$vendorid','$typeid','$orderNo','$pieces','$totalQty','$perDayQty','$startingDate','$endingDate','$creditPeriod','$finishedPrice','$samplePrice','$status',NOW(),'$activeUser')";
             
             if(mysqli_query($conn, $insertQuery)){
-                echo "<script>
-                        setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 1000);
-                    </script>";
+                echo "<script>alert('Payment Receipt added successfully!');
+                setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 500)</script>";
                     exit();
             } else {
                 $message = "Error creating agreement: " . mysqli_error($conn);

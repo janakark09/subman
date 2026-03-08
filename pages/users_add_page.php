@@ -49,22 +49,31 @@
         $subconID=$_POST['subcontractor'] ?? '';
         $password=md5($Pswd);
 
-        $ac1=$_POST['check1'] ?? 'false';
-        $ac2=$_POST['check2'] ?? 'false';
-        $ac3=$_POST['check3'] ?? 'false';
-        $ac4=$_POST['check4'] ?? 'false';
-        $ac5=$_POST['check5'] ?? 'false';
-        $ac6=$_POST['check6'] ?? 'false';
-        $ac7=$_POST['check7'] ?? 'false';
-        $ac8=$_POST['check8'] ?? 'false';
-        $ac9=$_POST['check9'] ?? 'false';
-        $ac10=$_POST['check10'] ?? 'false';
-        $ac11=$_POST['check11'] ?? 'false';
-        $ac12=$_POST['check12'] ?? 'false';
-        $ac13=$_POST['check13'] ?? 'false';
-        $ac14=$_POST['check14'] ?? 'false';
-        $ac15=$_POST['check15'] ?? 'false';
-
+        $ac1=isset($_POST['check1']) ? 1 : 0;
+        $ac2=isset($_POST['check2']) ? 1 : 0;
+        $ac3=isset($_POST['check3']) ? 1 : 0;
+        $ac4=isset($_POST['check4']) ? 1 : 0;
+        $ac5=isset($_POST['check5']) ? 1 : 0;
+        $ac6=isset($_POST['check6']) ? 1 : 0;
+        $ac7=isset($_POST['check7']) ? 1 : 0;
+        $ac8=isset($_POST['check8']) ? 1 : 0;
+        $ac9=isset($_POST['check9']) ? 1 : 0;
+        $ac10=isset($_POST['check10']) ? 1 : 0;
+        $ac11=isset($_POST['check11']) ? 1 : 0;
+        $ac12=isset($_POST['check12']) ? 1 : 0;
+        $ac13=isset($_POST['check13']) ? 1 : 0;
+        $ac14=isset($_POST['check14']) ? 1 : 0;
+        $ac15=isset($_POST['check15']) ? 1 : 0;
+        $ac16=isset($_POST['check16']) ? 1 : 0;
+        $ac17=isset($_POST['check17']) ? 1 : 0;
+        $ac18=isset($_POST['check18']) ? 1 : 0;
+        $ac19=isset($_POST['check19']) ? 1 : 0;
+        $ac20=isset($_POST['check20']) ? 1 : 0;
+        $ac21=isset($_POST['check21']) ? 1 : 0;
+        $ac22=isset($_POST['check22']) ? 1 : 0;
+        $ac23=isset($_POST['check23']) ? 1 : 0;
+        $ac24=isset($_POST['check24']) ? 1 : 0;
+        $ac25=isset($_POST['check25']) ? 1 : 0;
 
         $query_userchk="SELECT COUNT(User_ID) FROM users WHERE Name='$Uname'";
 		$result_userchk=mysqli_query($conn,$query_userchk);
@@ -73,34 +82,33 @@
         
         if($chk_count==0)
         {
-
-            if($Pswd == $Pswd1)
-                {                    
-                    $insertQuery1="INSERT INTO users (User_ID, Name, Email, Fname, Lname, fullName, User_Type, Password, Member_Status) 
-                        VALUES ('$NewID','$Uname', '$email', '$fname', '$lname', '$fullName', '$userType', '$password', '$uStatus')";
-                    $insertQuery2="INSERT INTO user_details (User_ID, Address, TelNumber, Joined_Date, locationID, venderID, acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10, acc11, acc12, acc13, acc14, acc15)
-                        VALUES ('$NewID', '$address', '$tel', NOW(), '$locID', '$subconID', '$ac1', '$ac2', '$ac3', '$ac4', '$ac5', '$ac6', '$ac7', '$ac8', '$ac9', '$ac10', '$ac11', '$ac12', '$ac13', '$ac14', '$ac15')";
-                    $result1=mysqli_query($conn, $insertQuery1);
-                    $result2=mysqli_query($conn, $insertQuery2);
-        
-                    if($result1 && $result2)
-                    {
-                        $message="User added successfully.";
-                    }
-                    else
-                    {
-                        $message="Error adding User: " . mysqli_error($conn);
-                    }
-                    echo "<script>
-                        setTimeout(function(){window.location.href = 'home_page.php?activity=users';}, 1000);
-                    </script>";
-                    exit();
+                if($Pswd == $Pswd1)
+                    {                    
+                        $insertQuery1="INSERT INTO users (User_ID, Name, Email, Fname, Lname, fullName, User_Type, Password, Member_Status) 
+                            VALUES ('$NewID','$Uname', '$email', '$fname', '$lname', '$fullName', '$userType', '$password', '$uStatus')";
+                        $insertQuery2="INSERT INTO user_details (User_ID, Address, TelNumber, Joined_Date, locationID, venderID, acc1, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10, acc11, acc12, acc13, acc14, acc15, acc16, acc17, acc18, acc19, acc20, acc21, acc22, acc23, acc24, acc25)
+                            VALUES ('$NewID', '$address', '$tel', NOW(), '$locID', '$subconID', '$ac1', '$ac2', '$ac3', '$ac4', '$ac5', '$ac6', '$ac7', '$ac8', '$ac9', '$ac10', '$ac11', '$ac12', '$ac13', '$ac14', '$ac15', '$ac16', '$ac17', '$ac18', '$ac19', '$ac20', '$ac21', '$ac22', '$ac23', '$ac24', '$ac25')";
+                        $result1=mysqli_query($conn, $insertQuery1);
+                        $result2=mysqli_query($conn, $insertQuery2);
+            
+                        if($result1 && $result2)
+                        {
+                            $message="User added successfully.";
+                        }
+                        else
+                        {
+                            $message="Error adding User: " . mysqli_error($conn);
+                        }
+                        echo "<script>
+                            setTimeout(function(){window.location.href = 'home_page.php?activity=users';}, 1000);
+                        </script>";
+                        exit();
                 }
                 else
                 {
                     $message="*Passwords do not match. Please try again.";
                 }
-        }
+            }
         else
         {
             $message="Username already exists. Please choose a different username.";
@@ -122,9 +130,9 @@
             <div class="mb-5">
                 <h4>Add New User</h4>  
             </div>
-            <div class="rounded col-lg-3 p-2 mb-3" style="background-color: lightgrey;">
+            <div class="rounded col-lg-3 p-2 mb-3" style="background-color: lightgrey;" >
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="Radio1" value="employee">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="Radio1" value="employee" >
                     <label class="form-check-label" for="Radio1">Employee</label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -236,26 +244,40 @@
                     </div>
 
                     <div class="rounded container-fluid p-2 mb-3 d-lg-flex" style="background-color: lightgrey; min-height: 10em;">
-                        <div class="col-4">
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="true" id="check1"><label for="check1"> Dashboard</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="true" id="check2"><label for="check2"> Subcontractor Management</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="true" id="check3"><label for="check3"> All Vendor List</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="true" id="check4"><label for="check4"> Merchandising</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="true" id="check5"><label for="check5"> Buyers</label></div>
+                        <div class="col-md-4">
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check1" name="check1"><label for="check1"> Dashboard</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check2" name="check2"><label for="check2"> Merchandising </label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check3" name="check3"><label for="check3"> Buyers Management</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check4" name="check4"><label for="check4"> Style Order Management</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check5" name="check5"><label for="check5"> Merchandising Approvals </label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check6" name="check6"><label for="check6"> Order Planning</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check7" name="check7"><label for="check7"> Confirm Order Planning</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check8" name="check8"><label for="check8"> Subcontractor Management </label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check9" name="check9"><label for="check9"> Order Agreements </label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check10" name="check10"><label for="check10"> Approve Agreements</label></div>
                         </div>
-                        <div class="col-4">
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check6"><label for="check6"> Style Order Management</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check7"><label for="check7"> Dashboard</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check8"><label for="check8"> Dashboard</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check9"><label for="check9"> Dashboard</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check10"><label for="check10"> Dashboard</label></div>
+                        <div class="col-md-4">
+
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check11" name="check11"><label for="check11"> Gate Passes</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check12" name="check12"><label for="check12"> Gate Pass Listing</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check13" name="check13"><label for="check13"> Gate Pass Approval</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check14" name="check14"><label for="check14"> Production Record</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check15" name="check15"><label for="check15"> Production Record Listing</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check16" name="check16"><label for="check16"> Production Record Approval</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check17" name="check17"><label for="check17"> GRN</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check18" name="check18"><label for="check18"> GRN Listing</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check19" name="check19"><label for="check19"> GRN Approval</label></div>
+
+
+
                         </div>
-                        <div class="col-4">
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check11"><label for="check11"> Dashboard</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check12"><label for="check12"> Dashboard</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check13"><label for="check13"> Dashboard</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check14"><label for="check14"> Dashboard</label></div>
-                            <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="check15"><label for="check15"> Dashboard</label></div>
+                        <div class="col-md-4">
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check20" name="check20"><label for="check20"> Payment Receipt</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check21" name="check21"><label for="check21"> Payments</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check22" name="check22"><label for="check22"> Payment Receipt Approval</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check23" name="check23"><label for="check23"> Reports</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check24" name="check24"><label for="check24"> User management</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="check25" name="check25"><label for="check25"> Location Management</label></div>
                         </div>
                     </div>
 

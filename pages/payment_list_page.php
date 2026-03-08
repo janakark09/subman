@@ -1,7 +1,7 @@
     <?php
 	include "../includes/db-con.php";
 
-    $selectedBuyer = "";
+    $selectedVendor = "";
     $selectedStyle = "";
     $selectedOrder = "";
     $message="";
@@ -13,50 +13,35 @@
                  JOIN users U ON P.createdBy=U.User_ID";
 
     $returnAll=mysqli_query($conn,$allpayQuery);
-    
-    if(isset($_POST['btnAll']))
-        {
-            $returnAll=mysqli_query($conn,$allpayQuery);
-        }
 
-    //------------------ Fetch Buyer Name and Style Nos -------------------
-    $sqlQuery1="SELECT * FROM  buyer WHERE status='Active'";
+    //------------------ Fetch Payment Records based on Date Range -------------------
+    if(isset($_POST['fromDate']) && isset($_POST['fromDate'])!="" && $_POST['fromDate'] > $_POST['toDate']){
+        $fromDate = $_POST['fromDate'];
+        $allpayQuery .= " AND P.Date >= '$fromDate'";
+        // echo $allpayQuery;
+        $returnAll=mysqli_query($conn,$allpayQuery);
+    }
+    if(isset($_POST['toDate']) && isset($_POST['toDate'])!="" && $_POST['toDate'] > $_POST['fromDate']){
+        $toDate = $_POST['toDate'];
+        $allpayQuery .= " AND P.Date <= '$toDate'";
+        $returnAll=mysqli_query($conn,$allpayQuery);
+    }
+    //------------------ Fetch Vendor Name -------------------
+    $sqlQuery1="SELECT * FROM  vendors WHERE status='Active'";
     $returnDataSet1=mysqli_query($conn,$sqlQuery1);
 
-    //------------------ Fetch Selected Buyer -------------------
-    if(isset($_POST['buyerid']))
+    //------------------ Fetch Selected Vendor -------------------
+    if(isset($_POST['vendorid']))
     {
-        $selectedBuyer=$_POST['buyerid'];
+        $selectedVendor=$_POST['vendorid'];
     }
-    if($selectedBuyer != ""){
-    $sqlQuery2 = "SELECT * FROM styles WHERE status='Active' AND buyerID='$selectedBuyer'";
-    $returnDataSet2 = mysqli_query($conn,$sqlQuery2);
-    }
-
-    //------------------ Fetch Selected Style -------------------
-    if(isset($_POST['styleNo']))
-    {
-        $selectedStyle=$_POST['styleNo'];
-    }
-    if($selectedStyle != ""){
-    $sqlQuery3 = "SELECT * FROM styleorder WHERE Status='Active' AND styleNo='$selectedStyle'";
-    $returnDataSet3 = mysqli_query($conn,$sqlQuery3);
-    }
-
-    if(isset($_POST['orderNo']))
-    {
-        $selectedOrder=$_POST['orderNo'];
-    }
-
-    if(isset($_POST['btnSearch']) && $selectedOrder!=""){
-        //echo $selectedOrder;
-        $srchQry=$allQuery." WHERE SP.orderNoID='$selectedOrder' ";
+    if($selectedVendor != "" && $selectedVendor != "All"){
+         $srchQry=$allpayQuery." WHERE P.VendorID='$selectedVendor' ";
         $returnAll=mysqli_query($conn,$srchQry);
     }
-    elseif(isset($_POST['btnSearch']) && $selectedOrder=="")
-        {
-            $message = "All production records Loaded. *Please select a Order No to search.";
-        }
+    else{
+        $returnAll=mysqli_query($conn,$allpayQuery);
+    }
 
     $activeUser=$_SESSION['_UserID'];
 
@@ -89,68 +74,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRN List</title>
+    <title>Payment List</title>
 </head>
 <body>
     <div class="d-flex justify-content-between mb-3">
-        <h4>All GRN List</h4>
+        <h4>Payment Receipt List</h4>
+        <button class="btn btn-primary me-2" name="btnAdd" onclick="window.location.href='home_page.php?activity=payAdd'">+ New Payment </button> 
     </div>
     <form method="POST">
         <div class="container-fluid">
             <!---------------------------------- Buyer Style Order Section -------------------------------------- -->
+            <div class="d-lg-flex mb-3">
+                    <div class="form-group col-lg-2">
+                        <label>From Date</label>
+                        <input type="date" class="form-control" id="fromDate" required name="fromDate" value="<?php echo isset($_POST['fromDate']) ? $_POST['fromDate'] : ''; ?>" onchange="this.form.submit()"/>
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label>To Date</label>
+                        <input type="date" class="form-control" id="toDate" required name="toDate" value="<?php echo isset($_POST['toDate']) ? $_POST['toDate'] : ''; ?>" onchange="this.form.submit()"/>
+                    </div>
+                        <div class="form-group col-md-4 me-3 ms-5">
+                            <br>
+                            <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=payList'"/>
+                        </div> 
+                    </div>
                     <div class="form-group col-md-4 me-3">
-                            <label >Buyer</label>
-                            <select class="form-select" name="buyerid" id="buyerSelect" onchange="resetStyleAndOrder(); this.form.submit()"  >
-                                <option selected hidden></option>
+                            <label >Vendor</label>
+                            <select class="form-select" name="vendorid" id="vendorSelect" onchange="this.form.submit()"  >
+                                <option selected >All</option>
                                 <?php 
-                                    while($buyer=mysqli_fetch_assoc($returnDataSet1)){
+                                    while($vendor=mysqli_fetch_assoc($returnDataSet1)){
                                         ?>
-                                        <option value="<?php echo $buyer['buyerID']; ?>" 
-                                        <?php if(isset($_POST['buyerid']) && $_POST['buyerid']==$buyer['buyerID']) echo "selected"; ?>>
-                                        <?php echo $buyer['buyerName']?></option>
+                                        <option value="<?php echo $vendor['vendorID']; ?>" 
+                                        <?php if(isset($_POST['vendorid']) && $_POST['vendorid']==$vendor['vendorID']) echo "selected"; ?>>
+                                        <?php echo $vendor['vendor']?></option>
                                     <?php
                                     }
                                     ?>
                             </select>
                     </div>
-                    <div class="d-lg-flex mb-3">
-                        <div class="form-group col-md-4 me-3">
-                            <label >Style No.</label>
-                            <select class="form-select" name="styleNo" id="styleSelect" onchange="this.form.submit()">
-                                <option selected hidden></option>
-                                <?php 
-                                    if($selectedBuyer != ""){
-                                        while($styleno=mysqli_fetch_assoc($returnDataSet2)){
-                                            ?>
-                                            <option value="<?php echo $styleno['styleNo']; ?>" <?php if(isset($_POST['styleNo']) && $_POST['styleNo']==$styleno['styleNo']) echo "selected"; ?>><?php echo $styleno['styleNo']?></option>
-                                        <?php
-                                        }
-                                    }
-                                    ?>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-4 me-5">
-                            <label >Order No.</label>
-                            <select class="form-select" name="orderNo" id="orderSelect" onchange="this.form.submit()">
-                                <option selected hidden></option>
-                                <?php 
-                                    if($selectedStyle != ""){
-                                        while($orderno=mysqli_fetch_assoc($returnDataSet3)){
-                                            ?>
-                                            <option value="<?php echo $orderno['id']?>" <?php if(isset($_POST['orderNo']) && $_POST['orderNo']==$orderno['id']) echo "selected"; ?>><?php echo $orderno['orderNo']?></option>
-                                        <?php
-                                        }
-                                    }
-                                    ?>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-4 me-3 ms-5">
-                            <br>
-                            <button type="Search" class="btn btn-primary me-2 save_btn" name="btnSearch" id="btnSearch">Search</button>
-                            <button type="All" class="btn btn-primary me-2 save_btn" name="btnAll" id="btnAll" onclick="resetStyleAndOrder()">All</button>
-                        </div> 
-                    </div>        
-            <div class="table-wrapper">
+                            
+            <div class="table-wrapper mt-5">
                 <table class="table1 text-center" cellspacing="0" style="font-size: 9pt; min-width: 100%;">
                     <tr class="table-header">
                         <th>Receipt No.</th>

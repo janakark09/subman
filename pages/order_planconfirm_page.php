@@ -27,12 +27,15 @@
          $user = $_SESSION['_UserID'];
 
         $updateQuery = "UPDATE order_plan SET setPieces='$piecesPerSet', subDuration='$duration', vendor='$vendor', startDate='$startDate', endDate='$endDate',planStatus='Confirmed' WHERE orderID='$orderID'";
-        mysqli_query($conn,$updateQuery);
+        
+        if(mysqli_query($conn,$updateQuery))
+            {
+                echo "<script>alert('Plan Confirmed!');
+                                setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 500)</script>";
+                exit();
+            }
 
-        echo "<script>
-              setTimeout(function(){window.location.href = 'home_page.php?activity=confirmplan';}, 100);
-              </script>";
-        exit();
+        
     }
     
 	$activeUser=$_SESSION['_UserID'];

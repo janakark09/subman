@@ -35,7 +35,7 @@
         
                     if($result1)
                     {
-                        $message="Buyer added successfully.";
+                        echo "<script>alert('Buyer added successfully!');</script>";
                     }
                     else
                     {

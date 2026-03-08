@@ -276,6 +276,9 @@
 										case 'adduser':
 											include ('users_add_page.php');
 											break;
+										case 'edituser':
+											include ('users_edit_page.php');
+											break;
 										case 'usertype':
 											include ('users_type_page.php');
 											break;

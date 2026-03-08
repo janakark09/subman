@@ -64,7 +64,7 @@
 
 	$activeUser=$_SESSION['_UserID'];
 
-    $userQuery="SELECT CONCAT(U.Fname,' ',U.Lname) AS 'CURRENTU', UD.acc10 AS 'APP1' FROM users U JOIN user_details UD ON U.User_ID=UD.User_ID WHERE U.User_ID='$activeUser'";
+    $userQuery="SELECT CONCAT(U.Fname,' ',U.Lname) AS 'CURRENTU', UD.acc19 AS 'APP1' FROM users U JOIN user_details UD ON U.User_ID=UD.User_ID WHERE U.User_ID='$activeUser'";
     $userData=mysqli_query($conn,$userQuery);
     if($userData && mysqli_num_rows($userData)==1)
         {

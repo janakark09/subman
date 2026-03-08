@@ -18,7 +18,7 @@
         
         if(mysqli_query($conn, $insertQuery))
         {
-            $message="Location added successfully.";
+            echo "<script>alert('Location added successfully!');</script>";
         }
         else
         {
