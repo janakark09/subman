@@ -250,7 +250,7 @@ include "../includes/db-con.php";
                 <div class="collapse submenu" id="reportsMenu">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Report1</a>
+                            <a href="home_page.php?activity=rptOrderTrack" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='rptOrderTrack' ? 'active' : '' ?>">Order tracker</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link text-white">Report2</a>

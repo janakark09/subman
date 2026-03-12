@@ -142,12 +142,12 @@
 		<!------------------------------ Body Contents ------------------------------------------------>
 		<div>
 			<div class="container-fluid pt-5">
-				<div class="row min-vh-100">
-					<div class="col-2 mt-1 bg-dark">
+				<div class="row d-flex min-vh-100">
+					<div class="col-sm-6 col-md-4 col-lg-2 mt-1 bg-dark">
 						<!-------------------------------- Side bar ---------------------------->
 						<?php include '../includes/sidebar.php'?>
 						<!-- User Dropdown -->
-						<div class="dropdown">
+						<!-- <div class="dropdown">
 							<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
 							data-bs-toggle="dropdown">
 								<img src="../Resources/images/userIcon.png" width="32" height="32" class="rounded-circle me-2">
@@ -159,7 +159,7 @@
 								<li><hr class="dropdown-divider"></li>
 								<li><a class="dropdown-item" href="#">Sign out</a></li>
 							</ul>
-						</div>
+						</div> -->
 					</div>
 					<div class="col pt-5 mt-2 ms-5 me-5 ">
 						<!-------------------------- Content for the system operations ------------------------->
@@ -268,6 +268,10 @@
 											break;
 										case 'payView':
 											include ("payment_view_page.php");
+											break;
+										//------------------------------------------------
+										case 'rptOrderTrack':
+											include ('./reports/ordertracker_report.php');
 											break;
 										//------------------------------------------------
 										case 'users':
