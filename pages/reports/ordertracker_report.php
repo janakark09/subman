@@ -4,21 +4,12 @@
     $selectedBuyer = "";
     $selectedStyle = "";
     $selectedOrder = "";
+    $selectedLoc="";
+    $selectedVendor="";
+    $fromDate="";
+    $toDate="";
+    $selection1="";
     $message="";
-    $allgrnQuery="";
-
-    $allgrnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',SP.recordID AS 'PROID',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
-                DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
-                (GD.fgValue+GD.sampleValue+GD.vat) AS 'GRNVAL', DATE_FORMAT(GD.createdDT,'%d/%m/%y') AS 'GRNDATE', CONCAT(U.Fname, ' ', U.Lname) AS 'GRNBY', GD.status AS 'STATUS'
-                FROM grn_details GD JOIN sub_production SP ON GD.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
-                JOIN mast_location ML ON SP.locationID=ML.locationID JOIN vendors V ON SP.vendorID=V.vendorID JOIN users U ON SP.createdBy=U.User_ID";
-
-    $returnAll=mysqli_query($conn,$allgrnQuery);
-    
-    if(isset($_POST['btnAll']))
-        {
-            $returnAll=mysqli_query($conn,$allgrnQuery);
-        }
 
     //------------------ Fetch Buyer Name and Style Nos -------------------
     $sqlQuery1="SELECT * FROM  buyer WHERE status='Active'";
@@ -49,15 +40,32 @@
         $selectedOrder=$_POST['orderNo'];
     }
 
-    if(isset($_POST['btnSearch']) && $selectedOrder!=""){
-        //echo $selectedOrder;
-        $srchQry=$allQuery." WHERE SP.orderNoID='$selectedOrder' ";
-        $returnAll=mysqli_query($conn,$srchQry);
+    //------------------ Fetch Location -------------------
+    $locationQuery="SELECT * FROM  mast_location WHERE status='Active'";
+	$locationDataSet=mysqli_query($conn,$locationQuery);
+
+    //------------------ Fetch Vendor Name -------------------
+    $vendorQuery="SELECT * FROM  vendors WHERE status='Active'";
+    $vendorDataSet=mysqli_query($conn,$vendorQuery);
+
+    if(isset($_POST['btnView'])){
+        $selectedBuyer=$_POST['buyerid'];
+        $selectedStyle=$_POST['styleNo'];
+        $selectedOrder=$_POST['orderNo'];
+        $selectedLoc=$_POST['locationid'];
+        $selectedVendor=$_POST['vendorid'];
+        $fromDate=$_POST['fromDate'];
+        $toDate=$_POST['toDate'];
+        $selection1=$_POST['selection1'];
+
+        echo  $selectedBuyer."-".$selectedStyle."-".$selectedOrder."-".$selectedLoc."-".$selectedVendor."-".$fromDate."-".$toDate."-".$selection1;
+
+        $url = 'ordertracker_report_view.php?activity=ordertrackerView&Criteria=Grn&buyer= '.$selectedBuyer.'&style= '.$selectedStyle.'&order= '.$selectedOrder.'&location= '.$selectedLoc.'&vendor= '.$selectedVendor.'&fromDate= '.$fromDate.'&toDate= '.$toDate.'&selection1= '.$selection1;
+        // echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">View</a>';
+        echo "<script>
+            setTimeout(function(){window.open('" . htmlspecialchars($url)."', '_blank');}, 1000);
+        </script>";
     }
-    elseif(isset($_POST['btnSearch']) && $selectedOrder=="")
-        {
-            $message = "All production records Loaded. *Please select a Order No to search.";
-        }
 
     $activeUser=$_SESSION['_UserID'];
 
@@ -78,10 +86,11 @@
     <form method="POST">
         <div class="container-fluid">
             <!---------------------------------- Buyer Style Order Section -------------------------------------- -->
-                    <div class="form-group col-md-4 me-3">
+                    <div class="d-lg-flex mb-3">
+                        <div class="form-group col-md-4 me-3">
                             <label >Buyer</label>
                             <select class="form-select" name="buyerid" id="buyerSelect" onchange="resetStyleAndOrder(); this.form.submit()"  >
-                                <option selected hidden></option>
+                                <option selected>All</option>
                                 <?php 
                                     while($buyer=mysqli_fetch_assoc($returnDataSet1)){
                                         ?>
@@ -92,12 +101,11 @@
                                     }
                                     ?>
                             </select>
-                    </div>
-                    <div class="d-lg-flex mb-3">
+                        </div>
                         <div class="form-group col-md-4 me-3">
                             <label >Style No.</label>
                             <select class="form-select" name="styleNo" id="styleSelect" onchange="this.form.submit()">
-                                <option selected hidden></option>
+                                <option selected>All</option>
                                 <?php 
                                     if($selectedBuyer != ""){
                                         while($styleno=mysqli_fetch_assoc($returnDataSet2)){
@@ -112,7 +120,7 @@
                         <div class="form-group col-md-4 me-5">
                             <label >Order No.</label>
                             <select class="form-select" name="orderNo" id="orderSelect" onchange="this.form.submit()">
-                                <option selected hidden></option>
+                                <option selected>All</option>
                                 <?php 
                                     if($selectedStyle != ""){
                                         while($orderno=mysqli_fetch_assoc($returnDataSet3)){
@@ -125,26 +133,28 @@
                             </select>
                         </div> 
                     </div>
-
-                <div class="form-group col-lg-2">
-                            <label>From Date</label>
-                            <input type="date" class="form-control" id="fromDate" required name="fromDate" value="<?php echo isset($_POST['fromDate']) ? $_POST['fromDate'] : ''; ?>" onchange="this.form.submit()"/>
-                        </div>
-                        <div class="form-group col-lg-2">
-                            <label>To Date</label>
-                            <input type="date" class="form-control" id="toDate" required name="toDate" value="<?php echo isset($_POST['toDate']) ? $_POST['toDate'] : ''; ?>" onchange="this.form.submit()"/>
-                        </div>
-                            <div class="form-group col-md-4 me-3 ms-5">
-                                <br>
-                                <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=payList'"/>
-                            </div> 
+                    <div class="d-lg-flex mb-3">
+                        <div class="form-group col-md-4 me-3">
+                            <label >Location</label>
+                            <select class="form-select" name="locationid" id="locationSelect1">
+                                <option selected>All</option>
+                                <?php 
+                                    while($location=mysqli_fetch_assoc($locationDataSet)){
+                                        ?>
+                                        <option value="<?php echo $location['locationID']; ?>" 
+                                        <?php if(isset($_POST['locationid']) && $_POST['locationid']==$location['locationID']) echo "selected"; ?>>
+                                        <?php echo $location['location']?></option>
+                                    <?php
+                                    }
+                                    ?>
+                            </select>
                         </div>
                         <div class="form-group col-md-4 me-3">
-                                <label >Vendor</label>
-                                <select class="form-select" name="vendorid" id="vendorSelect" onchange="this.form.submit()"  >
+                                <label >Subcontractor</label>
+                                <select class="form-select" name="vendorid" id="vendorSelect"  >
                                     <option selected >All</option>
                                     <?php 
-                                        while($vendor=mysqli_fetch_assoc($returnDataSet1)){
+                                        while($vendor=mysqli_fetch_assoc($vendorDataSet)){
                                             ?>
                                             <option value="<?php echo $vendor['vendorID']; ?>" 
                                             <?php if(isset($_POST['vendorid']) && $_POST['vendorid']==$vendor['vendorID']) echo "selected"; ?>>
@@ -154,71 +164,61 @@
                                         ?>
                                 </select>
                         </div>
-                        <div class="form-group col-md-4 me-3 ms-5">
-                            <br>
-                            <button type="Search" class="btn btn-primary me-2 save_btn" name="btnSearch" id="btnSearch">Search</button>
-                            <button type="All" class="btn btn-primary me-2 save_btn" name="btnAll" id="btnAll" onclick="resetStyleAndOrder()">All</button>
+                    </div>
+                    <div class="d-lg-flex mb-3 gap-3">
+                        <div class="form-group col-lg-2">
+                            <label>From Date</label>
+                            <input type="date" class="form-control" id="fromDate" required name="fromDate" value="<?php echo isset($_POST['fromDate']) ? $_POST['fromDate'] : ''; ?>" onchange="this.form.submit()"/>
                         </div>
+                        <div class="form-group col-lg-2">
+                            <label>To Date</label>
+                            <input type="date" class="form-control" id="toDate" required name="toDate" value="<?php echo isset($_POST['toDate']) ? $_POST['toDate'] : ''; ?>" onchange="this.form.submit()"/>
+                        </div>
+                    </div> 
+                    <div class="mb-3 gap-3 mt-5 bg-light p-3 col-3 rounded border">
+                        <div class="form-group">
+                            <input type="radio" class="form-check-input" name="selection1" id="selection1" value="Gate pass" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Gate pass") echo "checked"; ?>>
+                            <label for="selection1">Gate Passes</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="radio" class="form-check-input" name="selection1" id="selection2" value="Production Records" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Production Records") echo "checked"; ?>>
+                            <label for="selection2">Production Records</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="radio" class="form-check-input" name="selection1" id="selection3" value="GRN" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="GRN") echo "checked"; ?>>
+                            <label for="selection3">GRN</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="radio" class="form-check-input" name="selection1" id="selection4" value="Payments" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Payments") echo "checked"; ?>>
+                            <label for="selection4">Payments</label>
+                        </div>
+                    </div>
+                    <div class="container-fluid mb-3 gap-3">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <br>
+                            <?php
+                                $url = './reports/ordertracker_report_view.php?activity=ordertrackerView'
+                                    .'&Criteria=Grn'
+                                    .'&selectedID='."1"
+                                    .'&buyer='.urlencode($selectedBuyer)
+                                    .'&style='.urlencode($selectedStyle)
+                                    .'&order='.urlencode($selectedOrder)
+                                    .'&location='.urlencode($selectedLoc)
+                                    .'&vendor='.urlencode($selectedVendor)
+                                    .'&fromDate='.urlencode($fromDate)
+                                    .'&toDate='.urlencode($toDate)
+                                    .'&selection1='.urlencode($selection1);
+
+                                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">
+                                        <button type="button" class="btn btn-primary me-2 save_btn">View</button>
+                                </a>';
+                                ?>
+                            <input type="submit" class="btn btn-primary me-2 save_btn" name="btnView" id="btnView" value="View"/>
+                            <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=rptOrderTrack'"/>
+                        </div>
+                    </div>                    
+                        
         </div>
-        
-    <div class="table-wrapper">
-        <table class="table1 text-center" cellspacing="0" style="font-size: 9pt;">
-        	<tr class="table-header">
-                <th hidden></th>
-                <th>GRN No.</th>
-            	<th>Product. ID</th>
-                <th>Style</th>
-                <th>Order</th>
-                <th>Invoice Date</th>
-                <th>Vendor</th>
-                <th>Finished Qty.</th>
-                <th>Damage Qty.</th>
-                <th>Sample Qty.</th>
-                <th>GRN Value</th>
-                <th>Status</th>
-                <th>Created Date</th>
-                <th>Created By</th>
-                <th>View</th>			
-            </tr>
-            <?php
-            try{
-                while($result1=mysqli_fetch_assoc($returnAll))
-                {
-                    ?>
-                    <tr class="flex align-items-center">
-                        <td hidden><input type="text" name="grnID" value="<?php echo $result1['CODE1']; ?>"></td> 
-                        <td class="text-center"><?php echo $result1['CODE2']; ?></td>
-                        <td><?php echo $result1['PROID']?></td>
-                        <td><?php echo $result1['STYLE']?></td>
-                        <td><?php echo $result1['ORDERNO']?></td>
-                        <td ><?php echo $result1['INVDATE']?></td>
-                        <td><?php echo $result1['VEN']?></td>
-                        <td><?php echo $result1['RECFQTY']?></td>
-                        <td><?php echo $result1['RECDQTY']?></td>
-                        <td><?php echo $result1['RECSQTY']?></td>
-                        <td class="decimal-data"><?php echo $result1['GRNVAL']?></td>
-                        <td><?php echo $result1['STATUS']?></td>
-                        <td><?php echo $result1['GRNDATE']?></td>
-                        <td><?php echo $result1['GRNBY']?></td>
-                        <td class="text-center"><?php 
-                                $selected= $result1['CODE1'];
-                                $url = 'grn_view_page.php?activity=grnView&Criteria=Grn&selectedID= '.$selected;
-                                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">View</a>';
-                        ?></td> 
-                    </tr>
-                    <?php
-                }
-            }
-            catch(Exception $e){
-                echo "Error: " . $e->getMessage();
-            }
-			?>
-        </table>
-    </div> 
-    <!-- <div class="d-lg-flex justify-content-center mb-5 mt-3 gap-2">
-        <input type="submit" value="Save" class="btn btn-primary me-2 save_btn" name="btnSave"/>
-        <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=grnAll'"/>
-    </div> -->
     </form>
     <div class="container text-center" >
         <label class="text-danger"><?php echo $message?></label>
