@@ -294,10 +294,10 @@ include "../includes/db-con.php";
 
                 <div class="collapse submenu" id="mastersMenu">
                     <ul class="nav nav-pills flex-column">
-                        <li class="nav-item" <?php if($acc26==0){ echo 'hidden'; } ?>>
+                        <li class="nav-item" <?php if($acc25==0){ echo 'hidden'; } ?>>
                             <a href="home_page.php?activity=loc" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='loc' ? 'active' : '' ?>">Locations</a>
                         </li>
-                        <li class="nav-item" <?php if($acc27==0){ echo 'hidden'; } ?>>
+                        <li class="nav-item" <?php if($acc25==0){ echo 'hidden'; } ?>>
                             <a href="home_page.php?activity=addloc" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='addloc' ? 'active' : '' ?>">Add Location</a>
                         </li>
                         <!--li class="nav-item">
