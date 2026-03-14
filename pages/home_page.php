@@ -273,6 +273,9 @@
 										case 'rptOrderTrack':
 											include ('./reports/ordertracker_report.php');
 											break;
+										case 'rptStyles':
+											include ('./reports/styles_report.php');
+											break;
 										//------------------------------------------------
 										case 'users':
 											include ('users_all_page.php');

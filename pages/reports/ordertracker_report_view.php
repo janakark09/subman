@@ -3,82 +3,80 @@
     session_start();
 
     $gpID="";
-    $vendor="";
-    $message="";
-    $address="";
-    $tel="";
-    $person="";
-    $date="";
-    $location="";
-    $createdby="";
-    $createddt="";
-    $style="";
-    $order="";
-    $agreement="";
-    $total="";
+    
     $no = 1;
     $user="";
-    $approvedby=" ";
-    $approveddt="";
-    $accConfirm=0;
-    $status="";
+    $message="";
+
+    $style="";
+    $order="";
+    $location="";
+    $vendor="";
+    $fromdate="";
+    $todate="";
     
-    
-    $slectedID=$_REQUEST['selectedID'];
-    $selectedBuyer=$_REQUEST['buyer'];
-    $selectedStyle=$_REQUEST['style'];
-    $selectedOrder=$_REQUEST['order'];
-    $selectedLocation=$_REQUEST['location'];
-    $selectedVendor=$_REQUEST['vendor'];
-    $fromDate=$_REQUEST['fromDate'];
-    $toDate=$_REQUEST['toDate'];
-    $option=strtoupper($_REQUEST['selection1']);
+    // print_r($_GET);
 
-    echo $slectedID, $selectedBuyer, $selectedStyle, $selectedOrder, $selectedLocation, $selectedVendor, $fromDate, $toDate, $option;
+    $selectedBuyer = isset($_GET['buyer']) ? $_GET['buyer'] : "";
+    $selectedStyle = isset($_GET['style']) ? $_GET['style'] : "";
+    $selectedOrder = isset($_GET['order']) ? $_GET['order'] : "";
+    $selectedLocation = isset($_GET['location']) ? $_GET['location'] : "";
+    $selectedVendor = isset($_GET['vendor']) ? $_GET['vendor'] : "";
+    $fromDate = isset($_GET['fromDate']) ? $_GET['fromDate'] : "";
+    $toDate = isset($_GET['toDate']) ? $_GET['toDate'] : "";
+    $option = isset($_GET['selection1']) ? strtoupper($_GET['selection1']) : "";
 
-    $grnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',SP.recordID AS 'PROID',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
-                DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
-                (GD.fgValue+GD.sampleValue+GD.vat) AS 'GRNVAL', DATE_FORMAT(GD.createdDT,'%d/%m/%y') AS 'GRNDATE', CONCAT(U.Fname, ' ', U.Lname) AS 'GRNBY', GD.status AS 'STATUS'
-                FROM grn_details GD JOIN sub_production SP ON GD.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
-                JOIN mast_location ML ON SP.locationID=ML.locationID JOIN vendors V ON SP.vendorID=V.vendorID JOIN users U ON SP.createdBy=U.User_ID";
+    // echo 'buyer-'.$selectedBuyer." style-".$selectedStyle." order-".$selectedOrder." loc-".$selectedLocation." vendor-".$selectedVendor." from-".$fromDate." to-".$toDate." option-".$option;
+    // echo "<br>";
 
-    $returnGrn=mysqli_query($conn,$grnQuery);
+    if($selectedStyle!="All"){
+        $style=" AND SO.styleNo='$selectedStyle'";
+    }
+    if($selectedOrder!="All"){
+        $order=" AND SO.id='$selectedOrder'";
+    }
+    if($selectedLocation!="All"){
+        $location=" AND ML.locationID='$selectedLocation'";
+    }
+    if($selectedVendor!="All"){
+        $vendor=" AND V.vendorID='$selectedVendor'";
+    }
 
-    $grnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',SP.recordID AS 'PROID',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
-                DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
-                SUM(GD.fgValue+GD.sampleValue+GD.vat) AS 'GRNVAL', DATE_FORMAT(GD.createdDT,'%d/%m/%y') AS 'GRNDATE', GD.createdBy AS 'GRNBY', GD.status AS 'STATUS',
-                ML.location AS 'LOC', A.id AS 'AGREEMENT', GD.approvedBy AS 'APPROVED', DATE_FORMAT(GD.approvedDT,'%d/%m/%y') AS 'APPDT'
-                FROM grn_details GD JOIN sub_production SP ON GD.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
-                JOIN mast_location ML ON SP.locationID=ML.locationID JOIN vendors V ON SP.vendorID=V.vendorID JOIN users U ON SP.createdBy=U.User_ID 
-                JOIN agreements A ON SO.id=A.styleOrderID WHERE GD.grnCode1='$slectedID'";
-    $selectedData=mysqli_query($conn,$grnQuery);
-
-    if($selectedData && mysqli_num_rows($selectedData)==1)
-        {
-            $rowData=mysqli_fetch_assoc($selectedData);
-            $grnID=$rowData['CODE2'];
-            $vendor=$rowData['VEN'];
-            $proid=$rowData['PROID'];
-            $invdate=$rowData['INVDATE'];
-            $recfinqty=$rowData['RECFQTY']; 
-            $recdamqty=$rowData['RECDQTY'];
-            $recsamqty=$rowData['RECSQTY'];
-            $grnval=$rowData['GRNVAL'];
-            $grnby=$rowData['GRNBY'];
-            $grndt=$rowData['GRNDATE'];
-            $location=$rowData['LOC'];
-            $style=$rowData['STYLE'];
-            $order=$rowData['ORDERNO'];
-            $agreement=$rowData['AGREEMENT'];
-            $approvedby=$rowData['APPROVED'];
-            $approveddt=$rowData['APPDT'];
-            $status=$rowData['STATUS'];
+    if($fromDate!=""){
+        if($option=="GATE PASS"){
+            $fromdate=" AND GP.gatepassDate >= '$fromDate'";
         }
+        else if($option=="PRODUCTION RECORDS"){
+            $fromdate=" AND SP.cratedDT >= '$fromDate'";
+        }
+        else if($option=="GRN"){
+            $fromdate=" AND GD.invoiceDate >= '$fromDate'";
+        }
+        else if($option=="PAYMENTS"){
+            $fromdate=" AND P.createdDT >= '$fromDate'";
+        }
+
+    }
+    if($toDate!=""){
+        if($option=="GATE PASS"){
+            $todate=" AND GP.gatepassDate <= '$toDate'";
+        }
+        else if($option=="PRODUCTION RECORDS"){
+            $todate=" AND SP.cratedDT <= '$toDate'";
+        }
+        else if($option=="GRN"){
+            $todate=" AND GD.invoiceDate <= '$toDate'";
+        }
+        else if($option=="PAYMENTS"){
+            $todate=" AND P.createdDT <= '$toDate'";
+        }
+    }
     
-    $detailsQuery="SELECT GD1.prodetailsID AS 'PROID', PD.cutNO AS 'CUT', C.color AS 'COLOR',S.size AS 'SIZE', GD1.recFinQty AS 'FQTY', GD1.recDamQty AS 'DQTY', GD1.SampleQty AS 'SQTY' 
-                FROM grn_details1 GD1 JOIN sub_pro_details PD ON GD1.prodetailsID=PD.id
-                JOIN style_colors C ON PD.colorID=C.colorID JOIN style_sizes S ON PD.sizeID=S.sizeID  WHERE GD1.grnNo='$slectedID'";
-    $detailsData=mysqli_query($conn,$detailsQuery);
+    //echo $style."-".$order."-".$location."-".$vendor."-".$fromdate."-".$todate;
+    // $detailsQuery="SELECT GD1.prodetailsID AS 'PROID', PD.cutNO AS 'CUT', C.color AS 'COLOR',S.size AS 'SIZE', GD1.recFinQty AS 'FQTY', GD1.recDamQty AS 'DQTY', GD1.SampleQty AS 'SQTY' 
+    //             FROM grn_details1 GD1 JOIN sub_pro_details PD ON GD1.prodetailsID=PD.id
+    //             JOIN style_colors C ON PD.colorID=C.colorID JOIN style_sizes S ON PD.sizeID=S.sizeID  WHERE GD1.grnNo='$slectedID'";
+    // $detailsData=mysqli_query($conn,$detailsQuery);
 
 	$activeUser=$_SESSION['_UserID'];
 
@@ -90,43 +88,6 @@
             $user=$rowData['CURRENTU'];
             $accConfirm=$rowData['APP1'];
 
-        }
-
-    if(isset($_POST['btnApprove']))
-        {
-            $updateQuery="UPDATE grn_details SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE grnCode1='$slectedgrnID'";
-            $updateRes=mysqli_query($conn,$updateQuery);
-            if($updateRes)
-                {
-                    echo "<script>
-                    setTimeout(function(){window.location.href = 'home_page.php?activity=grnList';}, 1000);
-                    </script>";
-                    exit();
-                }
-            else
-                {
-                    $message="Error while approving the GRN. Try again.";
-                }
-        }
-
-    if(isset($_POST['btnDel']))
-        {
-            $deleteQry1="DELETE FROM grn_details1 WHERE grnNo='$slectedgrnID'";
-            if($deleteRes1=mysqli_query($conn,$deleteQry1)){
-                $deleteQuery="DELETE FROM grn_details WHERE grnCode1='$slectedgrnID'";
-                $deleteRes=mysqli_query($conn,$deleteQuery);
-                if($deleteRes)
-                    {
-                        echo "<script>
-                        setTimeout(function(){window.location.href = 'home_page.php?activity=grnList';}, 1000);
-                        </script>";
-                        exit();
-                    }
-                else
-                    {
-                        $message="Error while deleting the GRN. Try again.";
-                    }
-                }            
         }
  ?>
  
@@ -178,14 +139,39 @@
                                         <tr>
                                             <th>Style No:</th>
                                             <th>Order No:</th>
-                                            <th>Agreement No:</th>
-                                            <th>Total GRN Value:</th>
+                                            <th>Location:</th>
+                                            <th>Subcontractor:</th>
                                         </tr>
                                         <tr>
                                             <td><?php echo $selectedStyle;?></td>
-                                            <td><?php echo $selectedOrder;?></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td><?php if($selectedOrder!="All")
+                                            {
+                                                $orderdata=mysqli_query($conn,"SELECT orderNo FROM styleorder WHERE id='$selectedOrder'"); 
+                                                        if($orderdata && mysqli_num_rows($orderdata)==1){$rowData=mysqli_fetch_assoc($orderdata);echo $rowData['orderNo'];} 
+                                            }
+                                            else
+                                            {
+                                                echo "All";
+                                            }?></td>
+                                            <td><?php if($selectedLocation!="All")
+                                            {
+                                                $locdata=mysqli_query($conn,"SELECT location FROM mast_location WHERE locationID='$selectedLocation'"); 
+                                                        if($locdata && mysqli_num_rows($locdata)==1){$rowData=mysqli_fetch_assoc($locdata);echo $rowData['location'];} 
+                                            }
+                                            else
+                                            {
+                                                echo "All";
+                                            }?></td>
+                                            <td><?php if($selectedVendor!="All")
+                                            {
+                                                $vendordata=mysqli_query($conn,"SELECT vendor FROM vendors WHERE vendorID='$selectedVendor'"); 
+                                                        if($vendordata && mysqli_num_rows($vendordata)==1){$rowData=mysqli_fetch_assoc($vendordata);echo $rowData['vendor'];}
+                                            }
+                                            else
+                                            {
+                                                echo "All";
+                                            }
+                                             ?></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -201,7 +187,126 @@
                                                 <div class="col ps-4">
                                                     <table class="w-100 report-table text-center">
                                                         <tr>
-                                                            <th hidden></th>
+                                                            <th>Gate Pass No.</th>
+                                                            <th>Style</th>
+                                                            <th>Order No.</th>
+                                                            <th>Date</th>
+                                                            <th>Vendor</th>
+                                                            <th>Total Qty.</th>
+                                                            <th>Created By</th>
+                                                            <th>Created Date</th>	
+                                                            <th>Status</th>
+                                                        </tr>
+                                                        <?php
+                                                        try{
+                                                            
+                                                               $gpQuery="SELECT GP.gatepassID_1 AS 'gpID1', CONCAT(GP.gatepassID_2,'/', GP.gatepassID_1) AS 'gpID2',GP.gatepassDate AS 'GPDATE',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', ML.location AS 'LOC',
+                                                                        V.vendor AS 'VEN',GP.orderAgreement AS 'AGREEMENT',SUM(GD.matQty) AS 'TOTAL', GP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(GP.createdDT,'%d/%m/%y') AS 'CREATEDDATE' 
+                                                                        FROM  gatepass GP JOIN gatepass_details GD ON GP.gatepassID_1=GD.gpID JOIN mast_location AS ML ON GP.locationID=ML.locationID  
+                                                                        JOIN styleorder AS SO ON GP.orderNoID=SO.id JOIN vendors AS V ON GP.vendorID=V.vendorID JOIN agreements AS AG ON GP.orderAgreement=AG.id 
+                                                                        JOIN users AS U ON GP.createdBy=U.User_ID 
+                                                                        WHERE GP.status!='' $style $order $location $vendor $fromdate $todate GROUP BY GD.gpID ORDER BY GP.gatepassID_1 DESC";
+
+                                                                $returnGP=mysqli_query($conn,$gpQuery);
+
+                                                            while($resultgp=mysqli_fetch_assoc($returnGP))
+                                                            {
+                                                                ?>
+                                                                <tr class="flex align-items-center">
+                                                                    <td class="text-center"><?php 
+                                                                            $selected= $resultgp['gpID1'];
+                                                                            $url = '../gp_view_page.php?selectedID= '.$selected; 
+                                                                            echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer" class="text-decoration-none">' . $resultgp['gpID2'] . '</a>';
+                                                                    ?></td> 
+                                                                    <td><?php echo $resultgp['STYLE']?></td>
+                                                                    <td><?php echo $resultgp['ORDERNO']?></td>
+                                                                    <td><?php echo $resultgp['GPDATE']?></td>
+                                                                    <td><?php echo $resultgp['VEN']?></td>
+                                                                    <td><?php echo $resultgp['TOTAL']?></td>
+                                                                    <td><?php echo $resultgp['CREATEDBY']?></td>
+                                                                    <td class="text-center"><?php echo $resultgp['CREATEDDATE']?></td>
+                                                                    <td class="text-center"><?php echo $resultgp['STATUS']?></td>
+                                                                </tr>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        catch(Exception $e){
+                                                            echo "Error: " . $e->getMessage();
+                                                        }
+                                                        ?>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            break;
+                                        case "PRODUCTION RECORDS":
+                                            ?>
+                                            <div class="row text-center">
+                                                <div class="col ps-4">
+                                                    <table class="w-100 report-table text-center">
+                                                        <tr>
+                                                            <th>Record No.</th>
+                                                            <th>Style</th>
+                                                            <th>Order No.</th>
+                                                            <th>Date</th>
+                                                            <th>Vendor</th>
+                                                            <th>Finished Qty.</th>
+                                                            <th>Total Damages</th>
+                                                            <th>Total Samples</th>
+                                                            <th>Entered By</th>
+                                                            <th>Entered Date</th>	
+                                                            <th>Status</th>
+                                                        </tr>
+                                                        <?php
+                                                        try{
+                                                               $proQuery="SELECT SP.recordID AS 'recID',Sp.gatepassRefID AS 'REF', SP.gatepassDate AS 'GPDATE', SO.styleNo AS 'STYLE', SO.orderNo AS 'ORDERNO', ML.location AS 'LOC',
+                                                                            V.vendor AS 'VEN',SP.orderAgreement AS 'AGREEMENT',SUM(PD.finishedQty) AS 'FINQTY',(SUM(PD.fabDamQty)+SUM(PD.processDamQty)) AS 'DAMQTY',SUM(PD.sampleQty) AS 'SMQTY', SP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(SP.cratedDT,'%d/%m/%y') AS 'CREATEDDATE' 
+                                                                            FROM  sub_production SP JOIN sub_pro_details PD ON SP.recordID=PD.recID 
+                                                                            JOIN mast_location AS ML ON SP.locationID=ML.locationID JOIN styleorder AS SO ON SP.orderNoID=SO.id JOIN vendors AS V ON SP.vendorID=V.vendorID 
+                                                                            JOIN agreements AS AG ON SP.orderAgreement=AG.id JOIN users AS U ON SP.createdBy=U.User_ID 
+                                                                            WHERE SP.recordID!='' $style $order $location $vendor $fromdate $todate ORDER BY SP.cratedDT DESC";
+
+                                                                $returnPro=mysqli_query($conn,$proQuery);
+                                                                
+                                                            while($resultPro=mysqli_fetch_assoc($returnPro))
+                                                            {
+                                                                ?>
+                                                                <tr class="flex align-items-center">
+                                                                    <td class="text-center"><?php 
+                                                                            $selected= $resultPro['recID'];
+                                                                            $url = '../pro_view_page.php?selectedID= '.$selected;
+                                                                            echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer" class="text-decoration-none">' . $resultPro['recID'] . '</a>';
+                                                                    ?></td> 
+                                                                    <td><?php echo $resultPro['STYLE']?></td>
+                                                                    <td><?php echo $resultPro['ORDERNO']?></td>
+                                                                    <td><?php echo $resultPro['GPDATE']?></td>
+                                                                    <td><?php echo $resultPro['VEN']?></td>
+                                                                    <td><?php echo $resultPro['FINQTY']?></td>
+                                                                    <td><?php echo $resultPro['DAMQTY']?></td>
+                                                                    <td><?php echo $resultPro['SMQTY']?></td>
+                                                                    <td><?php echo $resultPro['CREATEDBY']?></td>
+                                                                    <td class="text-center"><?php echo $resultPro['CREATEDDATE']?></td>
+                                                                    <td class="text-center"><?php echo $resultPro['STATUS']?></td>
+                                                                </tr>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        catch(Exception $e){
+                                                            echo "Error: " . $e->getMessage();
+                                                        }
+                                                        ?>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            break;
+
+                                        case "GRN":
+                                            ?>
+                                            <div class="row text-center">
+                                                <div class="col ps-4">
+                                                    <table class="w-100 report-table text-center">
+                                                        <tr>
                                                             <th>GRN No.</th>
                                                             <th>Product. ID</th>
                                                             <th>Style</th>
@@ -218,14 +323,22 @@
                                                         </tr>
                                                         <?php
                                                         try{
+                                                               $grnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',SP.recordID AS 'PROID',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
+                                                                DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
+                                                                (GD.fgValue+GD.sampleValue+GD.vat) AS 'GRNVAL', DATE_FORMAT(GD.createdDT,'%d/%m/%y') AS 'GRNDATE', CONCAT(U.Fname, ' ', U.Lname) AS 'GRNBY', GD.status AS 'STATUS'
+                                                                FROM grn_details GD JOIN sub_production SP ON GD.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
+                                                                JOIN mast_location ML ON SP.locationID=ML.locationID JOIN vendors V ON SP.vendorID=V.vendorID JOIN users U ON SP.createdBy=U.User_ID 
+                                                                WHERE GD.status!='' $style $order $location $vendor $fromdate $todate ORDER BY GD.createdDT DESC";
+
+                                                                $returnGrn=mysqli_query($conn,$grnQuery);
+                                                                
                                                             while($result1=mysqli_fetch_assoc($returnGrn))
                                                             {
                                                                 ?>
                                                                 <tr class="flex align-items-center">
-                                                                    <td hidden><input type="text" name="grnID" value="<?php echo $result1['CODE1']; ?>"></td> 
                                                                     <td class="text-center"><?php 
                                                                             $selected= $result1['CODE1'];
-                                                                            $url = '../grn_view_page.php?activity=grnView&Criteria=Grn&selectedID= '.$selected;
+                                                                            $url = '../grn_view_page.php?selectedID= '.$selected;
                                                                             echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer" class="text-decoration-none">' . $result1['CODE2'] . '</a>';
                                                                     ?></td> 
                                                                     <td><?php echo $result1['PROID']?></td>
@@ -253,49 +366,67 @@
                                             </div>
                                             <?php
                                             break;
-                                        case "PRODUCTION RECORDS":
-                                            $message="Production Records details will be displayed here.";
-                                            break;
-                                        case "GRN":
-                                            $message="GRN details are displayed below.";
-                                            break;
+
                                         case "PAYMENTS":
-                                            $message="Payment details will be displayed here.";
+                                            ?>
+                                            <div class="row text-center">
+                                                <div class="col ps-4">
+                                                    <table class="w-100 report-table text-center">
+                                                        <tr>
+                                                            <th>Receipt No.</th>
+                                                            <th>Payment Date</th>
+                                                            <th>Net Value</th>
+                                                            <th>Vendor</th>
+                                                            <th>Status</th>
+                                                            <th>Created Date</th>
+                                                            <th>Created By</th>
+                                                        </tr>
+                                                        <?php
+                                                        try{
+                                                               $payQuery="SELECT P.receiptID AS 'ID', DATE_FORMAT(P.Date,'%d/%m/%y') AS 'DATE', V.vendor AS 'VEN', P.netValue AS 'NETVAL', CONCAT(U.Fname,' ',U.Lname) AS 'USER',
+                                                                                DATE_FORMAT(P.createdDT,'%d/%m/%y') AS 'CREATEDDT',P.Status AS 'STATUS' 
+                                                                                FROM payments P JOIN payment_methods PM ON P.payMenthod=PM.methodID JOIN vendors V ON P.VendorID=V.vendorID
+                                                                                JOIN users U ON P.createdBy=U.User_ID JOIN grn_details G ON P.receiptID=G.receiptID JOIN mast_location ML ON G.locationID=ML.locationID
+                                                                                JOIN sub_production SP ON G.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
+                                                                                WHERE P.receiptID!='' $style $order $location $vendor $fromdate $todate ORDER BY P.createdDT DESC";
+
+                                                                $returnPay=mysqli_query($conn,$payQuery);
+                                                                
+                                                            while($resPay=mysqli_fetch_assoc($returnPay))
+                                                            {
+                                                                ?>
+                                                                <tr class="flex align-items-center">
+                                                                    <td class="text-center"><?php 
+                                                                            $selected= $resPay['ID'];
+                                                                            $url = '../payment_view_page.php?selectedID= '.$selected;
+                                                                            echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer" class="text-decoration-none">' . $resPay['ID'] . '</a>';
+                                                                    ?></td> 
+                                                                    <td><?php echo $resPay['DATE'];?></td>
+                                                                    <td class="decimal-data"><?php echo $resPay['NETVAL'];?></td>
+                                                                    <td><?php echo $resPay['VEN'];?></td>
+                                                                    <td ><?php echo $resPay['STATUS'];?></td>
+                                                                    <td><?php echo $resPay['CREATEDDT'];?></td>
+                                                                    <td><?php echo $resPay['USER'];?></td>
+                                                                </tr>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        catch(Exception $e){
+                                                            echo "Error: " . $e->getMessage();
+                                                        }
+                                                        ?>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <?php
                                             break;
+
                                         default:
                                             $message="Invalid selection.";
                                     }
                             ?>
                             
-                            <!-- -------------------------------------------------------------------------------- -->
-                            <div class="row justify text-center">
-                                <table class="w-100 text-center no-border-table mt-5" style="border:1px solid;">
-                                <tr>
-                                    <td>
-                                        <label ><?php echo $user;?></label><br>
-                                        <label class="mt-4">........................................</label><br>
-                                        <label>Printed by</label><br>
-                                        <label ><?php echo $createddt;?></label>
-                                    </td>
-                                    <td>
-                                        <label ><?php
-                                        $user='';
-                                        $userRes=mysqli_query($conn,"SELECT CONCAT(Fname,' ',Lname) AS 'APPUS' FROM users WHERE User_ID='$approvedby'");
-                                        if($u1=mysqli_fetch_assoc($userRes)) $user=$u1['APPUS'];
-                                        echo $user;?></label><br>
-                                        <label class="mt-4">........................................</label><br>
-                                        <label>Approved by</label><br>
-                                        <label ><?php echo $approveddt;?></label>
-                                    </td>
-                                    <td>
-                                        <label ></label><br>
-                                        <label class="mt-4">........................................</label><br>
-                                        <label>Checked by</label><br>
-                                    </td>
-                                </tr>
-                            </table>
-                            </div>
-                            
+                                                        
                             <div class="row justify-content-center gap-3 mt-5 no-print">
                                 <hr>
                                 <button type="button" class="btn btn-success save_btn" onclick="window.print()">Print</button>

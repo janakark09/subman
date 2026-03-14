@@ -253,7 +253,7 @@ include "../includes/db-con.php";
                             <a href="home_page.php?activity=rptOrderTrack" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='rptOrderTrack' ? 'active' : '' ?>">Order tracker</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Report2</a>
+                            <a href="home_page.php?activity=rptStyles" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='rptStyles' ? 'active' : '' ?>">Style Report</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link text-white">Report3</a>

@@ -58,12 +58,21 @@
         $toDate=$_POST['toDate'];
         $selection1=$_POST['selection1'];
 
-        echo  $selectedBuyer."-".$selectedStyle."-".$selectedOrder."-".$selectedLoc."-".$selectedVendor."-".$fromDate."-".$toDate."-".$selection1;
+        //echo  $selectedBuyer."-".$selectedStyle."-".$selectedOrder."-".$selectedLoc."-".$selectedVendor."-".$fromDate."-".$toDate."-".$selection1;
 
-        $url = 'ordertracker_report_view.php?activity=ordertrackerView&Criteria=Grn&buyer= '.$selectedBuyer.'&style= '.$selectedStyle.'&order= '.$selectedOrder.'&location= '.$selectedLoc.'&vendor= '.$selectedVendor.'&fromDate= '.$fromDate.'&toDate= '.$toDate.'&selection1= '.$selection1;
-        // echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">View</a>';
+        $url = './reports/ordertracker_report_view.php?'
+      .'&buyer='.$selectedBuyer
+      .'&style='.$selectedStyle
+      .'&order='.$selectedOrder
+      .'&location='.$selectedLoc
+      .'&vendor='.$selectedVendor
+      .'&fromDate='.$fromDate
+      .'&toDate='.$toDate
+      .'&selection1='.$selection1;
+        //echo $url;
+        //echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">View</a>';
         echo "<script>
-            setTimeout(function(){window.open('" . htmlspecialchars($url)."', '_blank');}, 1000);
+            setTimeout(function(){window.open('$url', '_blank');}, 400);
         </script>";
     }
 
@@ -168,51 +177,35 @@
                     <div class="d-lg-flex mb-3 gap-3">
                         <div class="form-group col-lg-2">
                             <label>From Date</label>
-                            <input type="date" class="form-control" id="fromDate" required name="fromDate" value="<?php echo isset($_POST['fromDate']) ? $_POST['fromDate'] : ''; ?>" onchange="this.form.submit()"/>
+                            <input type="date" class="form-control" id="fromDate" name="fromDate" value="<?php echo isset($_POST['fromDate']) ? $_POST['fromDate'] : ''; ?>" onchange="this.form.submit()"/>
                         </div>
                         <div class="form-group col-lg-2">
                             <label>To Date</label>
-                            <input type="date" class="form-control" id="toDate" required name="toDate" value="<?php echo isset($_POST['toDate']) ? $_POST['toDate'] : ''; ?>" onchange="this.form.submit()"/>
+                            <input type="date" class="form-control" id="toDate" name="toDate" value="<?php echo isset($_POST['toDate']) ? $_POST['toDate'] : ''; ?>" onchange="this.form.submit()"/>
                         </div>
                     </div> 
                     <div class="mb-3 gap-3 mt-5 bg-light p-3 col-3 rounded border">
                         <div class="form-group">
-                            <input type="radio" class="form-check-input" name="selection1" id="selection1" value="Gate pass" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Gate pass") echo "checked"; ?>>
+                            <input type="radio" class="form-check-input" name="selection1" required id="selection1" value="Gate pass" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Gate pass") echo "checked"; ?>>
                             <label for="selection1">Gate Passes</label>
                         </div>
                         <div class="form-group">
-                            <input type="radio" class="form-check-input" name="selection1" id="selection2" value="Production Records" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Production Records") echo "checked"; ?>>
+                            <input type="radio" class="form-check-input" name="selection1" required id="selection2" value="Production Records" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Production Records") echo "checked"; ?>>
                             <label for="selection2">Production Records</label>
                         </div>
                         <div class="form-group">
-                            <input type="radio" class="form-check-input" name="selection1" id="selection3" value="GRN" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="GRN") echo "checked"; ?>>
+                            <input type="radio" class="form-check-input" name="selection1" required id="selection3" value="GRN" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="GRN") echo "checked"; ?>>
                             <label for="selection3">GRN</label>
                         </div>
                         <div class="form-group">
-                            <input type="radio" class="form-check-input" name="selection1" id="selection4" value="Payments" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Payments") echo "checked"; ?>>
+                            <input type="radio" class="form-check-input" name="selection1" required id="selection4" value="Payments" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Payments") echo "checked"; ?>>
                             <label for="selection4">Payments</label>
                         </div>
                     </div>
                     <div class="container-fluid mb-3 gap-3">
                         <div class="d-flex justify-content-center align-items-center">
                             <br>
-                            <?php
-                                $url = './reports/ordertracker_report_view.php?activity=ordertrackerView'
-                                    .'&Criteria=Grn'
-                                    .'&selectedID='."1"
-                                    .'&buyer='.urlencode($selectedBuyer)
-                                    .'&style='.urlencode($selectedStyle)
-                                    .'&order='.urlencode($selectedOrder)
-                                    .'&location='.urlencode($selectedLoc)
-                                    .'&vendor='.urlencode($selectedVendor)
-                                    .'&fromDate='.urlencode($fromDate)
-                                    .'&toDate='.urlencode($toDate)
-                                    .'&selection1='.urlencode($selection1);
-
-                                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">
-                                        <button type="button" class="btn btn-primary me-2 save_btn">View</button>
-                                </a>';
-                                ?>
+                            
                             <input type="submit" class="btn btn-primary me-2 save_btn" name="btnView" id="btnView" value="View"/>
                             <input type="button" value="Clear" class="btn btn-secondary save_btn" name="btnClear" onclick="window.location.href='home_page.php?activity=rptOrderTrack'"/>
                         </div>
