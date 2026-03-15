@@ -240,11 +240,11 @@
 
                     <div class="d-lg-flex mb-1 gap-3">
                         <div class="form-group mb-1 ">
-                            <label for="totalQty">Contract Total Quantity</label>
+                            <label for="totalQty">Contract Total Qty.(sets)</label>
                             <input type="number" min="0" class="form-control" id="totalQty" required name="totalQty" onchange="calcDays(); calculateEndingDate();" value="<?php echo ($totalqty > 0) ? $totalqty : ''; ?>">
                         </div>
                         <div class="form-group mb-1">
-                            <label for="perDayQty">Per Day Quantity</label>
+                            <label for="perDayQty">Per Day Qty.(sets)</label>
                             <input type="number" min="0" class="form-control" id="perDayQty" required name="perDayQty" onchange="calcDays(); calculateEndingDate();" value="<?php echo ($dailyQty > 0) ? $dailyQty : ''; ?>">
                         </div>
                     </div>

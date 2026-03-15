@@ -4,6 +4,8 @@
     $selectedBuyer = "";
     $selectedStyle = "";
     $selectedOrder = "";
+    $selectedLoc="";
+    $selectedVendor="";
     $message="";
     $allgrnQuery="";
     $style="";
@@ -25,6 +27,8 @@
     IFNULL(sp.PROQTY, 0) AS PROQTY,
     IFNULL(gr.GRQTY, 0) AS GRQTY,
     IFNULL(gr.GRDAMQTY, 0) AS GRDAMQTY,
+    SO.orderQty - (IFNULL(agr.CONQTY, 0)*A.pcsPerSet) AS BALQTY,
+    DATE_FORMAT(SO.createdDT, '%Y-%m-%d') AS CREATEDDATE,    
     SO.Status AS STATUS
 
 FROM styleorder SO
@@ -69,7 +73,8 @@ LEFT JOIN (
     FROM sub_production SP
     LEFT JOIN grn_details GR ON GR.proRecNo = SP.recordID
     GROUP BY SP.orderNoID
-) gr ON gr.orderNoID = SO.id";
+) gr ON gr.orderNoID = SO.id 
+WHERE SO.id!=''";
 
 $groupBy=" GROUP BY SO.orderNo";
 
@@ -110,19 +115,19 @@ $groupBy=" GROUP BY SO.orderNo";
     }
 
      //------------------ Fetch Location -------------------
-    $locationQuery="SELECT * FROM  mast_location WHERE status='Active'";
-	$locationDataSet=mysqli_query($conn,$locationQuery);
+    // $locationQuery="SELECT * FROM  mast_location WHERE status='Active'";
+	// $locationDataSet=mysqli_query($conn,$locationQuery);
 
-    //------------------ Fetch Vendor Name -------------------
-    $vendorQuery="SELECT * FROM  vendors WHERE status='Active'";
-    $vendorDataSet=mysqli_query($conn,$vendorQuery);
+    // //------------------ Fetch Vendor Name -------------------
+    // $vendorQuery="SELECT * FROM  vendors WHERE status='Active'";
+    // $vendorDataSet=mysqli_query($conn,$vendorQuery);
 
     if(isset($_POST['btnSearch'])){
         $selectedBuyer=$_POST['buyerid'];
         $selectedStyle=$_POST['styleNo'];
         $selectedOrder=$_POST['orderNo'];
-        $selectedLoc=$_POST['locationid'];
-        $selectedVendor=$_POST['vendorid'];
+        // $selectedLoc=$_POST['locationid'];
+        // $selectedVendor=$_POST['vendorid'];
         $fromDate=$_POST['fromDate'];
         $toDate=$_POST['toDate'];
 
@@ -144,7 +149,7 @@ $groupBy=" GROUP BY SO.orderNo";
         if($toDate!=""){
             $toDate=" AND SO.createdDT <= '$toDate'";
         }
-        
+        //echo $allgrnQuery.$style.$order.$fromDate.$toDate.$groupBy;
          $returnAll=mysqli_query($conn,$allgrnQuery.$style.$order.$fromDate.$toDate.$groupBy);
     }
 
@@ -217,11 +222,11 @@ $groupBy=" GROUP BY SO.orderNo";
             <div class="d-lg-flex mb-3 gap-3">
                 <div class="col-6 gap3 d-lg-flex gap-3">
                     <div class="form-group col-md-4">
-                        <label>From Date</label>
+                        <label>From(Created Date)</label>
                         <input type="date" class="form-control" id="fromDate" name="fromDate" value="<?php echo isset($_POST['fromDate']) ? $_POST['fromDate'] : ''; ?>" onchange="this.form.submit()"/>
                     </div>
                     <div class="form-group col-md-4">
-                        <label>To Date</label>
+                        <label>To(Created Date)</label>
                         <input type="date" class="form-control" id="toDate" name="toDate" value="<?php echo isset($_POST['toDate']) ? $_POST['toDate'] : ''; ?>" onchange="this.form.submit()"/>
                     </div>
                 </div>
@@ -242,12 +247,14 @@ $groupBy=" GROUP BY SO.orderNo";
                         <th>Order No</th>
                         <th>Order Quantity</th>
                         <th>Delivery Date</th>
-                        <th>Agreement Qty</th>
                         <th>Pcs Per Set</th>
+                        <th>Agreement Qty (Sets)</th>
                         <th>Gate Pass Qty</th>
                         <th>Finished Qty</th>
                         <th>GRN Qty</th>
-                        <th>Received Damages Qty</th>
+                        <th>Rec. Damage Qty</th>
+                        <th>Bal. Qty(order)</th>
+                        <th>Created Date</th>
                         <th>Status</th>		
                     </tr>
                     <?php
@@ -261,12 +268,14 @@ $groupBy=" GROUP BY SO.orderNo";
                                 <td><?php echo $result1['ORDERNO']?></td>
                                 <td><?php echo $result1['QTY']?></td>
                                 <td><?php echo $result1['DELDATE']?></td>
-                                <td><?php echo $result1['CONQTY']?></td>
                                 <td><?php echo $result1['PCS']?></td>
+                                <td><?php echo $result1['CONQTY']?></td>
                                 <td><?php echo $result1['GPQTY']?></td>
                                 <td><?php echo $result1['PROQTY']?></td>
                                 <td><?php echo $result1['GRQTY']?></td>
                                 <td><?php echo $result1['GRDAMQTY']?></td>
+                                <td><?php echo $result1['BALQTY']?></td>
+                                <td><?php echo $result1['CREATEDDATE']?></td>
                                 <td><?php echo $result1['STATUS']?></td>
                             </tr>
                             <?php
@@ -280,5 +289,22 @@ $groupBy=" GROUP BY SO.orderNo";
             </div> 
         </div>
     </form>
+
+    <script>
+    function resetStyleAndOrder() {
+        document.getElementById('styleSelect').selectedIndex = 0;
+        document.getElementById('orderSelect').innerHTML = '<option selected hidden></option>';
+    }
+    let cells = document.querySelectorAll(".decimal-data");
+        cells.forEach(function(cell) {
+        let number = Number(cell.textContent);
+        cell.textContent = number.toLocaleString('en-US', {
+            style: 'decimal',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    });
+</script>
+
 </body>
 </html>
