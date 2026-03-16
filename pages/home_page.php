@@ -190,7 +190,10 @@
 										case 'allvendors':
 											include ("vendor_all_page.php");
 										break;
-										
+										case 'editvendor':
+											include ("vendor_edit_page.php");
+										break;
+										//-----------------------------------------------
 										case 'agreements':
 											include ("agreements_page.php");
 										break;

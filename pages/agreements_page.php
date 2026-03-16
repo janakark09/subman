@@ -7,7 +7,7 @@
     JOIN vendors AS ven ON agr.vendorID = ven.vendorID 
     JOIN process_type AS pt ON agr.process = pt.typeid 
     JOIN styleorder AS so ON agr.styleOrderID = so.id 
-    JOIN users AS u ON agr.createdBy = u.User_ID;";
+    JOIN users AS u ON agr.createdBy = u.User_ID";
 
 	$returnDataSet=mysqli_query($conn,$sqlQuery);
 	
@@ -30,7 +30,7 @@
     <div  class="table-wrapper">
         <table class="table1 text-center" cellspacing="0">
         	<tr>
-                <th>Agreement ID</th>
+                <th>ID</th>
             	<th>Vendor Name</th>
                 <th>Process</th>
                 <th>Style No</th>
@@ -48,9 +48,7 @@
 			{
 			?>
             <tr>
-            	<td>
-                <a href="DashBoard.php?activity=editAgreement&selectedID=<?php echo $result1['ID']?>"><?php echo $result1['ID']?></a>
-                </td>
+            	<td><?php echo $result1['ID']?></td>
                 <td><?php echo $result1['VENDOR']?></td>
                 <td><?php echo $result1['PROCESS']?></td>
                 <td><?php echo $result1['STYLENO']?></td>
@@ -61,7 +59,11 @@
                 <td><?php echo $result1['EDATE']?></td>
                 <td><?php echo $result1['STAT']?></td>
                 <td><?php echo $result1['CREATED']?></td>
-                <td><a href="DashBoard.php?activity=viewAgr&Criteria=Agreement&selectedID=<?php echo $result1['ID']?>">View</a></td>
+                <td class="text-center"><?php 
+                                $selected= $result1['ID'];
+                                $url = 'agreement_view_page.php?selectedID= '.$selected;
+                                echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">View</a>';?>
+                </td> 
             <tr>
             <?php
 			}

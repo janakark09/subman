@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 15, 2026 at 06:33 PM
+-- Generation Time: Mar 16, 2026 at 12:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,18 +44,22 @@ CREATE TABLE `agreements` (
   `unitPriceSample` double NOT NULL,
   `Status` varchar(20) NOT NULL,
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
-  `createdBy` int(32) NOT NULL
+  `createdBy` int(32) NOT NULL,
+  `approvedBy` int(32) DEFAULT NULL,
+  `approvedDT` datetime DEFAULT NULL,
+  `canceledBy` int(32) DEFAULT NULL,
+  `canceledDT` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `agreements`
 --
 
-INSERT INTO `agreements` (`id`, `vendorID`, `process`, `styleOrderID`, `pcsPerSet`, `contractTotalQty`, `dailyQty`, `startedDate`, `endDate`, `creditPeriod`, `unitPriceFg`, `unitPriceSample`, `Status`, `createdDT`, `createdBy`) VALUES
-(1, 101, 1, 1, 2, 5000, 100, '2026-02-13', '2026-05-23', 30, 30, 20, 'Active', '2026-02-13 12:39:43', 1001),
-(2, 102, 1, 1, 2, 5000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:41:39', 1001),
-(3, 102, 1, 1, 2, 3500, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:45:36', 1001),
-(4, 101, 1, 1, 2, 10000, 30, '2026-03-08', '2028-06-18', 30, 150, 30, 'Active', '2026-03-08 22:13:37', 1002);
+INSERT INTO `agreements` (`id`, `vendorID`, `process`, `styleOrderID`, `pcsPerSet`, `contractTotalQty`, `dailyQty`, `startedDate`, `endDate`, `creditPeriod`, `unitPriceFg`, `unitPriceSample`, `Status`, `createdDT`, `createdBy`, `approvedBy`, `approvedDT`, `canceledBy`, `canceledDT`) VALUES
+(1, 101, 1, 1, 2, 5000, 100, '2026-02-13', '2026-05-23', 30, 30, 20, 'Approved', '2026-02-13 12:39:43', 1001, 1001, '2026-03-16 16:28:37', NULL, NULL),
+(2, 102, 1, 1, 2, 5000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:41:39', 1001, NULL, NULL, NULL, NULL),
+(3, 102, 1, 1, 2, 3500, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:45:36', 1001, NULL, NULL, NULL, NULL),
+(4, 101, 1, 1, 2, 10000, 30, '2026-03-08', '2028-06-18', 30, 150, 30, 'Approved', '2026-03-08 22:13:37', 1002, 1001, '2026-03-16 16:29:24', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -642,7 +646,9 @@ ALTER TABLE `agreements`
   ADD KEY `FK_Agree_vendor` (`vendorID`),
   ADD KEY `FK_Agree_order` (`styleOrderID`),
   ADD KEY `FK_Agree_Create` (`createdBy`),
-  ADD KEY `FK_Agree_type` (`process`);
+  ADD KEY `FK_Agree_type` (`process`),
+  ADD KEY `FK_Agree_Apred` (`approvedBy`),
+  ADD KEY `FK_Agree_Cancel` (`canceledBy`);
 
 --
 -- Indexes for table `buyer`
@@ -907,6 +913,8 @@ ALTER TABLE `vendors`
 -- Constraints for table `agreements`
 --
 ALTER TABLE `agreements`
+  ADD CONSTRAINT `FK_Agree_Apred` FOREIGN KEY (`approvedBy`) REFERENCES `users` (`User_ID`),
+  ADD CONSTRAINT `FK_Agree_Cancel` FOREIGN KEY (`canceledBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Agree_Create` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_Agree_order` FOREIGN KEY (`styleOrderID`) REFERENCES `styleorder` (`id`),
   ADD CONSTRAINT `FK_Agree_type` FOREIGN KEY (`process`) REFERENCES `process_type` (`typeid`),

@@ -2,69 +2,74 @@
 	include "../includes/db-con.php";
     session_start();
 
-    $gpID="";
-    $vendor="";
     $message="";
+
+    $agrID="";
+    $vendor="";
     $address="";
-    $tel="";
-    $person="";
-    $date="";
-    $location="";
-    $createdby="";
-    $createddt="";
+    $brno="";
+    $vatno="";
+    $process="";
     $style="";
     $order="";
-    $agreement="";
-    $total="";
-    $no = 1;
-    $user="";
-    $approvedby=" ";
+    $pcsperset="";
+    $totalqty="";
+    $dailyqty="";
+    $startDate="";
+    $endDate="";
+    $creditDays="";
+    $fgunitprice="";
+    $samupleunitprice="";
+    $status="";
+    $createdby="";
+    $createddt="";
+    $approvedby="";
     $approveddt="";
     $accConfirm=0;
-    $status="";
+
     
     
     $slectedgrnID=$_REQUEST['selectedID'];
 
-    $grnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',SP.recordID AS 'PROID',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
-                DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
-                SUM(GD.fgValue+GD.sampleValue+GD.vat) AS 'GRNVAL', DATE_FORMAT(GD.createdDT,'%d/%m/%y') AS 'GRNDATE', GD.createdBy AS 'GRNBY', GD.status AS 'STATUS',
-                ML.location AS 'LOC', A.id AS 'AGREEMENT', GD.approvedBy AS 'APPROVED', DATE_FORMAT(GD.approvedDT,'%d/%m/%y') AS 'APPDT'
-                FROM grn_details GD JOIN sub_production SP ON GD.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
-                JOIN mast_location ML ON SP.locationID=ML.locationID JOIN vendors V ON SP.vendorID=V.vendorID JOIN users U ON SP.createdBy=U.User_ID 
-                JOIN agreements A ON SO.id=A.styleOrderID WHERE GD.grnCode1='$slectedgrnID'";
-    $selectedData=mysqli_query($conn,$grnQuery);
+    $AgrmtQuery="SELECT agr.id as ID, ven.vendor AS VENDOR, ven.address AS VENADDR, ven.brNo AS BRNO, ven.vatNo AS VATNO, pt.processType AS PROCESS,
+                so.styleNo AS STYLENO, so.orderNo AS ORDERNO, agr.pcsPerSet AS PCSPERSET, agr.contractTotalQty AS TOTAL_SUBQTY, agr.dailyQty AS DAILY_QTY, agr.startedDate AS SDATE,
+                agr.endDate AS EDATE, agr.creditPeriod AS CREDIT, agr.unitPriceFg AS UPRICEFG, agr.unitPriceSample AS UPRICESAM, agr.Status AS STAT,
+                DATE_FORMAT(agr.createdDT,'%d/%m/%Y') AS CREATED, agr.createdBy as CREATEDBY, DATE_FORMAT(agr.approvedDT,'%d/%m/%Y') AS APPROVED,
+                agr.approvedBy as APPROVEDBY    
+                FROM agreements AS agr JOIN vendors AS ven ON agr.vendorID = ven.vendorID JOIN process_type AS pt ON agr.process = pt.typeid 
+                JOIN styleorder AS so ON agr.styleOrderID = so.id JOIN users AS u ON agr.createdBy = u.User_ID WHERE agr.id='$slectedgrnID'";
+    $selectedData=mysqli_query($conn,$AgrmtQuery);
 
     if($selectedData && mysqli_num_rows($selectedData)==1)
         {
             $rowData=mysqli_fetch_assoc($selectedData);
-            $grnID=$rowData['CODE2'];
-            $vendor=$rowData['VEN'];
-            $proid=$rowData['PROID'];
-            $invdate=$rowData['INVDATE'];
-            $recfinqty=$rowData['RECFQTY']; 
-            $recdamqty=$rowData['RECDQTY'];
-            $recsamqty=$rowData['RECSQTY'];
-            $grnval=$rowData['GRNVAL'];
-            $grnby=$rowData['GRNBY'];
-            $grndt=$rowData['GRNDATE'];
-            $location=$rowData['LOC'];
-            $style=$rowData['STYLE'];
+            $agreementID=$rowData['ID'];
+            $vendor=$rowData['VENDOR'];
+            $address=$rowData['VENADDR'];
+            $brno=$rowData['BRNO'];
+            $vatno=$rowData['VATNO'];
+            $process=$rowData['PROCESS'];
+            $style=$rowData['STYLENO'];
             $order=$rowData['ORDERNO'];
-            $agreement=$rowData['AGREEMENT'];
-            $approvedby=$rowData['APPROVED'];
-            $approveddt=$rowData['APPDT'];
-            $status=$rowData['STATUS'];
+            $pcsperset=$rowData['PCSPERSET'];
+            $totalqty=$rowData['TOTAL_SUBQTY'];
+            $dailyqty=$rowData['DAILY_QTY'];
+            $startdate=$rowData['SDATE'];
+            $enddate=$rowData['EDATE'];
+            $creditdays=$rowData['CREDIT'];
+            $fgunitprice=$rowData['UPRICEFG'];
+            $samupleunitprice=$rowData['UPRICESAM'];
+            $status=$rowData['STAT'];
+            $createdby=$rowData['CREATEDBY'];
+            $createddt=$rowData['CREATED'];
+            $approvedby=$rowData['APPROVEDBY'];
+            $approveddt=$rowData['APPROVED'];
         }
-    
-    $detailsQuery="SELECT GD1.prodetailsID AS 'PROID', PD.cutNO AS 'CUT', C.color AS 'COLOR',S.size AS 'SIZE', GD1.recFinQty AS 'FQTY', GD1.recDamQty AS 'DQTY', GD1.SampleQty AS 'SQTY' 
-                FROM grn_details1 GD1 JOIN sub_pro_details PD ON GD1.prodetailsID=PD.id
-                JOIN style_colors C ON PD.colorID=C.colorID JOIN style_sizes S ON PD.sizeID=S.sizeID  WHERE GD1.grnNo='$slectedgrnID'";
-    $detailsData=mysqli_query($conn,$detailsQuery);
 
+    //------------------------------- Get active user details --------------------------------------
 	$activeUser=$_SESSION['_UserID'];
 
-    $userQuery="SELECT CONCAT(U.Fname,' ',U.Lname) AS 'CURRENTU', UD.acc19 AS 'APP1' FROM users U JOIN user_details UD ON U.User_ID=UD.User_ID WHERE U.User_ID='$activeUser'";
+    $userQuery="SELECT CONCAT(U.Fname,' ',U.Lname) AS 'CURRENTU', UD.acc10 AS 'APP1' FROM users U JOIN user_details UD ON U.User_ID=UD.User_ID WHERE U.User_ID='$activeUser'";
     $userData=mysqli_query($conn,$userQuery);
     if($userData && mysqli_num_rows($userData)==1)
         {
@@ -73,40 +78,42 @@
             $accConfirm=$rowData['APP1'];
 
         }
-
-    if(isset($_POST['btnApprove']))
+    //---------------------------------------------------------------------------------------------
+    if(isset($_POST['btnApprove']) && $accConfirm==1)
         {
-            $updateQuery="UPDATE grn_details SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE grnCode1='$slectedgrnID'";
+            $updateQuery="UPDATE agreements SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE id='$slectedgrnID'";
             $updateRes=mysqli_query($conn,$updateQuery);
             if($updateRes)
                 {
+                    echo "<script>alert('Agreement approved successfully!');</script>";
                     echo "<script>
-                    setTimeout(function(){window.location.href = 'home_page.php?activity=grnList';}, 1000);
+                        setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 1000);
                     </script>";
                     exit();
                 }
             else
                 {
-                    $message="Error while approving the GRN. Try again.";
+                    $message="Error while approving the Agreement. Try again.";
                 }
         }
-
-    if(isset($_POST['btnDel']))
+    //---------------------------------------------------------------------------------------------
+    if(isset($_POST['btnCancel']) && $accConfirm==1)
         {
-            $deleteQry1="DELETE FROM grn_details1 WHERE grnNo='$slectedgrnID'";
+            $deleteQry1="UPDATE agreements SET status='Cancelled', canceledBy='$activeUser', canceledDT=NOW() WHERE id='$slectedgrnID'";
             if($deleteRes1=mysqli_query($conn,$deleteQry1)){
                 $deleteQuery="DELETE FROM grn_details WHERE grnCode1='$slectedgrnID'";
                 $deleteRes=mysqli_query($conn,$deleteQuery);
                 if($deleteRes)
                     {
+                        echo "<script>alert('Agreement cancelled successfully!');</script>";
                         echo "<script>
-                        setTimeout(function(){window.location.href = 'home_page.php?activity=grnList';}, 1000);
+                        setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 1000);
                         </script>";
                         exit();
                     }
                 else
                     {
-                        $message="Error while deleting the GRN. Try again.";
+                        $message="Error while deleting the Agreement. Try again.";
                     }
                 }            
         }
@@ -134,14 +141,18 @@
 
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css"/>
     
-
+    <style>
+        .middle-cell{
+            width: 50px;
+        }
+        </style>
 </head>
 <body>
     <form method="POST">
         <div class="container ps-5 pe-5">
             <div class="ms-5 me-5 ps-5 pe-5">
                 <div class="d-flex row" style="padding-bottom:25px;">
-                                <div class="col-3 d-flex justify-content-center align-items-center">
+                                <div class="col-3 text-center justify-content-center align-items-center d-flex">
                                     <img src="../Resources/images/logo.png" alt="Logo" class="img-fluid"  />
                                 </div>
                                 <div class="col-6 text-center pt-3">
@@ -149,24 +160,24 @@
                                     <p class="text-center">246/03 Welmilla, Aluthgama,  Bandaragama Bandaragama Sri Lanka.<br><b>Tel : </b>(122)(+94)11 7577700 <b>Fax : </b>(122)(+94)382291763 <br><b>E-Mail : </b>info@originalapparel.lk <b>Web : </b>www.originalapparel.lk</p>
                                 </div>
                                 <div class="col-3"></div>
-                            <div><h3 class="text-center title mb-2">GOOD RECEIVED NOTE (GRN)</h3></div>
+                            <div><h3 class="text-center title mb-2">SUBCONTRACT AGREEMENT</h3></div>
                             <div class="row no-wrap1 ">
                                 <div class="col-md-6 ps-4 mb-1 ">
                                     <table class="w-100" style="border:1px;">
                                         <tbody>
-                                            <tr><td>GRN No</td><td>:</td><td> <?php echo $grnID;?></td></tr>
+                                            <tr><td>Agreement No</td><td>:</td><td> <?php echo $agreementID;?></td></tr>
                                             <tr><td>Sub Contractor</td><td>:</td><td> <?php echo $vendor;?></td></tr>
-                                            <tr><td>Production Rec. No.</td><td>:</td><td> <a href="#"><?php echo $proid;?></a></td></tr>
-                                            <tr><td>Invoice Date</td><td>:</td><td> <?php echo $invdate;?></td></tr>
+                                            <tr><td>Address</td><td>:</td><td> <?php echo $address;?></td></tr>
+                                            <tr><td>BR No.</td><td>:</td><td> <?php echo $brno;?></td></tr>
+                                            <tr><td>VAT No.</td><td>:</td><td> <?php echo $vatno;?></td></tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="col-md-6 ps-4 mb-1">
                                     <table class="w-100" style="border:1px;">
                                         <tbody>
-                                            <tr><td>Location</td><td>:</td><td> <?php echo $location;?></td></tr>
-                                            <tr><td>Created By</td><td>:</td><td> <?php echo $grnby;?></td></tr>
-                                            <tr><td>GRN Date/Time</td><td>:</td><td> <?php echo $grndt;?></td></tr>
+                                            <tr><td>Created By</td><td>:</td><td> <?php echo $createdby;?></td></tr>
+                                            <tr><td>Created Date/Time</td><td>:</td><td> <?php echo $createddt;?></td></tr>
                                             <tr><td>Status</td><td>:</td><td> <?php echo $status;?></td></tr>
                                         </tbody>
                                     </table>
@@ -182,55 +193,29 @@
                                         <tr>
                                             <th>Style No.</th>
                                             <th>Order No.</th>
-                                            <th>Agreement No</th>
-                                            <th>Total GRN Value</th>
+                                            <th>Process Type</th>
                                         </tr>
                                         <tr>
                                             <td><?php echo $style;?></td>
                                             <td><?php echo $order;?></td>
-                                            <td><?php echo $agreement;?></td>
-                                            <td><?php echo $grnval;?></td>
+                                            <td><?php echo $process;?></td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
                             <!---------------------------------- Item Details Section -------------------------------------- -->
-
-                            <div style="height:50px; font-family: times-new-roman;"><h4 class="text-center mt-5"><u>Parts Details</u></h4></div>
-                            <div class="row text-center">
-                                <div class="col ps-4">
-                                    <table class="w-100 report-table text-center">
-                                        <tr>
-                                            <th>No.</th>
-                                            <th>Cut No.</th>
-                                            <th>Color.</th>
-                                            <th>Size</th>
-                                            <th>Finished Qty.</th>
-                                            <th>Damages Qty.</th>
-                                            <th>Sample Qty.</th>
-                                        </tr>
-                                        <?php
-                                        while($details=mysqli_fetch_assoc($detailsData))
-                                            {
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $no++; ?></td>
-                                            <td><?php echo $details['CUT'];?></td>
-                                            <td><?php echo $details['COLOR'];?></td>
-                                            <td><?php echo $details['SIZE'];?></td>
-                                            <td><?php echo $details['FQTY'];?></td>
-                                            <td><?php echo $details['DQTY'];?></td>
-                                            <td><?php echo $details['SQTY'];?></td>
-                                        </tr>
-                                        <?php
-                                            }
-                                        ?>
-                                        <tr>
-                                            <td class="dark-cell" colspan="4">Total</td>
-                                            <td class="dark-bg-cell"><?php echo $recfinqty;?></td>
-                                            <td class="dark-bg-cell"><?php echo $recdamqty;?></td>
-                                            <td class="dark-bg-cell"><?php echo $recsamqty;?></td>
-                                        </tr>
+                            <div class="row">
+                                <div class="col-md-6 ps-4 mb-1 ">
+                                    <table class="w-100" style="border:1px;">
+                                        <tbody>
+                                            <tr><td>Contract Total Qty.(<?php echo $pcsperset;?> pcs/set)</td><td class="middle-cell">:</td><td> <?php echo $totalqty;?></td></tr>
+                                            <tr><td>Per Day Qty.(<?php echo $pcsperset;?> pcs/set)</td><td class="middle-cell">:</td><td> <?php echo $dailyqty;?></td></tr>
+                                            <tr><td>Starting Date</td><td class="middle-cell">:</td><td> <?php echo $startdate;?></td></tr>
+                                            <tr><td>Ending Date</td><td class="middle-cell">:</td><td> <?php echo $enddate;?></td></tr>
+                                            <tr><td>Credit Period</td><td class="middle-cell">:</td><td> <?php echo $creditdays;?></td></tr>
+                                            <tr><td>Unit Price(Finished Goods)</td><td class="middle-cell">:</td><td> <?php echo number_format($fgunitprice, 2);?></td></tr>
+                                            <tr><td>Unit Price(Samples)</td><td class="middle-cell">:</td><td> <?php echo number_format($samupleunitprice, 2);?></td></tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -269,7 +254,7 @@
                                     if($accConfirm==1 && $status!="Approved"){
                                     ?>
                                     <input type="submit" class="btn btn-primary save_btn" value="Approve" name="btnApprove" id="btnApprove"/>
-                                    <input type="submit" class="btn btn-primary save_btn" value="Delete" name="btnDel" id="btnDel"/>
+                                    <input type="submit" class="btn btn-primary save_btn" value="Cancel" name="btnCancel" id="btnCancel"/>
                                     <?php
                                     }
                                 ?>

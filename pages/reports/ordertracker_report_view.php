@@ -120,7 +120,7 @@
         <div class="container ps-5 pe-5">
             <div class="ms-5 me-5 ps-5 pe-5">
                 <div class="d-flex row" style="padding-bottom:25px;">
-                                <div class="col-3 text-center">
+                                <div class="col-3 text-center justify-content-center align-items-center d-flex">
                                     <img src="../../Resources/images/logo.png" alt="Logo" class="img-fluid"  />
                                 </div>
                                 <div class="col-6 text-center pt-3">

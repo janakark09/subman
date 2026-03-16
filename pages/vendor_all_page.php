@@ -39,7 +39,7 @@
 			{
             ?>
             <tr>
-            	<td class="text-center"><a href="DashBoard.php?activity=editVendor&selectedID=<?php echo $result1['vendorID']?>"><?php echo $result1['vendorID']?></a></td>
+            	<td class="text-center"><a href="home_page.php?activity=editvendor&selectedID=<?php echo $result1['vendorID']?>"><?php echo $result1['vendorID']?></a></td>
                 <td><?php echo $result1['vendor']?></td>
                 <td><?php echo $result1['address']?></td>
                 <td><?php echo $result1['tel']?></td>
