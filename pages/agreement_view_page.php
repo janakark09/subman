@@ -160,7 +160,18 @@
                                     <p class="text-center">246/03 Welmilla, Aluthgama,  Bandaragama Bandaragama Sri Lanka.<br><b>Tel : </b>(122)(+94)11 7577700 <b>Fax : </b>(122)(+94)382291763 <br><b>E-Mail : </b>info@originalapparel.lk <b>Web : </b>www.originalapparel.lk</p>
                                 </div>
                                 <div class="col-3"></div>
-                            <div><h3 class="text-center title mb-2">SUBCONTRACT AGREEMENT</h3></div>
+                            <div>
+                                <?php
+                                if($status=="Cancelled"){
+                                    ?>
+                                    <div class="position-absolute top-50 start-50 translate-middle">
+                                        <h1 class="display-1 text-danger" style="opacity:0.5;">CANCELLED</h1>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+                                <h3 class="text-center title mb-2">SUBCONTRACT AGREEMENT</h3>
+                            </div>
                             <div class="row no-wrap1 ">
                                 <div class="col-md-6 ps-4 mb-1 ">
                                     <table class="w-100" style="border:1px;">
@@ -251,11 +262,18 @@
                             <div class="row justify-content-center gap-3 mt-5 no-print">
                                 <hr>
                                 <?php
-                                    if($accConfirm==1 && $status!="Approved"){
-                                    ?>
-                                    <input type="submit" class="btn btn-primary save_btn" value="Approve" name="btnApprove" id="btnApprove"/>
-                                    <input type="submit" class="btn btn-primary save_btn" value="Cancel" name="btnCancel" id="btnCancel"/>
-                                    <?php
+                                    if($accConfirm==1){
+                                        if($status!="Cancelled" && $status!="Approved"){
+                                        ?>
+                                        <input type="submit" class="btn btn-primary save_btn" value="Approve" name="btnApprove" id="btnApprove"/>
+                                        <input type="submit" class="btn btn-primary save_btn" value="Cancel" name="btnCancel" id="btnCancel"/>
+                                        <?php
+                                        }
+                                        else if($status!="Cancelled"){
+                                            ?>
+                                            <input type="submit" class="btn btn-primary save_btn" value="Cancel" name="btnCancel" id="btnCancel"/>
+                                            <?php
+                                        }
                                     }
                                 ?>
                                 <button type="button" class="btn btn-success save_btn" onclick="window.print()">Print</button>

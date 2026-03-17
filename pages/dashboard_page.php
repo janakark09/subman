@@ -70,102 +70,105 @@
     </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <h3 class="mb-4">Subcontractor Management Dashboard</h3>
-        <div class="row g-4 gap-3 justify-content-center">
-            <div class="col-lg-2 col-md-3">
-                <div class="card-kpi bg-primary">
-                    <h6>Total Active Vendors</h6>
-                    <h3><?php echo $vendors['total']; ?></h3>
+    <div class="container">
+        <div class="container mt-4" >
+            <h3 class="mb-4">Subcontractor Management Dashboard</h3>
+            <div class="row g-4 gap-3 justify-content-center">
+                <div class="col-lg-2 col-md-3">
+                    <div class="card-kpi bg-primary">
+                        <h6>Total Active Vendors</h6>
+                        <h3><?php echo $vendors['total']; ?></h3>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-2 col-md-3">
-                <div class="card-kpi bg-success">
-                    <h6>Total Style Orders</h6>
-                    <h3><?php echo $orders['total']; ?></h3>
+                <div class="col-lg-2 col-md-3">
+                    <div class="card-kpi bg-success">
+                        <h6>Total Style Orders</h6>
+                        <h3><?php echo $orders['total']; ?></h3>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-lg-2 col-md-3">
-                <div class="card-kpi bg-warning">
-                    <h6>Active Agreements</h6>
-                    <h3><?php echo $gatepass['TOTALAGR']; ?></h3>
+                <div class="col-lg-2 col-md-3">
+                    <div class="card-kpi bg-warning">
+                        <h6>Active Agreements</h6>
+                        <h3><?php echo $gatepass['TOTALAGR']; ?></h3>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-lg-2 col-md-3">
-                <div class="card-kpi bg-danger">
-                    <h6>Payble GRNs</h6>
-                    <h3><?php echo $grn['PAYBLEGRN']; ?></h3>
+                <div class="col-lg-2 col-md-3">
+                    <div class="card-kpi bg-danger">
+                        <h6>Payble GRNs</h6>
+                        <h3><?php echo $grn['PAYBLEGRN']; ?></h3>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-lg-2 col-md-3">
-                <div class="card-kpi bg-dark">
-                    <h6>Total Payables</h6>
-                    <h4><?php echo number_format($payments['PAYBLE'],2); ?></h4>
-                </div>
-            </div>
-        </div>
-
-        <!-------------------------------------- Vendor Performance Chart ---------------------------------->
-        <div class="container-fluid">
-            <div class="card mt-4">
-                <div class="card-header">Vendor Performance</div>
-                <div class="card-body">
-                    <canvas id="vendorChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!------------------------Production Progress Chart -------------------------------------->
-        <div class="d-flex gap-5">
-            <div class="col-lg-3 card mt-4">
-                <div class="card-header">Production vs Received</div>
-                <div class="card-body">
-                    <canvas id="prodChart"></canvas>
+                <div class="col-lg-2 col-md-3">
+                    <div class="card-kpi bg-dark">
+                        <h6>Total Payables</h6>
+                        <h4><?php echo number_format($payments['PAYBLE'],2); ?></h4>
+                    </div>
                 </div>
             </div>
 
-        <!------------------------------- payment chart ----------------------------------->
-            <div class="col-lg-3 card mt-4">
-                <div class="card-header">Vendor Payments</div>
-
-                <div class="card-body">
-                    <canvas id="payChart"></canvas>
+            <!-------------------------------------- Vendor Performance Chart ---------------------------------->
+            <div class="container-fluid">
+                <div class="card mt-4">
+                    <div class="card-header">Vendor Performance</div>
+                    <div class="card-body">
+                        <canvas id="vendorChart"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
-        
 
-        <!-- ------------------------- Top Vendors List ---------------------------- -->
-        <div>
-            <h4 class="mt-5">Top Vendors</h4>
+            <!------------------------Production Progress Chart -------------------------------------->
+            <div class="d-flex gap-5">
+                <div class="col-lg-3 card mt-4">
+                    <div class="card-header">Production vs Received</div>
+                    <div class="card-body">
+                        <canvas id="prodChart"></canvas>
+                    </div>
+                </div>
 
-            <table class="table table-bordered">
-                <tr>
-                    <th>Vendor</th>
-                    <th>Total Finished Qty</th>
-                </tr>
-                    <?php
+            <!------------------------------- payment chart ----------------------------------->
+                <div class="col-lg-3 card mt-4">
+                    <div class="card-header">Vendor Payments</div>
 
-                        $q=mysqli_query($conn,"SELECT v.vendor,SUM(g.recFnishedQty) qty FROM grn_details g JOIN vendors v ON g.VendorID=v.vendorID
-                        GROUP BY v.vendorID ORDER BY qty DESC LIMIT 5");
+                    <div class="card-body">
+                        <canvas id="payChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
 
-                        while($r=mysqli_fetch_assoc($q)){
+            <!-- ------------------------- Top Vendors List ---------------------------- -->
+            <div>
+                <h4 class="mt-5">Top Vendors</h4>
 
-                        echo "<tr>
-                            <td>".$r['vendor']."</td>
-                            <td>".$r['qty']."</td>
-                        </tr>";
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Vendor</th>
+                        <th>Total Finished Qty</th>
+                    </tr>
+                        <?php
 
-                        }
+                            $q=mysqli_query($conn,"SELECT v.vendor,SUM(g.recFnishedQty) qty FROM grn_details g JOIN vendors v ON g.VendorID=v.vendorID
+                            GROUP BY v.vendorID ORDER BY qty DESC LIMIT 5");
 
-                    ?>
+                            while($r=mysqli_fetch_assoc($q)){
 
-            </table> 
+                            echo "<tr>
+                                <td>".$r['vendor']."</td>
+                                <td>".$r['qty']."</td>
+                            </tr>";
+
+                            }
+
+                        ?>
+
+                </table> 
+            </div>
         </div>
     </div>
+    
 
     <script>
         new Chart(document.getElementById('vendorChart'),{

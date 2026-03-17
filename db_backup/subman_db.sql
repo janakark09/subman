@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 16, 2026 at 12:02 PM
+-- Generation Time: Mar 17, 2026 at 01:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,8 +56,8 @@ CREATE TABLE `agreements` (
 --
 
 INSERT INTO `agreements` (`id`, `vendorID`, `process`, `styleOrderID`, `pcsPerSet`, `contractTotalQty`, `dailyQty`, `startedDate`, `endDate`, `creditPeriod`, `unitPriceFg`, `unitPriceSample`, `Status`, `createdDT`, `createdBy`, `approvedBy`, `approvedDT`, `canceledBy`, `canceledDT`) VALUES
-(1, 101, 1, 1, 2, 5000, 100, '2026-02-13', '2026-05-23', 30, 30, 20, 'Approved', '2026-02-13 12:39:43', 1001, 1001, '2026-03-16 16:28:37', NULL, NULL),
-(2, 102, 1, 1, 2, 5000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:41:39', 1001, NULL, NULL, NULL, NULL),
+(1, 101, 1, 1, 2, 5000, 100, '2026-02-13', '2026-05-23', 30, 30, 20, 'Cancelled', '2026-02-13 12:39:43', 1001, 1001, '2026-03-16 16:28:37', 1001, '2026-03-17 10:49:26'),
+(2, 102, 1, 1, 2, 5000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Cancelled', '2026-02-13 12:41:39', 1001, NULL, NULL, 1001, '2026-03-17 10:56:13'),
 (3, 102, 1, 1, 2, 3500, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:45:36', 1001, NULL, NULL, NULL, NULL),
 (4, 101, 1, 1, 2, 10000, 30, '2026-03-08', '2028-06-18', 30, 150, 30, 'Approved', '2026-03-08 22:13:37', 1002, 1001, '2026-03-16 16:29:24', NULL, NULL);
 

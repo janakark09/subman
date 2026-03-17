@@ -79,7 +79,7 @@
     <form method="POST">
         <div class="container-fluid">
             <!---------------------------------- Buyer Style Order Section -------------------------------------- -->
-                    <div class="form-group col-md-4 me-3">
+                    <div class="form-group col-lg-4 me-3">
                             <label >Buyer</label>
                             <select class="form-select" name="buyerid" id="buyerSelect" onchange="resetStyleAndOrder(); this.form.submit()"  >
                                 <option selected hidden></option>
@@ -95,7 +95,7 @@
                             </select>
                     </div>
                     <div class="d-lg-flex mb-3">
-                        <div class="form-group col-md-4 me-3">
+                        <div class="form-group col-lg-4 me-3">
                             <label >Style No.</label>
                             <select class="form-select" name="styleNo" id="styleSelect" onchange="this.form.submit()">
                                 <option selected hidden></option>
@@ -110,7 +110,7 @@
                                     ?>
                             </select>
                         </div>
-                        <div class="form-group col-md-4 me-5">
+                        <div class="form-group col-lg-4 me-5">
                             <label >Order No.</label>
                             <select class="form-select" name="orderNo" id="orderSelect" onchange="this.form.submit()">
                                 <option selected hidden></option>
@@ -125,10 +125,10 @@
                                     ?>
                             </select>
                         </div>
-                        <div class="form-group col-md-4 me-3 ms-5">
+                        <div class="form-group col-lg-4 me-3 ms-5 gap-3">
                             <br>
-                            <button type="Search" class="btn btn-primary me-2 save_btn" name="btnSearch" id="btnSearch">Search</button>
-                            <button type="All" class="btn btn-primary me-2 save_btn" name="btnAll" id="btnAll" onclick="resetStyleAndOrder()">All</button>
+                            <button type="Search" class="btn btn-primary me-2 save_btn mb-2" name="btnSearch" id="btnSearch">Search</button>
+                            <button type="All" class="btn btn-primary me-2 save_btn mb-2" name="btnAll" id="btnAll" onclick="resetStyleAndOrder()">All</button>
                         </div> 
                     </div>
         </div>

@@ -40,10 +40,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<!--bootstrap-->
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
+		<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous"> -->
+
+		<!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script> -->
+		<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script> -->
 
 		<!--Font-awsome-->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -57,27 +60,13 @@
 		<link rel="stylesheet" type="text/css" href="../assets/font-awesome/css/all.css"/>
 		<script src="../assets/font-awesome/js/all.js"></script>
 		<style type="text/css">
-			.signup
-			{
-				color:white;
-				font-family:'Arial Black';
-				margin-top:0px;
-				margin-bottom:5px;
-				margin-right:20px;
-			}
+			
 			.orangecolor{
 				color: #ef5c23;
 			}
 			.logo{
 				text-decoration: none;
 			}
-			/* .content_div
-			{
-				height:100%;
-				width:100%;
-				float:right;
-				position:absolute;
-			} */
 			#td11
 			{
 				min-height:100%;
@@ -93,21 +82,13 @@
 		<header class="navbar navbar-expand-lg bg-success fixed-top">
 			<div class="container-fluid">
 				<h3 class="h3"><a class="text-white fw-bold logo" href="#">SUBMAN</a></h3>
-				<button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<!-- Toggle button for mobile view -->
+				<button class="navbar-toggler navbar-dark" type="button"  id="togglebtn1" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 			</div>
 			<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-				<ul class="navbar-nav ">
-					<!--li class="nav-item">
-						<a class="nav-link active text-light" aria-current="page" href="#">HOME</a>
-					</li>
-					<li class="nav-item ">
-						<a class="nav-link text-light" href="#">ABOUT</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-light" href="#">SERVICES</a>
-					</li-->
+				<ul class="navbar-nav">
 					<li class="nav-item">
 						<!-- User Dropdown -->
 						<div class="dropdown">
@@ -127,7 +108,7 @@
 					</li>
 					<li class="nav-item">
 						<a class="nav-link dropdown-toggle text-light pe-2" href="home_page.php?activity=notify" id="messagesDropdown" role="button"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									<i class="fa fa-envelope mb-1"></i>
 									<span class="red-badge">7</span>
 								</a>
@@ -141,27 +122,14 @@
 
 		<!------------------------------ Body Contents ------------------------------------------------>
 		<div>
-			<div class="container-fluid pt-5">
+			<div class=" pt-5">
 				<div class="row d-flex min-vh-100">
-					<div class="col-sm-6 col-md-4 col-lg-2 mt-1 bg-dark">
+					<div class="col-sm col-md-4 col-lg-3 col-xl-3 mt-1 bg-dark">
 						<!-------------------------------- Side bar ---------------------------->
 						<?php include '../includes/sidebar.php'?>
 						<!-- User Dropdown -->
-						<!-- <div class="dropdown">
-							<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-							data-bs-toggle="dropdown">
-								<img src="../Resources/images/userIcon.png" width="32" height="32" class="rounded-circle me-2">
-								<strong>mdo</strong>
-							</a>
-							<ul class="dropdown-menu dropdown-menu-dark shadow">
-								<li><a class="dropdown-item" href="#">Profile</a></li>
-								<li><a class="dropdown-item" href="#">Settings</a></li>
-								<li><hr class="dropdown-divider"></li>
-								<li><a class="dropdown-item" href="#">Sign out</a></li>
-							</ul>
-						</div> -->
 					</div>
-					<div class="col pt-5 mt-2 ms-5 me-5 ">
+					<div class="col-sm col-md-6 col-lg pt-5 mt-2 ms-5 me-5 ">
 						<!-------------------------- Content for the system operations ------------------------->
 						<?php
 						if(empty($_REQUEST['activity']))
@@ -302,7 +270,13 @@
 										case 'addloc':
 											include ('mast_addloc_page.php');
 											break;
+										case 'editLoc':
+											include ('mast_editloc_page.php');
+											break;
 										//------------------------------------------------
+										case 'aboutdev':
+											include ('about.php');
+										break;
 										case 'logout':
 										break;
 										
@@ -322,7 +296,7 @@
 				</div>
 		</div>
 
-		<script>
+		<script>			
 			document.addEventListener("DOMContentLoaded", function () {
 
 				const employeeRadio = document.getElementById("Radio1");

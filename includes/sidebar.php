@@ -34,289 +34,250 @@ include "../includes/db-con.php";
             $acc25=$uDetails['acc25'];
         }    
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar Menu</title>
-<!--Font-awsome-->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.min.css"/>
-    <!-- Custom CSS -->
-    <style>
-        /* body {
-            height: 100%;
-        } */
 
-        .sidebar {
-            width: 100%;
-            min-height: 100vh;
-        }
+<div class="d-flex justify-content-end mb-3">
+    <div class="d-flex justify-content-right align-items-center pt-3 ps-2 pb-1 bg-dark">
+        <button class="navbar-toggler" type="button"  id="togglebtn1" data-bs-toggle="collapse" data-bs-target="#sidebarMenuWrapper" aria-controls="sidebarMenuWrapper" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa fa-window-maximize text-secondary"></i>
+	    </button>
+    </div>
+    <!-- <button class="navbar-toggler navbar-dark" type="button"  id="togglebtn1" data-bs-toggle="collapse" data-bs-target="#sidebarMenuWrapper" aria-controls="sidebarMenuWrapper" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span> -->
+	</button>
+    <div class="collapse d-md-block d-lg-block navbar-collapse" id="sidebarMenuWrapper">
+        <!------------------------- Sidebar ------------------------>
+        <div class="sidebar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+            <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <span class="fs-4">Main Menu</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto" id="sidebarMenu">
+                    
+                <li class="nav-item " <?php if($acc1==0){ echo 'hidden'; } ?>>
+                    <a href="home_page.php?activity=dashboard" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='dashboard' ? 'active' : '' ?>">
+                        <i class="fa fa-chart-area me-2" aria-hidden="true"></i> Dashboard
+                    </a>
+                </li>
 
-        /* Main menu active */
-        .nav-pills .nav-link.active {
-            background-color: #198754;
-            color: #fff;
-            font-weight: 500;
-        }
+                <!---------------- Merchandising with Sub Menu ------------------------------------>
+                <li class="nav-item" <?php if($acc2==0){ echo 'hidden'; } ?>>
+                    <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#merchMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-users me-2"></i> Merchandising</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
 
-        /* Hover */
-        .nav-pills .nav-link:hover {
-            background-color: #495057;
-            color: #fff;
-        }
+                    <div class="collapse submenu" id="merchMenu">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item" <?php if($acc3==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=allbuyers" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allbuyers' ? 'active' : '' ?>">All Buyers</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc4==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=styles" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='styles' ? 'active' : '' ?>">Style Management</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc4==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=styleorder" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='styleorder' ? 'active' : '' ?>">Style Order Management</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc4==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=colorsize" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='colorsize' ? 'active' : '' ?>">Style Color & Size</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
-        /* Sub menu */
-        .submenu .nav-link {
-            padding-left: 2.5rem;
-            font-size: 0.9rem;
-        }
+        <!---------------- Vendors with Sub Menu ------------------------------------>
+                <li class="nav-item">
+                    <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#vendorMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-handshake me-2"></i> Subcontracting</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
 
-        .submenu .nav-link.active {
-            background-color: #0d6efd;
-        }
+                    <div class="collapse submenu" id="vendorMenu">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item" <?php if($acc8==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=allvendors" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allvendors' ? 'active' : '' ?>">All Vendors</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc8==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=addvendor" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='addvendor' ? 'active' : '' ?>">New Vendor</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc9==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=agreements" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='agreements' ? 'active' : '' ?>">Order Agreements</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            <!------------------------------- Planning Module with Sub Menu ---------------------------->
+                <li class="nav-item" <?php if($acc6==0){ echo 'hidden'; } ?>>
+                    <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#planningMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-clock me-2"></i>Order Planning</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
 
-        /* Arrow rotation */
-        .nav-link .fa-angle-down {
-            transition: transform 0.3s;
-        }
+                    <div class="collapse submenu" id="planningMenu">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a href="home_page.php?activity=planning" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='planning' ? 'active' : '' ?>">Order Planning</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc7==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=confirmplan" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='confirmplan' ? 'active' : '' ?>">Confirm Planning</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            <!---------------------------------- Gate Passes with Sub Menu ------------------------------------>
+                <li class="nav-item" <?php if($acc12==0){ echo 'hidden'; } ?>>
+                    <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#gatepasssMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-cubes me-2"></i> Gate Passes</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
 
-        .nav-link[aria-expanded="true"] .fa-angle-down {
-            transform: rotate(180deg);
-        }
-    </style>
-</head>
-<body>
+                    <div class="collapse submenu" id="gatepasssMenu">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a href="home_page.php?activity=gatepass" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='gatepass' ? 'active' : '' ?>">All Gate Passes</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc11==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=newgatepass" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='newgatepass' ? 'active' : '' ?>">New gate Pass</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            <!------------------------------- Production Module with Sub Menu ---------------------------->
+                <li class="nav-item" <?php if($acc15==0){ echo 'hidden'; } ?>>
+                    <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#productsMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-tshirt me-2"></i> Production Module</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
 
-<div class="d-flex">
-    <!------------------------- Sidebar ------------------------>
-    <div class="sidebar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
-        <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-            <span class="fs-4">Main Menu</span>
-        </a>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto" id="sidebarMenu">
-                   
-            <li class="nav-item " <?php if($acc1==0){ echo 'hidden'; } ?>>
-                <a href="home_page.php?activity=dashboard" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='dashboard' ? 'active' : '' ?>">
-                    <i class="fa fa-chart-area me-2" aria-hidden="true"></i> Dashboard
-                </a>
-            </li>
+                    <div class="collapse submenu" id="productsMenu">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a href="home_page.php?activity=proRec" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='proRec' ? 'active' : '' ?>">All Records</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc14==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=proAdd" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='proAdd' ? 'active' : '' ?>">Add Record</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            <!------------------------------- Finance Module with Sub Menu ---------------------------->
+                <li class="nav-item">
+                    <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#financeMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-dollar-sign me-2"></i> Finance Module</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
 
-            <!---------------- Merchandising with Sub Menu ------------------------------------>
-            <li class="nav-item" <?php if($acc2==0){ echo 'hidden'; } ?>>
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#merchMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-users me-2"></i> Merchandising</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
+                    <div class="collapse submenu" id="financeMenu">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item" <?php if($acc17==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=grnAll" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='grnAll' ? 'active' : '' ?>">GRN</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc18==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=grnList" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='grnList' ? 'active' : '' ?>">GRN List</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc20==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=payAdd" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='payAdd' ? 'active' : '' ?>">Payments</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc21==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=payList" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='payList' ? 'active' : '' ?>">Payments List</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            <!------------------------------- Reports with Sub Menu ---------------------------->
+                <!-- <li class="nav-item">
+                    <a href="#" class="nav-link text-white">
+                        <i class="fa fa-calculator me-2"></i> Reports</a>
+                </li> -->
+                <!-------------------------- Reports with Sub Menu ------------------------------------------>
+                <li class="nav-item" <?php if($acc23==0){ echo 'hidden'; } ?>>
+                    <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#reportsMenu" role="button" aria-expanded="false">
+                        <span><i class="fa fa-newspaper me-2"></i> Reports</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
 
-                <div class="collapse submenu" id="merchMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item" <?php if($acc3==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=allbuyers" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allbuyers' ? 'active' : '' ?>">All Buyers</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc4==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=styles" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='styles' ? 'active' : '' ?>">Style Management</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc4==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=styleorder" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='styleorder' ? 'active' : '' ?>">Style Order Management</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc4==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=colorsize" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='colorsize' ? 'active' : '' ?>">Style Color & Size</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
+                    <div class="collapse submenu" id="reportsMenu">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a href="home_page.php?activity=rptOrderTrack" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='rptOrderTrack' ? 'active' : '' ?>">Order tracker</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="home_page.php?activity=rptStyles" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='rptStyles' ? 'active' : '' ?>">Style Report</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link text-white">Report3</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            <!-------------------------- Users Management with Sub Menu ------------------------------------------>
+                <li class="nav-item" <?php if($acc24==0){ echo 'hidden'; } ?>>
+                    <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#usersMenu" role="button" aria-expanded="true">
+                        <span><i class="fa fa-user-circle me-2"></i> Users</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
 
-    <!---------------- Vendors with Sub Menu ------------------------------------>
-            <li class="nav-item">
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#vendorMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-handshake me-2"></i> Subcontracting</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
+                    <div class="collapse submenu" id="usersMenu">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item">
+                                <a href="home_page.php?activity=adduser" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='adduser' ? 'active' : '' ?>">New User</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="home_page.php?activity=users" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='users' ? 'active' : '' ?>">All Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="home_page.php?activity=usertype" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='usertype' ? 'active' : '' ?>">User Types</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
-                <div class="collapse submenu" id="vendorMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item" <?php if($acc8==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=allvendors" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='allvendors' ? 'active' : '' ?>">All Vendors</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc8==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=addvendor" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='addvendor' ? 'active' : '' ?>">New Vendor</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc9==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=agreements" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='agreements' ? 'active' : '' ?>">Order Agreements</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-         <!------------------------------- Planning Module with Sub Menu ---------------------------->
-            <li class="nav-item" <?php if($acc6==0){ echo 'hidden'; } ?>>
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#planningMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-clock me-2"></i>Order Planning</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
+                <!-------------------------- Masters with Sub Menu ------------------------------------------>
+                <li class="nav-item" <?php if($acc25==0){ echo 'hidden'; } ?>>
+                    <a class="nav-link text-white d-flex justify-content-between align-items-center"
+                    data-bs-toggle="collapse" href="#mastersMenu" role="button" aria-expanded="true">
+                        <span><i class="fa fa-cog me-2"></i> Masters</span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
 
-                <div class="collapse submenu" id="planningMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=planning" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='planning' ? 'active' : '' ?>">Order Planning</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc7==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=confirmplan" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='confirmplan' ? 'active' : '' ?>">Confirm Planning</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        <!---------------------------------- Gate Passes with Sub Menu ------------------------------------>
-            <li class="nav-item" <?php if($acc12==0){ echo 'hidden'; } ?>>
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#gatepasssMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-cubes me-2"></i> Gate Passes</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
+                    <div class="collapse submenu" id="mastersMenu">
+                        <ul class="nav nav-pills flex-column">
+                            <li class="nav-item" <?php if($acc25==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=loc" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='loc' ? 'active' : '' ?>">Locations</a>
+                            </li>
+                            <li class="nav-item" <?php if($acc25==0){ echo 'hidden'; } ?>>
+                                <a href="home_page.php?activity=addloc" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='addloc' ? 'active' : '' ?>">Add Location</a>
+                            </li>
+                            <!--li class="nav-item">
+                                <a href="#" class="nav-link text-white">User Types</a>
+                            </li-->
+                        </ul>
+                    </div>
+                </li>
+                <!-------------------------- About Developer ------------------------------------------>
+                <li class="nav-item">
+                    <a href="home_page.php?activity=aboutdev" class="nav-link text-white">
+                        <i class="fa fa-baby me-2"></i> About Developer</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../includes/logout.php" class="nav-link text-white">
+                        <i class="fa fa-power-off me-2"></i> Logout</a>
+                </li>
+                
 
-                <div class="collapse submenu" id="gatepasssMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=gatepass" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='gatepass' ? 'active' : '' ?>">All Gate Passes</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc11==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=newgatepass" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='newgatepass' ? 'active' : '' ?>">New gate Pass</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        <!------------------------------- Production Module with Sub Menu ---------------------------->
-            <li class="nav-item" <?php if($acc15==0){ echo 'hidden'; } ?>>
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#productsMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-tshirt me-2"></i> Production Module</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
-
-                <div class="collapse submenu" id="productsMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=proRec" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='proRec' ? 'active' : '' ?>">All Records</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc14==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=proAdd" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='proAdd' ? 'active' : '' ?>">Add Record</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        <!------------------------------- Finance Module with Sub Menu ---------------------------->
-            <li class="nav-item">
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#financeMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-dollar-sign me-2"></i> Finance Module</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
-
-                <div class="collapse submenu" id="financeMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item" <?php if($acc17==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=grnAll" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='grnAll' ? 'active' : '' ?>">GRN</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc18==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=grnList" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='grnList' ? 'active' : '' ?>">GRN List</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc20==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=payAdd" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='payAdd' ? 'active' : '' ?>">Payments</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc21==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=payList" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='payList' ? 'active' : '' ?>">Payments List</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-         <!------------------------------- Reports with Sub Menu ---------------------------->
-            <!-- <li class="nav-item">
-                <a href="#" class="nav-link text-white">
-                    <i class="fa fa-calculator me-2"></i> Reports</a>
-            </li> -->
-            <!-------------------------- Reports with Sub Menu ------------------------------------------>
-            <li class="nav-item" <?php if($acc23==0){ echo 'hidden'; } ?>>
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#reportsMenu" role="button" aria-expanded="false">
-                    <span><i class="fa fa-newspaper me-2"></i> Reports</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
-
-                <div class="collapse submenu" id="reportsMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=rptOrderTrack" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='rptOrderTrack' ? 'active' : '' ?>">Order tracker</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=rptStyles" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='rptStyles' ? 'active' : '' ?>">Style Report</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-white">Report3</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        <!-------------------------- Users Management with Sub Menu ------------------------------------------>
-            <li class="nav-item" <?php if($acc24==0){ echo 'hidden'; } ?>>
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#usersMenu" role="button" aria-expanded="true">
-                    <span><i class="fa fa-user-circle me-2"></i> Users</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
-
-                <div class="collapse submenu" id="usersMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=adduser" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='adduser' ? 'active' : '' ?>">New User</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=users" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='users' ? 'active' : '' ?>">All Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="home_page.php?activity=usertype" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='usertype' ? 'active' : '' ?>">User Types</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-
-            <!-------------------------- Masters with Sub Menu ------------------------------------------>
-            <li class="nav-item" <?php if($acc25==0){ echo 'hidden'; } ?>>
-                <a class="nav-link text-white d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#mastersMenu" role="button" aria-expanded="true">
-                    <span><i class="fa fa-cog me-2"></i> Masters</span>
-                    <i class="fa fa-angle-down"></i>
-                </a>
-
-                <div class="collapse submenu" id="mastersMenu">
-                    <ul class="nav nav-pills flex-column">
-                        <li class="nav-item" <?php if($acc25==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=loc" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='loc' ? 'active' : '' ?>">Locations</a>
-                        </li>
-                        <li class="nav-item" <?php if($acc25==0){ echo 'hidden'; } ?>>
-                            <a href="home_page.php?activity=addloc" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='addloc' ? 'active' : '' ?>">Add Location</a>
-                        </li>
-                        <!--li class="nav-item">
-                            <a href="#" class="nav-link text-white">User Types</a>
-                        </li-->
-                    </ul>
-                </div>
-            </li>
-
-        </ul>
-
-        <hr>
-
-        
+            </ul>
+            
+        </div>
     </div>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Active Menu Script -->
 <script>
@@ -361,5 +322,5 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-</body>
-</html>
+<!-- </body>
+</html> -->

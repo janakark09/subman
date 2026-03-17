@@ -184,7 +184,7 @@
                             <input type="date" class="form-control" id="toDate" name="toDate" value="<?php echo isset($_POST['toDate']) ? $_POST['toDate'] : ''; ?>" onchange="this.form.submit()"/>
                         </div>
                     </div> 
-                    <div class="mb-3 gap-3 mt-5 bg-light p-3 col-3 rounded border">
+                    <div class="mb-3 gap-3 mt-5 bg-light p-3 col-lg-4 rounded border">
                         <div class="form-group">
                             <input type="radio" class="form-check-input" name="selection1" required id="selection1" value="Gate pass" <?php if(isset($_POST['selection1']) && $_POST['selection1']=="Gate pass") echo "checked"; ?>>
                             <label for="selection1">Gate Passes</label>

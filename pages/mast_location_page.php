@@ -33,10 +33,10 @@
 			?>
             <tr>
             	<td class="text-center">
-                <a href="DashBoard.php?activity=editUser&selectedID=<?php echo $result1['locationID']?>"><?php echo $result1['locationID']?></a>
+                <a href="home_page.php?activity=editLoc&selectedID=<?php echo $result1['locationID']?>"><?php echo $result1['locationID']?></a>
                 <td><?php echo $result1['location']?></td>
                 <td><?php echo $result1['address']?></td>
-                <td class="text-center"><?php echo $result1['status']?></td>				
+                <td class="text-center"><?php echo $result1['status']?></td>			
             <tr>
             <?php
 			}
