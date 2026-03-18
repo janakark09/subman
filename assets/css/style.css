@@ -42,6 +42,15 @@
 {
 	width:70%;
 }
+/*----------------------------------- Message box -------------------------------*/
+.dropdown-menu {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.textJustify{
+	text-align: justify;
+}
 /* ------------------------------------sidebar styles-------------------------------------- */
 
 /* body {

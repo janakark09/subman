@@ -78,7 +78,11 @@
         {
             $updateQuery="UPDATE grn_details SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE grnCode1='$slectedgrnID'";
             $updateRes=mysqli_query($conn,$updateQuery);
-            if($updateRes)
+
+            $sendNotifQry="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'GRN No: $slectedgrnID has been approved by $user.',$createdby,'0')";
+            $sendNotifRes=mysqli_query($conn, $sendNotifQry);
+
+            if($updateRes && $sendNotifRes)
                 {
                     echo "<script>
                     setTimeout(function(){window.location.href = 'home_page.php?activity=grnList';}, 1000);
@@ -97,7 +101,11 @@
             if($deleteRes1=mysqli_query($conn,$deleteQry1)){
                 $deleteQuery="DELETE FROM grn_details WHERE grnCode1='$slectedgrnID'";
                 $deleteRes=mysqli_query($conn,$deleteQuery);
-                if($deleteRes)
+
+                $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'GRN No: $slectedgrnID has been deleted by $user.',$createdby,'0')";
+                $sendNotifRes1=mysqli_query($conn, $sendNotifQry1);
+
+                if($deleteRes && $sendNotifRes1)
                     {
                         echo "<script>
                         setTimeout(function(){window.location.href = 'home_page.php?activity=grnList';}, 1000);

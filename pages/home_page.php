@@ -29,6 +29,9 @@
 		exit();
 	}
 	$today=date("Y/m/d");
+
+	$noifyQuery=mysqli_query($conn,"SELECT notifications.*, CONCAT(users.Fname,' ', users.Lname) AS UserName FROM notifications JOIN users ON notifications.user = users.User_ID WHERE attUser='$UsrID' AND NotifyStatus='0' ORDER BY createdDT DESC");
+	$notifyDataset=mysqli_fetch_all($noifyQuery, MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -99,20 +102,83 @@
 								<strong><?php echo $Usrname?></strong>
 							</a>
 							<ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-								<li><a class="dropdown-item" href="home_page.php?activity=acc"><?php echo $userName?></a></li>
+								<li><a class="dropdown-item" href="home_page.php?activity=acc">Reset Password</a></li>
 								<li><a class="dropdown-item" href="#">Settings</a></li>
 								<li><hr class="dropdown-divider"></li>
 								<li><a class="dropdown-item" href="home_page.php?activity=logout">Sign out</a></li>
 							</ul>
 						</div>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link dropdown-toggle text-light pe-2" href="home_page.php?activity=notify" id="messagesDropdown" role="button"
-									data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fa fa-envelope mb-1"></i>
-									<span class="red-badge">7</span>
-								</a>
-					</li>
+					<!-- ---------------------- Message Toolbox ---------------------------------------------->
+					<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle text-light pe-2 position-relative" 
+					href="#" 
+					id="messagesDropdown" 
+					role="button"
+					data-bs-toggle="dropdown" 
+					aria-expanded="false">
+
+						<i class="fa fa-envelope"></i>
+
+						<!-- Badge -->
+						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+						 palceholder="Unread Messages" style="margin-top: 10px; margin-left: -25px; font-size: 0.75rem;">
+							<?php echo count($notifyDataset); ?>
+						</span>
+					</a>
+
+					<!-- Notification Panel -->
+					<ul class="dropdown-menu dropdown-menu-end shadow" 
+						aria-labelledby="messagesDropdown" 
+						style="width: 320px;">
+
+						<li class="dropdown-header fw-bold">Messages</li>
+
+						<!-- Message Item -->
+						 <?php foreach($notifyDataset as $notify){
+							?>
+						<li class="cursor-pointer" onclick="markAsRead(<?php echo $notify['id']; ?>)">
+							<a href="#" class="dropdown-item d-flex align-items-start">
+								<img src="../Resources/images/userIcon.png" 
+									class="rounded-circle me-2" width="40" height="40">
+								<div>
+									<strong><?php echo $notify['UserName']; ?></strong>
+									<div class="small text-muted"><?php echo $notify['description']; ?></div>
+									<small class="text-muted">
+										<?php 
+											$createdTime = new DateTime($notify['createdDT']);
+											$currentTime = new DateTime();
+											$interval = $currentTime->diff($createdTime);
+
+											if ($interval->y > 0) {
+												echo $interval->y . ' year' . ($interval->y > 1 ? 's' : '') . ' ago';
+											} elseif ($interval->m > 0) {
+												echo $interval->m . ' month' . ($interval->m > 1 ? 's' : '') . ' ago';
+											} elseif ($interval->d > 0) {
+												echo $interval->d . ' day' . ($interval->d > 1 ? 's' : '') . ' ago';
+											} elseif ($interval->h > 0) {
+												echo $interval->h . ' hour' . ($interval->h > 1 ? 's' : '') . ' ago';
+											} elseif ($interval->i > 0) {
+												echo $interval->i . ' minute' . ($interval->i > 1 ? 's' : '') . ' ago';
+											} else {
+												echo 'Just now';
+											}
+									 ?></small>
+								</div>
+							</a>
+						</li>
+
+						<li><hr class="dropdown-divider"></li>
+						 <?php } ?>
+
+						<!-- Footer -->
+						<li class="text-center">
+							<a href="#" class="dropdown-item text-primary" onclick="markAllAsRead()">Mark As Read All</a>
+						</li>
+
+					</ul>
+				</li>
+					<!-- ---------------------------------------------------------------------------------- -->
 					<li class="nav-item">
 						<a class="nav-link text-light" href="home_page.php?activity=logout"><i class="fa fa-sign-out-alt"></i></a>
 					</li>
@@ -121,15 +187,15 @@
 		</header>
 
 		<!------------------------------ Body Contents ------------------------------------------------>
-		<div>
-			<div class=" pt-5">
+		<div class="container-fluid">
+			<div class="pt-5">
 				<div class="row d-flex min-vh-100">
 					<div class="col-sm col-md-4 col-lg-3 col-xl-3 mt-1 bg-dark">
 						<!-------------------------------- Side bar ---------------------------->
 						<?php include '../includes/sidebar.php'?>
 						<!-- User Dropdown -->
 					</div>
-					<div class="col-sm col-md-6 col-lg pt-5 mt-2 ms-5 me-5 ">
+					<div class="col-sm col-md-6 col-lg pt-5 mt-2 ps-5">
 						<!-------------------------- Content for the system operations ------------------------->
 						<?php
 						if(empty($_REQUEST['activity']))
@@ -326,6 +392,51 @@
 				});
 
 			});
+		</script>
+
+		<script>
+		function markAsRead(id) {
+			fetch('../includes/update_notification.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+				body: 'id=' + id
+			})
+			.then(response => response.text())
+			.then(data => {
+				console.log("Updated:", data);
+
+				// Optional: remove badge or style change
+			})
+			.catch(error => console.error('Error:', error));
+
+			// Fade or remove item visually
+    		event.currentTarget.style.opacity = "0.3";
+			event.currentTarget.style.visibility = "hidden";
+		}
+		function markAllRead() {
+			fetch('../includes/update_notification.php', {
+				method: 'POST'
+			})
+			.then(response => response.text())
+			.then(data => {
+				console.log(data);
+
+				// Remove red badge count
+				let badge = document.querySelector('.badge');
+				if (badge) {
+					badge.remove();
+				}
+
+				// Fade all notifications
+				let items = document.querySelectorAll('.dropdown-item');
+				items.forEach(item => {
+					item.style.opacity = "0.5";
+				});
+			})
+			.catch(error => console.error('Error:', error));
+		}
 		</script>
 
 	</body>

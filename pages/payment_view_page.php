@@ -77,6 +77,10 @@
         {
             $updateQuery="UPDATE payments SET Status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE receiptID='$selectedID'";
             $updateRes=mysqli_query($conn,$updateQuery);
+            
+            $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Payment No: $selectedID has been approved by $user.',$createdby,'0')";
+            $sendNotifRes1=mysqli_query($conn, $sendNotifQry1);
+
             if($updateRes)
                 {
                     echo "<script>
@@ -86,7 +90,7 @@
                 }
             else
                 {
-                    $message="Error while approving the GRN. Try again.";
+                    $message="Error while approving the payment. Try again.";
                 }
         }
  ?>
@@ -97,7 +101,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRN view</title>
+    <title>Payment view</title>
 
     <!--bootstrap-->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">

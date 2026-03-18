@@ -1,90 +1,52 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>About - Lowa State-LMS</title>
-    <link rel="stylesheet" type="text/css" href="../assets/css/style.css"/>
+<?php
+    include "../includes/db-con.php";
+    $message="";
     
-    <style type="text/css">
-		.signup
-		{
-			color:white;
-			font-family:'Arial Black';
-			margin-top:0px;
-			margin-bottom:5px;
-			margin-right:20px;
-		}
-    </style>
-</head>
-<!--#####################################################################################################################-->
-<body>
-    <div class="header_div1">
-		<h1 class="p1" align="center">Lowa State University </h1>
-    	<p class="p2">Online Library Management System</p>
-	</div>
-    <!--******************************************************************************************************************-->
-	<div class="navbar_div">
-  		<ul class="navbar">
-        	<li class="listitem"><a href="../index.php">Home</a></li>
-            <li class="listitem"><a href="">About</a></li>
-        </ul>
-	</div>
-    
-<!--******************************************************************************************************************-->
-<!--	<div style="float:left;height:100%;width:30%;background-color:blue;position:absolute">
-    <p>jsahfjhsdf sdjfkdsf dsbfkhsdifuhsdijf sdvhsdkfds fksdjfihdsvjbsd fvskdjfkjvsdv sdvkjsdkvhsdkjvds vjsdvhsdvk</p>
-    </div>-->
-<div class="content_div">
-	<table width="100%" height="100%" border="0px" cellspacing="0" >
-    <tr>
-    	<td id="td1"></td>
-    	<td>
-        <div style="padding:50px;height:100%">
-        	<h1>About the University...</h1>
-            <img src="../Resources/all_walk2c.jpg" height="360"/>
-            <p>
-            	Iowa State University is a public, land-grant university, where students get a great academic start in learning communities and stay active in 800-plus student organizations, undergrad research, internships and study abroad. They learn from world-class scholars who are tackling some of the world's biggest challenges -- feeding the hungry, finding alternative fuels and advancing manufacturing.
-            </p>
-            </br>
-            <h1>About System....</h1>
-            </br>
-            </br>
-            <h1>About Developer...</h1>
-            </br>
-            <a href="#"><img src="../Resources/02.jpg"/></a>
-            <p>Currently I'm a HND computing Student of ESOFT Metro Campus in Sri Lanka. I'm most familiar in Software Engineering and I have extensive Experience in Software Engineering Network Engineering, Hardware Administration and general computing. Before Following of the HND computing, I'm qualified in MCSA(C#). Also that knowledge was a favor for the magnificent finalization of Web Design and Development Project of HND Computing with Web Development knowledge of HND program.
-            </p>
-            <p>
-             As study purposely I decided to implement the Online Library Management System for Requirements of Lowa State University. So I hope, This System will be good enough for the requirements of Lowa State University Library.
-            </p>
-            <p>
-            Last but not least, many thanks go to the ESOFT Management, Programming Lecturer Mr.Praveen and the batch members of the HND 93 batch. I wish good luck.
-            </p>
-            </br>
-        </div>
-        </td>
-    </tr>
-	</table>
- </div>
-    
-    
-<!--******************************************************************************************************************-->
+    $activeUser=$_SESSION['_UserID'];   
+ ?>
 
-<div class="footer_div">
-	<table width="100%" height="100%" border="0px" cellspacing="0">
-       <tr style="text-align:center;">
-            <td width="130px">
-            <img src="../Resources/esoft logo.jpg" align="middle" width="100px" />
-     		</td>
-           <td>
-            </br>
-			<p>Created by A.D.Janaka Ruwan Kumara</p>
-        	<p>Btech HND - COL/A-066156</p>
-           </td>
-           <td width=130px>
-           </td>
-       </tr>
-    </table>
+<div class="ps-lg-5 pe-lg-5 ms-3 me-5 container">
+    <div class="container ps-lg-5 pe-lg-5 mb-5">
+            <div class="mb-5 text-center">
+                <h4>About Subcontracts Management System</h4>  
+            </div>
+            <div class="text-justify">
+                <p class="textJustify">Subcontracts Management System is a web-based application designed to streamline and enhance the management of 
+                    subcontracting processes within organizations. The system provides a centralized platform for tracking, managing, and analyzing subcontractor
+                     relationships, contracts, and performance. It offers features such as contract creation, document management, performance monitoring, 
+                     and reporting tools to help organizations efficiently manage their subcontracting activities and ensure compliance with contractual obligations.</p>
+            </div>
+            <div class="row justify-content-end">
+                
+                <div class="card rounded-5 bg-light ">
+                    <div class="card-body col-lg-6 mb-sm-5">
+                        <h5 class="card-title">Key Features:</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Contract Management: Create, store, and manage subcontractor contracts in a centralized repository.</li>
+                            <li class="list-group-item">Order Planning: Plan and schedule subcontracting orders efficiently to meet project timelines.</li>
+                            <li class="list-group-item">Material Movement Tracking: Track the movement of materials and resources related to subcontracting activities.</li>
+                            <li class="list-group-item">Performance Monitoring: Track subcontractor performance metrics and generate reports to evaluate their effectiveness.</li>
+                            <li class="list-group-item">Payment and Invoice Management: Manage subcontractor payments and invoices efficiently.</li>
+                            <li class="list-group-item">Communication Tools: Facilitate communication between the organization and subcontractors through messaging and notifications.</li>
+                        </ul>
+                    </div>
+                 </div> 
+                 <div class="col-lg-6 justify-content-end" style="margin-top: -10em;">
+                    <img src="../Resources/images/tailoring-processs.jpg" class="img-fluid card rounded-5" alt="Subcontract Management System">
+                </div>
+            </div>
+
+            <div class="container ps-lg-5 pe-lg-5 mb-5 mt-5">
+                <h4>About Developer</h4>
+                <img src="../Resources/images/developer.jpg" class="img-fluid rounded-circle border border-1 mt-3" alt="Subcontract Management System">
+                <p class="textJustify mt-4">The Subcontracts Management System was developed by A.D. Janaka Ruwan Kumara (K2557618 - janakark09@gmail.com) as a part of Individual Project of BSc Topup Program in Kington University. The system is designed to address the challenges organizations face in managing subcontracting processes, combining efficiency with a user-friendly interface to meet practical business needs.</p>
+                    
+                
+            </div>
+    </div>
+
 </div>
-</body>
 
+</body>
 </html>
+

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 17, 2026 at 01:26 PM
+-- Generation Time: Mar 18, 2026 at 01:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,8 +58,8 @@ CREATE TABLE `agreements` (
 INSERT INTO `agreements` (`id`, `vendorID`, `process`, `styleOrderID`, `pcsPerSet`, `contractTotalQty`, `dailyQty`, `startedDate`, `endDate`, `creditPeriod`, `unitPriceFg`, `unitPriceSample`, `Status`, `createdDT`, `createdBy`, `approvedBy`, `approvedDT`, `canceledBy`, `canceledDT`) VALUES
 (1, 101, 1, 1, 2, 5000, 100, '2026-02-13', '2026-05-23', 30, 30, 20, 'Cancelled', '2026-02-13 12:39:43', 1001, 1001, '2026-03-16 16:28:37', 1001, '2026-03-17 10:49:26'),
 (2, 102, 1, 1, 2, 5000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Cancelled', '2026-02-13 12:41:39', 1001, NULL, NULL, 1001, '2026-03-17 10:56:13'),
-(3, 102, 1, 1, 2, 3500, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Active', '2026-02-13 12:45:36', 1001, NULL, NULL, NULL, NULL),
-(4, 101, 1, 1, 2, 10000, 30, '2026-03-08', '2028-06-18', 30, 150, 30, 'Approved', '2026-03-08 22:13:37', 1002, 1001, '2026-03-16 16:29:24', NULL, NULL);
+(3, 102, 1, 1, 2, 3500, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Approved', '2026-02-13 12:45:36', 1001, 1001, '2026-03-18 17:13:02', NULL, NULL),
+(4, 101, 1, 1, 2, 10000, 30, '2026-03-08', '2028-06-18', 30, 150, 30, 'Approved', '2026-03-08 22:13:37', 1002, 1001, '2026-03-18 17:15:39', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -240,6 +240,30 @@ INSERT INTO `mast_location` (`locationID`, `location`, `address`, `status`, `cre
 (8, 'other4', 'sghgh', 'Active', 1001, '2026-02-03 17:45:47'),
 (9, 'other5', 'lkl', 'Active', 1001, '2026-02-03 17:47:07'),
 (10, 'other6', 'jhg', 'Active', 1001, '2026-02-03 17:47:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(32) NOT NULL,
+  `user` int(32) NOT NULL,
+  `description` varchar(500) NOT NULL,
+  `attUser` int(32) NOT NULL,
+  `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
+  `NotifyStatus` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user`, `description`, `attUser`, `createdDT`, `NotifyStatus`) VALUES
+(1, 1001, 'Logged', 1001, '2026-03-18 11:43:23', 0),
+(2, 1002, 'logout', 1001, '2026-03-18 12:12:57', 1),
+(3, 1001, 'Agreement No:  4 has been approved by System Admin.', 1002, '2026-03-18 17:15:39', 1);
 
 -- --------------------------------------------------------
 
@@ -464,7 +488,7 @@ CREATE TABLE `sub_production` (
 --
 
 INSERT INTO `sub_production` (`recordID`, `gatepassRefID`, `orderNoID`, `gatepassDate`, `locationID`, `vendorID`, `orderAgreement`, `comments`, `status`, `cratedDT`, `createdBy`, `approvedBy`, `approvedDT`) VALUES
-(2, '365665', 1, '2026-03-12', 2, 102, 2, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-03 22:54:27', 1002, 1002, '2026-03-04 13:13:45');
+(2, '365665', 1, '2026-03-12', 2, 102, 2, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-03 22:54:27', 1002, 1001, '2026-03-18 17:39:34');
 
 -- --------------------------------------------------------
 
@@ -704,6 +728,14 @@ ALTER TABLE `mast_location`
   ADD KEY `FK_Loc_Uid` (`createdBy`);
 
 --
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_Notify_user` (`user`),
+  ADD KEY `FK_Notify_att` (`attUser`);
+
+--
 -- Indexes for table `order_plan`
 --
 ALTER TABLE `order_plan`
@@ -852,6 +884,12 @@ ALTER TABLE `mast_location`
   MODIFY `locationID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
@@ -967,6 +1005,13 @@ ALTER TABLE `grn_details1`
 --
 ALTER TABLE `mast_location`
   ADD CONSTRAINT `FK_Loc_Uid` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`);
+
+--
+-- Constraints for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `FK_Notify_att` FOREIGN KEY (`attUser`) REFERENCES `users` (`User_ID`),
+  ADD CONSTRAINT `FK_Notify_user` FOREIGN KEY (`user`) REFERENCES `users` (`User_ID`);
 
 --
 -- Constraints for table `order_plan`

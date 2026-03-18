@@ -27,8 +27,9 @@
          $user = $_SESSION['_UserID'];
 
         $updateQuery = "UPDATE order_plan SET setPieces='$piecesPerSet', subDuration='$duration', vendor='$vendor', startDate='$startDate', endDate='$endDate',planStatus='Confirmed' WHERE orderID='$orderID'";
-        
-        if(mysqli_query($conn,$updateQuery))
+        $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Order Plan No: $orderID has been confirmed by $user.',$createdby,'0')";
+
+        if(mysqli_query($conn,$updateQuery) && mysqli_query($conn, $sendNotifQry1))
             {
                 echo "<script>alert('Plan Confirmed!');
                                 setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 500)</script>";

@@ -175,15 +175,15 @@
                     <div class="d-lg-flex">
                         <div class="form-group me-5 col-lg-3">
                             <label>Username</label>
-                            <input type="text" class="form-control" id="username"  required name="username1">
+                            <input type="text" class="form-control" id="username"  required name="username1" autocomplete="new-text">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>Password</label>
-                            <input type="password" class="form-control" id="password" required name="password">
+                            <input type="password" class="form-control" id="password" required name="password" autocomplete="new-password">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>Confirm Password</label>
-                            <input type="password" class="form-control" id="confirmpassword" required name="confirmpassword">
+                            <input type="password" class="form-control" id="confirmpassword" required name="confirmpassword" autocomplete="new-password">
                         </div>
                     </div>
                 <!---------------------------------------->

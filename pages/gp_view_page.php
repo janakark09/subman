@@ -74,7 +74,9 @@
         {
             $updateQuery="UPDATE gatepass SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE gatepassID_1='$slectedgpID'";
             $updateRes=mysqli_query($conn,$updateQuery);
-            if($updateRes)
+             $sendNotifQry="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Gatepass No: $slectedgpID has been approved by $user.',$createdby,'0')";
+            $sendNotifRes=mysqli_query($conn, $sendNotifQry);
+            if($updateRes && $sendNotifRes)
                 {
                     echo "<script>
                     setTimeout(function(){window.location.href = 'home_page.php?activity=gatepass';}, 1000);

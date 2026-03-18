@@ -90,7 +90,11 @@
         {
             $updateQuery="UPDATE sub_production SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE recordID='$slectedrecID'";
             $updateRes=mysqli_query($conn,$updateQuery);
-            if($updateRes)
+            
+            $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Production Record No: $slectedrecID has been approved by $user.',$createdby,'0')";
+            $sendNotifRes1=mysqli_query($conn, $sendNotifQry1);
+
+            if($updateRes && $sendNotifRes1)
                 {
                     echo "<script>
                     setTimeout(function(){window.location.href = 'home_page.php?activity=proRec';}, 1000);

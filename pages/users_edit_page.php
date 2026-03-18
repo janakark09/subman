@@ -233,11 +233,11 @@
                             </div>
                             <div class="form-group me-5">
                                 <label>Password</label>
-                                <input type="password" class="form-control" id="password" <?php if(isset($_POST['checkpass'])) echo 'required'; ?> name="password" value="<?php echo $Pswd; ?>">
+                                <input type="password" class="form-control" id="password" <?php if(isset($_POST['checkpass'])) echo 'required'; ?> name="password" autocomplete="new-password">
                             </div>
                             <div class="form-group me-5">
                                 <label>Confirm Password</label>
-                                <input type="password" class="form-control" id="confirmpassword" <?php if(isset($_POST['checkpass'])) echo 'required'; ?> name="confirmpassword" value="<?php echo $Pswd; ?>">
+                                <input type="password" class="form-control" id="confirmpassword" <?php if(isset($_POST['checkpass'])) echo 'required'; ?> name="confirmpassword" autocomplete="new-password">
                             </div>
                         </div>
                         

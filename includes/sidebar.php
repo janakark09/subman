@@ -36,15 +36,13 @@ include "../includes/db-con.php";
 ?>
 
 <div class="d-flex justify-content-end mb-3">
-    <div class="d-flex justify-content-right align-items-center pt-3 ps-2 pb-1 bg-dark">
+    <div class="d-flex justify-content-right align-items-center pt-3 ps-0 pb-1 bg-dark">
         <button class="navbar-toggler" type="button"  id="togglebtn1" data-bs-toggle="collapse" data-bs-target="#sidebarMenuWrapper" aria-controls="sidebarMenuWrapper" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fa fa-window-maximize text-secondary"></i>
 	    </button>
     </div>
-    <!-- <button class="navbar-toggler navbar-dark" type="button"  id="togglebtn1" data-bs-toggle="collapse" data-bs-target="#sidebarMenuWrapper" aria-controls="sidebarMenuWrapper" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span> -->
 	</button>
-    <div class="collapse d-md-block d-lg-block navbar-collapse" id="sidebarMenuWrapper">
+    <div class="collapse d-lg-block d-md-block navbar-collapse" id="sidebarMenuWrapper">
         <!------------------------- Sidebar ------------------------>
         <div class="sidebar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
             <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -210,9 +208,9 @@ include "../includes/db-con.php";
                             <li class="nav-item">
                                 <a href="home_page.php?activity=rptStyles" class="nav-link text-white <?= ($_GET['activity'] ?? '')=='rptStyles' ? 'active' : '' ?>">Style Report</a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a href="#" class="nav-link text-white">Report3</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </li>
@@ -267,7 +265,7 @@ include "../includes/db-con.php";
                         <i class="fa fa-baby me-2"></i> About Developer</a>
                 </li>
                 <li class="nav-item">
-                    <a href="../includes/logout.php" class="nav-link text-white">
+                    <a href="home_page.php?activity=logout" class="nav-link text-white">
                         <i class="fa fa-power-off me-2"></i> Logout</a>
                 </li>
                 

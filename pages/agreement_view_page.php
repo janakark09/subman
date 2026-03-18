@@ -29,7 +29,7 @@
 
     
     
-    $slectedgrnID=$_REQUEST['selectedID'];
+    $slectedagrID=$_REQUEST['selectedID'];
 
     $AgrmtQuery="SELECT agr.id as ID, ven.vendor AS VENDOR, ven.address AS VENADDR, ven.brNo AS BRNO, ven.vatNo AS VATNO, pt.processType AS PROCESS,
                 so.styleNo AS STYLENO, so.orderNo AS ORDERNO, agr.pcsPerSet AS PCSPERSET, agr.contractTotalQty AS TOTAL_SUBQTY, agr.dailyQty AS DAILY_QTY, agr.startedDate AS SDATE,
@@ -37,7 +37,7 @@
                 DATE_FORMAT(agr.createdDT,'%d/%m/%Y') AS CREATED, agr.createdBy as CREATEDBY, DATE_FORMAT(agr.approvedDT,'%d/%m/%Y') AS APPROVED,
                 agr.approvedBy as APPROVEDBY    
                 FROM agreements AS agr JOIN vendors AS ven ON agr.vendorID = ven.vendorID JOIN process_type AS pt ON agr.process = pt.typeid 
-                JOIN styleorder AS so ON agr.styleOrderID = so.id JOIN users AS u ON agr.createdBy = u.User_ID WHERE agr.id='$slectedgrnID'";
+                JOIN styleorder AS so ON agr.styleOrderID = so.id JOIN users AS u ON agr.createdBy = u.User_ID WHERE agr.id='$slectedagrID'";
     $selectedData=mysqli_query($conn,$AgrmtQuery);
 
     if($selectedData && mysqli_num_rows($selectedData)==1)
@@ -81,9 +81,11 @@
     //---------------------------------------------------------------------------------------------
     if(isset($_POST['btnApprove']) && $accConfirm==1)
         {
-            $updateQuery="UPDATE agreements SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE id='$slectedgrnID'";
+            $updateQuery="UPDATE agreements SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE id='$slectedagrID'";
             $updateRes=mysqli_query($conn,$updateQuery);
-            if($updateRes)
+            $sendNotifQry="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Agreement No: $slectedagrID has been approved by $user.',$createdby,'0')";
+            $sendNotifRes=mysqli_query($conn, $sendNotifQry);
+            if($updateRes && $sendNotifRes)
                 {
                     echo "<script>alert('Agreement approved successfully!');</script>";
                     echo "<script>
@@ -99,11 +101,11 @@
     //---------------------------------------------------------------------------------------------
     if(isset($_POST['btnCancel']) && $accConfirm==1)
         {
-            $deleteQry1="UPDATE agreements SET status='Cancelled', canceledBy='$activeUser', canceledDT=NOW() WHERE id='$slectedgrnID'";
+            $deleteQry1="UPDATE agreements SET status='Cancelled', canceledBy='$activeUser', canceledDT=NOW() WHERE id='$slectedagrID'";
             if($deleteRes1=mysqli_query($conn,$deleteQry1)){
-                $deleteQuery="DELETE FROM grn_details WHERE grnCode1='$slectedgrnID'";
-                $deleteRes=mysqli_query($conn,$deleteQuery);
-                if($deleteRes)
+                $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Agreement No: $slectedagrID has been cancelled by $user.',$createdby,'0')";
+                $sendNotifRes1=mysqli_query($conn, $sendNotifQry1);
+                if($deleteRes1 && $sendNotifRes1)
                     {
                         echo "<script>alert('Agreement cancelled successfully!');</script>";
                         echo "<script>
