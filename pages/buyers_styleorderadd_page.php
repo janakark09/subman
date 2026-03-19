@@ -128,28 +128,30 @@
                     <div class="d-lg-flex mb-1">
                         <div class="form-group col-md-4 me-3">
                             <label >Division</label>
-                            <select class="form-select" name="division" id="divSelect">
-                                <option selected hidden></option>
-                                <?php 
-                                    while($styleno=mysqli_fetch_assoc($returnDataSet1)){
-                                        ?>
-                                        <option><?php echo $buyer['buyerID']?></option>
-                                    <?php
-                                    }
-                                    ?>
+                            <select id="inputDiv" class="form-select" name="division">
+                                <option >Kids</option>
+                                <option>Ladies</option>
+                                <option>Mens</option>
                             </select>
                         </div>
                         <div class="form-group col-md-4 me-3">
                             <label >Product Category</label>
-                            <select class="form-select" name="proCategory" id="catSelect">
-                                <option selected hidden></option>
-                                <?php 
-                                    while($styleno=mysqli_fetch_assoc($returnDataSet1)){
-                                        ?>
-                                        <option><?php echo $styleno['category']?></option>
-                                    <?php
-                                    }
-                                    ?>
+                            <select id="inputCat" class="form-select" name="productCategory">
+                                <option>BODY SUITE</option>
+                                <option>sleep suite</option>
+                                <option>kids wear pant</option>
+                                <option>Top and Bottom</option>
+                                <option>Blouse</option>
+                                <option>SKIRT</option>
+                                <option>Ladies Shirts</option>
+                                <option>Trouser</option>
+                                <option>Short</option>
+                                <option>Ladies Dress</option>
+                                <option>Boys Shirt</option>
+                                <option>T-Shirt</option>
+                                <option>Jacket</option>
+                                <option>TOP</option>
+                                <option>BOTTOM</option>
                             </select>
                         </div>
                     </div>

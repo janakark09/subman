@@ -4,7 +4,7 @@
     // Fetching order and planning data with LEFT JOIN to include orders without plans
 	$sqlQuery="SELECT OP.orderID AS OP_ID, SO.orderNo AS ORDER_NO, SO.styleNo AS STYLE, B.buyerName AS BUYER, SO.deliveryDate AS DELIVERY_DATE, SO.orderQty AS ORDER_QTY, 
             OP.setPieces AS PIECES, OP.subDuration AS DURATION,V.vendor AS VEN, V.vendorID AS VEN_ID, OP.startDate AS START_DATE, OP.endDate AS END_DATE,
-             CONCAT(U.Fname,' ',U.Lname) AS PLANNEDBY, DATE_FORMAT(OP.plannedDT,'%d-%m-%Y') AS PLANNEDDT, OP.planStatus AS PLANST
+             OP.plannedBy AS PLANNED_BY_ID, CONCAT(U.Fname,' ',U.Lname) AS PLANNEDBY, DATE_FORMAT(OP.plannedDT,'%d-%m-%Y') AS PLANNEDDT, OP.planStatus AS PLANST
                 FROM order_plan OP JOIN styleorder SO ON OP.orderID=SO.id JOIN styles S ON SO.styleNo=S.styleNo JOIN buyer B ON S.buyerID=B.buyerID 
                     JOIN users U ON OP.plannedBy=U.user_ID JOIN vendors V ON OP.vendor=V.vendorID
                  WHERE SO.status='Active' AND B.status='Active' AND S.status='Active'";
@@ -25,9 +25,10 @@
         $startDate = $_POST['startDate'];
         $endDate = $_POST['endDate'];
          $user = $_SESSION['_UserID'];
+         $createdby = $_POST['plannedBy'];
 
         $updateQuery = "UPDATE order_plan SET setPieces='$piecesPerSet', subDuration='$duration', vendor='$vendor', startDate='$startDate', endDate='$endDate',planStatus='Confirmed' WHERE orderID='$orderID'";
-        $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Order Plan No: $orderID has been confirmed by $user.',$createdby,'0')";
+        $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$user', 'Order Plan No: $orderID has been confirmed by $user.',$createdby,'0')";
 
         if(mysqli_query($conn,$updateQuery) && mysqli_query($conn, $sendNotifQry1))
             {
@@ -80,8 +81,7 @@
 			?>
             <tr>
             	<td class="text-center">
-                    <a href="DashBoard.php?activity=editStyleOrder&selectedID=<?php echo $result1['OP_ID']?>"><?php echo $result1['OP_ID']?>
-                    </a>
+                    <?php echo $result1['OP_ID']?>
                     <input type="hidden" name="orderID" value="<?php echo $result1['OP_ID']?>"/>
                 </td>
                 <td><?php echo $result1['ORDER_NO']?></td>
@@ -107,6 +107,7 @@
                 <td style="width:110px;"><input type="date" class="form-control" style="font-size:8pt" name="endDate" value="<?php echo $result1['END_DATE']?>"/></td>
                 <td><?php echo $result1['PLANNEDBY']?></td>
                 <td><?php echo $result1['PLANNEDDT']?></td>
+                <td><input type="hidden" name="plannedBy" value="<?php echo $result1['PLANNED_BY_ID']; ?>"/></td>
 
                 <td style="width: 80px;"><input type="submit" class="btn btn-primary" style="font-size:7pt" name="btnConfirm" value="<?php if($result1['PLANST']=='Confirmed') echo "Confirmed"; else echo "Confirm"; ?>" <?php if($result1['PLANST']=='Confirmed') echo "disabled"; ?>/></td>
             <tr>

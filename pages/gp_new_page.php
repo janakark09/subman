@@ -62,7 +62,9 @@
         $selectedVendor=$_POST['vendorid']; 
     }
 
-    $agrQry = "SELECT A.id AS agr_ID, V.vendor AS VEN, SO.orderNo AS ORDERNO FROM agreements A JOIN vendors V ON A.vendorID=V.vendorID JOIN styleorder SO ON SO.id=A.styleOrderID WHERE A.styleOrderID='$selectedOrder' AND A.vendorID='$selectedVendor' AND A.Status='Active'";
+    $agrQry = "SELECT A.id AS agr_ID, V.vendor AS VEN, SO.orderNo AS ORDERNO FROM agreements A 
+        JOIN vendors V ON A.vendorID=V.vendorID JOIN styleorder SO ON SO.id=A.styleOrderID 
+        WHERE A.styleOrderID='$selectedOrder' AND A.vendorID='$selectedVendor' AND A.Status='Approved'";
     $agrResult = mysqli_query($conn, $agrQry);
 
     

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2026 at 01:11 PM
+-- Generation Time: Mar 19, 2026 at 10:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -59,7 +59,8 @@ INSERT INTO `agreements` (`id`, `vendorID`, `process`, `styleOrderID`, `pcsPerSe
 (1, 101, 1, 1, 2, 5000, 100, '2026-02-13', '2026-05-23', 30, 30, 20, 'Cancelled', '2026-02-13 12:39:43', 1001, 1001, '2026-03-16 16:28:37', 1001, '2026-03-17 10:49:26'),
 (2, 102, 1, 1, 2, 5000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Cancelled', '2026-02-13 12:41:39', 1001, NULL, NULL, 1001, '2026-03-17 10:56:13'),
 (3, 102, 1, 1, 2, 3500, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Approved', '2026-02-13 12:45:36', 1001, 1001, '2026-03-18 17:13:02', NULL, NULL),
-(4, 101, 1, 1, 2, 10000, 30, '2026-03-08', '2028-06-18', 30, 150, 30, 'Approved', '2026-03-08 22:13:37', 1002, 1001, '2026-03-18 17:15:39', NULL, NULL);
+(4, 101, 1, 1, 2, 10000, 30, '2026-03-08', '2028-06-18', 30, 150, 30, 'Approved', '2026-03-08 22:13:37', 1002, 1001, '2026-03-18 17:15:39', NULL, NULL),
+(5, 101, 1, 1, 2, 2, 600, '2026-03-19', '2026-03-19', 30, 100, 75, 'Approved', '2026-03-19 10:55:58', 1001, 1001, '2026-03-19 10:56:07', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -89,7 +90,8 @@ CREATE TABLE `buyer` (
 
 INSERT INTO `buyer` (`buyerID`, `buyerCode`, `buyerName`, `address`, `tel`, `fax`, `brNo`, `vatNo`, `contactPerson`, `email`, `status`, `createdDT`, `createdBy`) VALUES
 (1, 'B001', 'dsfsdfdsfds', 'sdf sdf sdf sdf', '0778520129', '656565', 'sdf35356', '35321-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:12:10', 1001),
-(2, 'B002', 'dfg gdfg', '301/A, Owitiyagala, Horana.', '0778520129', '656565', 'sdf35356', '6546-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:13:22', 1001);
+(2, 'B002', 'dfg gdfg', '301/A, Owitiyagala, Horana.', '0778520129', '656565', 'sdf35356', '6546-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:13:22', 1001),
+(3, 'RA123', 'RASIKA', 'BANDARAGAMA', '0768244682', '123', '123', '123', 'Rasika Handunge', 'rasikah@originalapparel.lk', 'Active', '2026-03-19 14:08:57', 1001);
 
 -- --------------------------------------------------------
 
@@ -263,7 +265,8 @@ CREATE TABLE `notifications` (
 INSERT INTO `notifications` (`id`, `user`, `description`, `attUser`, `createdDT`, `NotifyStatus`) VALUES
 (1, 1001, 'Logged', 1001, '2026-03-18 11:43:23', 0),
 (2, 1002, 'logout', 1001, '2026-03-18 12:12:57', 1),
-(3, 1001, 'Agreement No:  4 has been approved by System Admin.', 1002, '2026-03-18 17:15:39', 1);
+(3, 1001, 'Agreement No:  4 has been approved by System Admin.', 1002, '2026-03-18 17:15:39', 1),
+(4, 1001, 'Agreement No:  5 has been approved by System Admin.', 1001, '2026-03-19 10:56:07', 0);
 
 -- --------------------------------------------------------
 
@@ -288,7 +291,9 @@ CREATE TABLE `order_plan` (
 --
 
 INSERT INTO `order_plan` (`orderID`, `setPieces`, `subDuration`, `vendor`, `startDate`, `endDate`, `planStatus`, `plannedBy`, `plannedDT`) VALUES
-(1, 2, 100, 101, '2026-02-19', '2026-02-19', 'Confirmed', 1001, '2026-02-19 20:25:58');
+(1, 2, 100, 101, '2026-02-19', '2026-02-19', 'Confirmed', 1001, '2026-02-19 20:25:58'),
+(3, 2, 500, 102, '2025-04-07', '2026-08-20', 'Confirmed', 1001, '2026-03-19 11:53:59'),
+(4, 2, 200, 101, '2025-09-12', '2026-03-31', 'Pending', 1001, '2026-03-19 14:13:15');
 
 -- --------------------------------------------------------
 
@@ -389,7 +394,9 @@ CREATE TABLE `styleorder` (
 
 INSERT INTO `styleorder` (`id`, `styleNo`, `orderNo`, `orderQty`, `division`, `proCategory`, `description`, `deliveryDate`, `Status`, `createdDT`, `createdBy`) VALUES
 (1, 'GBHD0235', '0025632', 50000, '', '', 'sdfsdf sd f', '2026-05-21', 'Active', '2026-02-11 18:15:29', 1001),
-(2, 'HGH00235', '100035', 65000, '', '', 'sdf dsf sdf sd', '2026-06-19', 'Active', '2026-02-19 21:15:34', 1001);
+(2, 'HGH00235', '100035', 65000, '', '', 'sdf dsf sdf sd', '2026-06-19', 'Active', '2026-02-19 21:15:34', 1001),
+(3, 'GBHD0235', '2566656', 60000, 'Ladies', '', ' sdasd a dasdasd asdasd', '2026-08-20', 'Active', '2026-03-19 11:26:41', 1001),
+(4, '123', 'OA123', 1000, 'Ladies', '', 'BLOUSE', '2026-03-31', 'Active', '2026-03-19 14:10:33', 1001);
 
 -- --------------------------------------------------------
 
@@ -411,6 +418,8 @@ CREATE TABLE `styles` (
 --
 
 INSERT INTO `styles` (`styleNo`, `styleName`, `buyerID`, `createdBy`, `createdDT`, `status`) VALUES
+('123', '123RA', 3, 1001, '2026-03-19 14:09:36', 'Active'),
+('FDF02253', 'dsfsd sdf s', 1, 1001, '2026-03-19 10:58:14', 'Active'),
 ('GBHD0235', 'dsf sdfsdfhfg fghfgh', 2, 1001, '2026-02-11 17:11:48', 'Active'),
 ('HGH00235', 'sadas as asd sad', 1, 1001, '2026-02-19 21:07:56', 'Active');
 
@@ -437,7 +446,10 @@ INSERT INTO `style_colors` (`colorID`, `color`, `orderNoID`, `active`) VALUES
 (3, 'BLACK', 1, 0),
 (4, 'PINK', 1, 1),
 (5, 'BROWN', 1, 1),
-(9, 'PRINT', 1, 0);
+(9, 'PRINT', 1, 0),
+(10, 'RED', 4, 1),
+(11, 'BLUE', 4, 1),
+(12, 'BLACK', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -459,7 +471,10 @@ CREATE TABLE `style_sizes` (
 INSERT INTO `style_sizes` (`sizeID`, `size`, `orderNoID`, `active`) VALUES
 (1, '30', 1, 1),
 (2, '25', 1, 1),
-(3, '10', 1, 1);
+(3, '10', 1, 1),
+(4, 'S', 4, 1),
+(5, 'L', 4, 1),
+(6, 'XL', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -598,9 +613,9 @@ CREATE TABLE `user_details` (
 --
 
 INSERT INTO `user_details` (`User_ID`, `Address`, `TelNumber`, `Joined_Date`, `locationID`, `venderID`, `acc1`, `acc2`, `acc3`, `acc4`, `acc5`, `acc6`, `acc7`, `acc8`, `acc9`, `acc10`, `acc11`, `acc12`, `acc13`, `acc14`, `acc15`, `acc16`, `acc17`, `acc18`, `acc19`, `acc20`, `acc21`, `acc22`, `acc23`, `acc24`, `acc25`) VALUES
-(1001, 'Bandaragama', '0778520129', '2026-02-02', 1, NULL, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 1, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(1003, 'Bandaragama', '0778520129', '2026-02-09', 1, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1001, 'Bandaragama', '0778520129', '2026-02-02', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 1, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1003, 'Bandaragama', '0778520129', '2026-02-09', 1, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (1004, 'dsf dsf sdf sdf', '354356356', '2026-03-03', 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (1005, ' sdf sdf sdfsdf', '35435465', '2026-03-08', 2, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (1006, 'fghfgh', 'fhgjfg', '2026-03-08', 9, NULL, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -655,8 +670,9 @@ CREATE TABLE `vendors` (
 --
 
 INSERT INTO `vendors` (`vendorID`, `vendor`, `address`, `tel`, `fax`, `brNo`, `vatNo`, `vatPercentage`, `contactPerson`, `dailyCapacity`, `email`, `status`, `createdDT`, `createdBy`) VALUES
-(101, 'vendor1', 'Bandaragama', '0778520129', '0778520129', 'df354365', '254325-7000', 18, 'Janakaruwan Kumara', 103, 'janakark09@gmail.com', 'Active', '2026-02-10 20:42:20', 1001),
-(102, 'Vendor 2', '301/A, Owitiyagala, Horana.', '0778520129', '656565', 'sdf35356', '6546-7000', 18, 'A.D. Janaka Ruwan Kumara', 100, 'janakark09@gmail.com', 'Active', '2026-02-12 17:44:51', 1001);
+(101, 'vendor1', 'Bandaragama', '0778520129', '0778520129', 'df354365', '254325-7000', 18, 'Janakaruwan Kumara', 700, 'janakark09@gmail.com', 'Active', '2026-02-10 20:42:20', 1001),
+(102, 'Vendor 2', '301/A, Owitiyagala, Horana.', '0778520129', '656565', 'sdf35356', '6546-7000', 18, 'A.D. Janaka Ruwan Kumara', 100, 'janakark09@gmail.com', 'Active', '2026-02-12 17:44:51', 1001),
+(103, 'Vendor 3', 'Bandaragama', '0778520129', '0778520129', 'df354365', '254325-7000', 18, 'Janaka Kumara', 100, 'sdfs@sdfsdf.lk', 'Active', '2026-03-19 08:19:04', 1001);
 
 --
 -- Indexes for dumped tables
@@ -851,13 +867,13 @@ ALTER TABLE `vendors`
 -- AUTO_INCREMENT for table `agreements`
 --
 ALTER TABLE `agreements`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `buyer`
 --
 ALTER TABLE `buyer`
-  MODIFY `buyerID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `buyerID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `gatepass`
@@ -887,7 +903,7 @@ ALTER TABLE `mast_location`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
@@ -905,19 +921,19 @@ ALTER TABLE `process_type`
 -- AUTO_INCREMENT for table `styleorder`
 --
 ALTER TABLE `styleorder`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `style_colors`
 --
 ALTER TABLE `style_colors`
-  MODIFY `colorID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `colorID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `style_sizes`
 --
 ALTER TABLE `style_sizes`
-  MODIFY `sizeID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `sizeID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `sub_production`
@@ -941,7 +957,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `vendorID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `vendorID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- Constraints for dumped tables

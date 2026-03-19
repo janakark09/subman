@@ -53,15 +53,27 @@
     $dataSetVendors = mysqli_query($conn, $vendorsQuery);
     
     //------------------ Fetch Vendor ID for Active User -------------------
-    $userQuery = "SELECT venderID FROM user_details WHERE User_ID='$activeUser'";
+    $userQuery = "SELECT U.User_Type AS UTYPE,UD.venderID AS VENID FROM user_details UD JOIN users U ON UD.User_ID=U.User_ID WHERE UD.User_ID='$activeUser'";
     $userResult = mysqli_query($conn, $userQuery);
+    $vedorselect = "";
     if(mysqli_num_rows($userResult) > 0){
         $userData = mysqli_fetch_assoc($userResult);
-        $activeVendor = $userData['venderID'];
+
+        if($userData['VENID'] != "" && $userData['UTYPE'] != "Administrator"){
+             $selectedVendor = $userData['VENID'];
+                $activeVendor = "AND A.vendorID='$selectedVendor'";
+        }
+        else if($userData['VENID'] == "" && $userData['UTYPE'] == "administrator"){
+            $activeVendor = "";
+        }
+        else if($userData['VENID'] == "" && $userData['UTYPE'] != "administrator"){
+            $activeVendor = "AND A.vendorID=''";
+        }
     }
     
     // ----------------- Fetch Active Agreements for Selected Order and Vendor --------------------
-    $agrQry = "SELECT A.id AS agr_ID, V.vendor AS VEN, SO.orderNo AS ORDERNO FROM agreements A JOIN vendors V ON A.vendorID=V.vendorID JOIN styleorder SO ON SO.id=A.styleOrderID WHERE A.styleOrderID='$selectedOrder' AND A.vendorID='$activeVendor' AND A.Status='Active'";
+    $agrQry = "SELECT A.id AS agr_ID, V.vendor AS VEN, SO.orderNo AS ORDERNO FROM agreements A JOIN vendors V ON A.vendorID=V.vendorID 
+        JOIN styleorder SO ON SO.id=A.styleOrderID WHERE A.styleOrderID='$selectedOrder' AND A.Status='Approved' $activeVendor";
     $agrResult = mysqli_query($conn, $agrQry); 
 
     //------------------ Fetch Location ID for Active User -------------------

@@ -1,5 +1,8 @@
 <?php
 	include "../includes/db-con.php";
+    $suggestVendor="";
+    $endDate = "";
+    $startDate = "";
 	
     // Fetching order and planning data with LEFT JOIN to include orders without plans
 	$sqlQuery="SELECT SO.id AS SO_ID,OP.orderID AS OP_ID, SO.orderNo AS ORDER_NO, SO.styleNo AS STYLE, B.buyerName AS BUYER, SO.deliveryDate AS DELIVERY_DATE, SO.orderQty AS ORDER_QTY, 
@@ -20,34 +23,84 @@
     // -------------------------- Saving a new plan ------------------------------------------
     if(isset($_POST['confirmPlan']))
     {
-        $orderID = $_POST['orderID'];
-        $piecesPerSet = $_POST['piecesSet'];
-        $duration = $_POST['duration'];
-        $vendor = $_POST['vendor'];
-        $startDate = $_POST['startDate'];
-        $endDate = $_POST['endDate'];
-         $user = $_SESSION['_UserID'];
+        if(isset($_POST['piecesSet'])!="" && isset($_POST['duration'])!="" && isset($_POST['vendor'])!="" && isset($_POST['startDate'])!="" && isset($_POST['endDate'])!="" && $_POST['piecesSet'] > 0 && $_POST['duration'] > 0){
+            $orderID = $_POST['orderID'];
+            $piecesPerSet = $_POST['piecesSet'];
+            $duration = $_POST['duration'];
+            $vendor = $_POST['vendor'];
+            $startDate = $_POST['startDate'];
+            $endDate = $_POST['endDate'];
+            $user = $_SESSION['_UserID'];
 
-        //echo "Order ID: " . $orderID . "piecesPerSet: " . $piecesPerSet . "duration: " . $duration . "vendor: " . $vendor . "startDate: " . $startDate . "endDate: " . $endDate . "user: " . $user;
-        $insert = "INSERT INTO order_plan 
-                (orderID, setPieces, subDuration, vendor, startDate, endDate,planStatus, plannedBy)
-                VALUES
-                ('$orderID','$piecesPerSet','$duration','$vendor','$startDate','$endDate','Pending','$user')";
+            //echo "Order ID: " . $orderID . "piecesPerSet: " . $piecesPerSet . "duration: " . $duration . "vendor: " . $vendor . "startDate: " . $startDate . "endDate: " . $endDate . "user: " . $user;
+            $insert = "INSERT INTO order_plan 
+                    (orderID, setPieces, subDuration, vendor, startDate, endDate,planStatus, plannedBy)
+                    VALUES
+                    ('$orderID','$piecesPerSet','$duration','$vendor','$startDate','$endDate','Pending','$user')";
 
-        mysqli_query($conn,$insert);
+            if(mysqli_query($conn,$insert))
+            {
+                echo "<script>
+                    setTimeout(function(){window.location.href = 'home_page.php?activity=planning';}, 500);
+                </script>";
+                exit();
+            }
+        }
+        else{
+            echo "<script>alert('Please fill all fields with valid values before saving the plan.');</script>";
+        }
     }
 
-    if(isset($_POST['btnCheck']))
+    if(isset($_POST['btnCheck']) && isset($_POST['piecesSet'])!="" && isset($_POST['duration'])!="")
     {
+        $orderID = $_POST['orderID'];
         $deliveryDate = $_POST['deldate'];
         $orderQty = $_POST['orderqty'];
         $piecesPerSet = $_POST['piecesSet'];
         $duration = $_POST['duration'];
-        $vendor = $_POST['vendor'];
-        $startDate = $_POST['startDate'];
-        $endDate = $_POST['endDate'];
+        //echo "Order ID: " . $orderID . " Delivery Date: " . $deliveryDate . " Order Qty: " . $orderQty . " Pieces Per Set: " . $piecesPerSet . " Duration: " . $duration;
+        // Required daily qty
+        if($piecesPerSet != "" && $duration != "" && $piecesPerSet > 0 && $duration > 0)
+        {
+            $setsRequired = (int)$orderQty / (int)$piecesPerSet;
+            $requiredDaily = $setsRequired / (int)$duration;
+        }
+        else{
+            $requiredDaily = 0;
+            $suggestVendor = "";
+            $startDate = "";
+            $endDate = "";
+        }
+        // $requiredDaily = (int)$orderQty / (int)$duration;
+        //echo " Required Daily Qty: " . $requiredDaily;
+        // Find suitable vendor
+        $sqlVendor = "SELECT * FROM vendors 
+                    WHERE dailyCapacity >= '$requiredDaily' 
+                    ORDER BY dailyCapacity ASC LIMIT 1";
 
-        
+        $resVendor = mysqli_query($conn, $sqlVendor);
+        $vendorData = mysqli_fetch_assoc($resVendor);
+
+        if($vendorData)
+        {
+            $suggestVendor = $vendorData['vendorID'];
+            echo " Suggested Vendor: " . $vendorData['vendor'] . " with Daily Capacity: " . $vendorData['dailyCapacity'];
+            // Calculate dates
+            $endDate = $deliveryDate;
+            $startDate = date('Y-m-d', strtotime($endDate . " -$duration days"));
+
+            //echo " Suggested Start Date: " . $startDate . " End Date: " . $endDate;
+
+            // Store results
+            $suggested[$orderID] = [
+                'vendor' => $suggestVendor,
+                'start' => $startDate,
+                'end' => $endDate
+            ];
+        }
+    }
+    else{
+        $suggested = [];
     }
 	$activeUser=$_SESSION['_UserID'];
 
@@ -66,7 +119,7 @@
         <h4>Order Planning</h4>
     </div>
     <div class="table-wrapper">
-        <table class="table1 text-center" cellspacing="0" style="font-size:6pt; min-width: 110%;">
+        <table class="table1 text-center" cellspacing="0" style="font-size:6pt; min-width: 130%;">
         	<tr class="text-center">
             	<th>ID</th>
                 <th>Order No</th>
@@ -91,15 +144,14 @@
 			?>
             <tr>
             	<td class="text-center">
-                    <a href="DashBoard.php?activity=editStyleOrder&selectedID=<?php echo $result1['SO_ID']?>"><?php echo $result1['SO_ID']?>
-                    </a>
+                    <?php echo $result1['SO_ID']?>
                     <input type="hidden" name="orderID" value="<?php echo $result1['SO_ID']?>"/>
                 </td>
                 <td><?php echo $result1['ORDER_NO']?></td>
                 <td><?php echo $result1['STYLE']?></td>
                 <td><?php echo $result1['BUYER']?></td>
-                <td name="deldate" value="<?php echo $result1['DELIVERY_DATE']?>"><?php echo $result1['DELIVERY_DATE']?></td>
-                <td name="orderqty" value="<?php echo $result1['ORDER_QTY']?>"><?php echo $result1['ORDER_QTY']?></td>
+                <td value="<?php echo $result1['DELIVERY_DATE']?>"><?php echo $result1['DELIVERY_DATE']?></td>
+                <td value="<?php echo $result1['ORDER_QTY']?>"><?php echo $result1['ORDER_QTY']?></td>
                 <?php
                     if($result1['OP_ID']!=null){
                         ?>
@@ -114,24 +166,29 @@
                     }
                     else{
                     ?>
-                        <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="piecesSet" value="<?php echo $result1['PIECES']?>"/></td>
-                        <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="duration" value="<?php echo $result1['DURATION']?>"/></td>
+                        <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="piecesSet" value="<?php if($result1['PIECES']!=""){echo $result1['PIECES'];}else{if(isset($_POST['piecesSet'])){echo $_POST['piecesSet'];}} ?>" /></td>
+                        <td style="width: 100px;"><input type="text" class="form-control" style="font-size:9pt" name="duration" value="<?php if($result1['DURATION']!=""){echo $result1['DURATION'];}else{ if(isset($_POST['duration'])){echo $_POST['duration'];} } ?>"  id="duration_<?php echo $rowId; ?>"/></td>
                         <td style="width: 90px;"><input type="submit" value="Check" class="btn btn-primary" style="font-size:7pt" name="btnCheck"/></td>
                         <td style="width: auto;"><select class="form-select" name="vendor" id="vendor" style="font-size:9pt">
-                                        <option selected hidden></option>
-                                        <?php 
+                                            <option selected hidden></option>
+                                            <?php
                                             mysqli_data_seek($returnDataSet1, 0);
                                             while($vendor=mysqli_fetch_assoc($returnDataSet1)){
-                                                ?>
-                                                <option value="<?php echo $vendor['vendorID'];?>"><?php echo $vendor['vendor']?></option>
-                                            <?php
-                                            }
+                                                // $selected = (isset($suggested[$result1['SO_ID']]) && 
+                                                //             $suggested[$result1['SO_ID']]['vendor'] == $vendor['vendorID']) 
+                                                //             ? 'selected' : '';
                                             ?>
-                                    </select>
+                                            <option value="<?php echo $vendor['vendorID'];?>" <?php if($vendor['vendorID']==$suggestVendor){echo 'selected';} ?>>
+                                                <?php echo $vendor['vendor']?>
+                                            </option>
+                                            <?php } ?>
+                                        </select>   
                                 </td>
-                        <td style="width:110px;"><input type="date" min="<?php echo $todayStr; ?>" class="form-control" style="font-size:8pt" name="startDate"/></td>
-                        <td style="width:110px;"><input type="date" min="<?php echo $todayStr   ; ?>" class="form-control" style="font-size:8pt" name="endDate"/></td>
+                        <td style="width:110px;"><input type="date" value="<?php if($startDate!=""){echo $startDate;} ?>" class="form-control" style="font-size:8pt" name="startDate" id="startDate_<?php echo $rowId; ?>" onchange="calculateEndingDate('<?php echo $rowId; ?>')"/></td>
+                        <td style="width:110px;"><input type="date" value="<?php if($endDate!=""){echo $endDate;} ?>" class="form-control" style="font-size:8pt" name="endDate" id="endDate_<?php echo $rowId; ?>"/></td>
                         <td style="width: 80px;"><input type="submit" class="btn btn-primary" style="font-size:7pt" name="confirmPlan" value="Save"/></td>
+                        <td hidden><input type="hidden" name="deldate" value="<?php echo $result1['DELIVERY_DATE']?>"/></td>
+                        <td hidden><input type="hidden" name="orderqty" value="<?php echo $result1['ORDER_QTY']?>"/></td>
                 <?php
                         }
                 ?>	
@@ -144,5 +201,26 @@
         </table>
     </div>
     </form>
+    
+<script>
+function calculateEndingDate(rowId)
+{
+    let startDate = document.getElementById('startDate_' + rowId).value;
+    let duration = document.getElementById('duration_' + rowId).value;
+
+    if(startDate && duration > 0)
+    {
+        let start = new Date(startDate);
+        
+        // Add duration days
+        start.setDate(start.getDate() + parseInt(duration));
+
+        // Format YYYY-MM-DD
+        let endDate = start.toISOString().split('T')[0];
+
+        document.getElementById('endDate_' + rowId).value = endDate;
+    }
+}
+</script>
 </body>
 </html>
