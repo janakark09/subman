@@ -133,12 +133,12 @@
             $orderNo = $_POST['orderNo'];
             $gpDate=$_POST['finishingDate'];
             $locid= $_POST['locationid'];
-            $vendorid = $activeVendor; // Assuming vendor is determined by active user
+            $vendorid = $selectedVendor; // Assuming vendor is determined by active user
             $agrID = $_POST['agrtid'];
             $remark = $_POST['remark'];            
             $status = "Pending";
             
-            //echo "gatepassID2: ".$gatepassID2."vendorid: ".$vendorid."orderNo: ".$orderNo."gpDate: ".$gpDate."agrID: ".$agrID."status: ".$status."cutNo: ".$cutNo."colorid: ".$colorid."sizeid: ".$sizeid;
+           // echo "vendor: ".$vendorid." order: ".$orderNo." date: ".$gpDate." loc: ".$locid." agrID: ".$agrID;
         // Validate required fields
         if(empty($vendorid) || empty($orderNo) || empty($gpDate) || empty($agrID)){
             $message = "Please fill in all required fields.";
@@ -165,8 +165,8 @@
                     $processDamQty = (int)$item['processDamQty'];
                     $sampleQty = (int)$item['sampleQty'];
 
-                    $sql2 = "INSERT INTO sub_pro_details (recID, cutNo, colorID, sizeID, finishedQty, fabDamQty, processDamQty, sampleQty) 
-                            VALUES ('$last_id','$cutNo','$colorid','$sizeid','$finishedQty','$fabricDamQty','$processDamQty','$sampleQty')";
+                    $sql2 = "INSERT INTO sub_pro_details (recID, cutNo, colorID, sizeID, finishedQty, fabDamQty, processDamQty, sampleQty,recFnishedQty,recDamQty,recSampleQty) 
+                            VALUES ('$last_id','$cutNo','$colorid','$sizeid','$finishedQty','$fabricDamQty','$processDamQty','$sampleQty','0','0','0')";
                     $conn->query($sql2);
                 }
 
@@ -251,11 +251,11 @@
                         <div class="form-group col-lg-2">
                             <label>Finishing Date</label>
                             <input type="date" min="<?php echo $todayStr; ?>" class="form-control" id="finishingDate" required name="finishingDate" 
-                            value="<?php echo isset($_POST['finishingDate']) ? $_POST['finishingDate']: '';?>">
+                            value="<?php if(isset($_POST['finishingDate'])) {echo $_POST['finishingDate'];}  else {echo '';} ?>">
                         </div>
                         <div class="form-group mb-1 col-3">
                                 <label for="refno">Gatepass Reference No.</label>
-                                <input type="text" class="form-control" id="refno" name="refno">
+                                <input type="text" class="form-control" id="refno" name="refno" value="<?php if(isset($_POST['refno'])) {echo $_POST['refno'];}  else {echo '';} ?>">
                             </div>
                      </div>
                     <!-- ------------------------------------------------------------------ -->
@@ -278,7 +278,7 @@
 
                         <div class="form-group mb-1 col">
                                 <label for="remark">Remarks</label>
-                                <input type="text" class="form-control" id="remark" name="remark">
+                                <input type="text" class="form-control" id="remark" name="remark" value="<?php echo $_POST['remark'];?>">
                         </div>
 
                      <!-- ---------------------------------- Colors Sizes and Quantity Section -------------------------------- -->

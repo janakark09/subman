@@ -150,7 +150,7 @@
                                 else
                                     {
                                         $conn->begin_transaction();
-                                        //echo $recFQty[$i]."-".$recDQty[$i]."-".$recSQty[$i]."<br>";
+                                        echo $ROWID[$i]."--".$recFQty[$i]."-".$recDQty[$i]."-".$recSQty[$i]."<br>";
                                         $updateDetailsQuery="UPDATE sub_pro_details SET recFnishedQty=recFnishedQty+'$recFQty[$i]', recDamQty=recDamQty+'$recDQty[$i]', recSampleQty=recSampleQty+'$recSQty[$i]' WHERE id='$ROWID[$i]'";
                                         $conn->query($updateDetailsQuery);
                                         $createGRNQuery="INSERT INTO grn_details1(prodetailsID, grnNo, recFinQty, recDamQty, SampleQty) VALUES ('$ROWID[$i]', '$last_id', '$recFQty[$i]', '$recDQty[$i]', '$recSQty[$i]')";
@@ -161,10 +161,10 @@
                         $conn->commit();
                         $message="Record Saved Successfully!";
                         $saved=1;
-                        echo "<script>
-                            setTimeout(function(){window.location.href = 'home_page.php?activity=grnAll';}, 1000);
-                        </script>";
-                        exit(); 
+                        // echo "<script>
+                        //     setTimeout(function(){window.location.href = 'home_page.php?activity=grnAll';}, 1000);
+                        // </script>";
+                        // exit(); 
                     }
                 else
                     {
@@ -263,22 +263,22 @@
                                 <div class="d-lg-flex mt-3 mb-3 gap-3" >
                                     <div class="form-group col-lg-2">
                                         <label>Invoice Date</label>
-                                        <input type="date" class="form-control" id="invDate" required name="invDate"/>
+                                        <input type="date" class="form-control" id="invDate" required name="invDate" value="<?php if(isset($_POST['invDate'])) {echo $_POST['invDate'];} ?>"/>
                                     </div>
                                     <div class="form-group mb-1 col-3">
                                             <label for="invno">Invoice No.</label>
-                                            <input type="text" class="form-control" id="invno" name="invno" required/>
+                                            <input type="text" class="form-control" id="invno" name="invno" required value="<?php if(isset($_POST['invno'])) {echo $_POST['invno'];}  else {echo '';} ?>"/>
                                         </div>
                                 </div>
 
                                 <div class="d-lg-flex mt-3 mb-3 gap-3" >
                                     <div class="form-group mb-1 col-2">
                                         <label for="finUprice">Finished good Unit Price</label>
-                                        <input type="number" class="form-control" min="0" id="finUprice" name="finUprice" step="0.01" value="0.00">
+                                        <input type="number" class="form-control" min="0" id="finUprice" name="finUprice" step="0.01" value="<?php if(isset($_POST['finUprice'])) {echo $_POST['finUprice'];}  else {echo '0.00';} ?>">
                                     </div>
                                     <div class="form-group mb-1 col-2">
                                         <label for="samUprice">Sample Unit Price</label>
-                                        <input type="number" class="form-control" min="0" id="samUprice" name="samUprice" step="0.01" value="0.00">
+                                        <input type="number" class="form-control" min="0" id="samUprice" name="samUprice" step="0.01" value="<?php if(isset($_POST['samUprice'])) {echo $_POST['samUprice'];}  else {echo '0.00';} ?>">
                                     </div>
                                     <div class="form-group mb-1 col-2">
                                         <br>

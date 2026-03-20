@@ -28,7 +28,7 @@
 
     $gpQuery="SELECT GP.gatepassID_1 AS 'gpID1', CONCAT(GP.gatepassID_2,'/', GP.gatepassID_1) AS 'gpID2',GP.gatepassDate AS 'GPDATE',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', ML.location AS 'LOC', 
         V.vendor AS 'VEN',V.address AS 'ADDR',V.tel AS 'TEL',V.contactPerson AS 'CONP',GP.orderAgreement AS 'AGREEMENT',SUM(GD.matQty) AS 'TOTAL', GP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', 
-            DATE_FORMAT(GP.createdDT,'%d/%m/%y %h:%m %p') AS 'CREATEDDATE',GP.approvedBy AS 'APPROVED',DATE_FORMAT(GP.approvedDT,'%d/%m/%y %h:%m %p') AS 'APPDT' 
+            GP.createdBy AS CREATEDBYID,DATE_FORMAT(GP.createdDT,'%d/%m/%y %h:%m %p') AS 'CREATEDDATE',GP.approvedBy AS 'APPROVED',DATE_FORMAT(GP.approvedDT,'%d/%m/%y %h:%m %p') AS 'APPDT' 
                     FROM  gatepass GP JOIN gatepass_details GD ON GP.gatepassID_1=GD.gpID JOIN mast_location AS ML ON GP.locationID=ML.locationID  
                     JOIN styleorder AS SO ON GP.orderNoID=SO.id JOIN vendors AS V ON GP.vendorID=V.vendorID JOIN agreements AS AG ON GP.orderAgreement=AG.id 
                     JOIN users AS U ON GP.createdBy=U.User_ID WHERE GP.gatepassID_1='$slectedgpID'";
@@ -44,6 +44,7 @@
             $date=$rowData['GPDATE'];
             $location=$rowData['LOC'];
             $createdby=$rowData['CREATEDBY'];
+            $createdbyid=$rowData['CREATEDBYID'];
             $createddt=$rowData['CREATEDDATE'];
             $style=$rowData['STYLE'];
             $order=$rowData['ORDERNO'];
@@ -74,7 +75,7 @@
         {
             $updateQuery="UPDATE gatepass SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE gatepassID_1='$slectedgpID'";
             $updateRes=mysqli_query($conn,$updateQuery);
-             $sendNotifQry="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Gatepass No: $slectedgpID has been approved by $user.',$createdby,'0')";
+             $sendNotifQry="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Gatepass No: $slectedgpID has been approved by $user.',$createdbyid,'0')";
             $sendNotifRes=mysqli_query($conn, $sendNotifQry);
             if($updateRes && $sendNotifRes)
                 {
