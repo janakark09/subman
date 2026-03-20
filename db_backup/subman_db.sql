@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 19, 2026 at 10:56 AM
+-- Generation Time: Mar 20, 2026 at 09:50 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -81,17 +81,19 @@ CREATE TABLE `buyer` (
   `email` varchar(100) DEFAULT NULL,
   `status` varchar(20) NOT NULL,
   `createdDT` datetime NOT NULL DEFAULT current_timestamp(),
-  `createdBy` int(32) NOT NULL
+  `createdBy` int(32) NOT NULL,
+  `modifiedBy` int(32) DEFAULT NULL,
+  `modifiedDT` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `buyer`
 --
 
-INSERT INTO `buyer` (`buyerID`, `buyerCode`, `buyerName`, `address`, `tel`, `fax`, `brNo`, `vatNo`, `contactPerson`, `email`, `status`, `createdDT`, `createdBy`) VALUES
-(1, 'B001', 'dsfsdfdsfds', 'sdf sdf sdf sdf', '0778520129', '656565', 'sdf35356', '35321-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:12:10', 1001),
-(2, 'B002', 'dfg gdfg', '301/A, Owitiyagala, Horana.', '0778520129', '656565', 'sdf35356', '6546-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:13:22', 1001),
-(3, 'RA123', 'RASIKA', 'BANDARAGAMA', '0768244682', '123', '123', '123', 'Rasika Handunge', 'rasikah@originalapparel.lk', 'Active', '2026-03-19 14:08:57', 1001);
+INSERT INTO `buyer` (`buyerID`, `buyerCode`, `buyerName`, `address`, `tel`, `fax`, `brNo`, `vatNo`, `contactPerson`, `email`, `status`, `createdDT`, `createdBy`, `modifiedBy`, `modifiedDT`) VALUES
+(1, 'B001', 'dsfsdfdsfds', 'sdf sdf sdf sdf dddd', '0778520129', '656565', 'sdf35356', '35321-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:12:10', 1001, 1001, '2026-03-20 13:42:32'),
+(2, 'B002', 'dfg gdfg', '301/A, Owitiyagala, Horana.', '0778520129', '656565', 'sdf35356', '6546-7000', 'A.D. Janaka Ruwan Kumara', 'janakark09@gmail.com', 'Active', '2026-02-11 12:13:22', 1001, NULL, NULL),
+(3, 'RA123', 'RASIKA', 'BANDARAGAMA', '0768244682', '123', '123', '123', 'Rasika Handunge', 'rasikah@originalapparel.lk', 'Active', '2026-03-19 14:08:57', 1001, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -695,7 +697,8 @@ ALTER TABLE `agreements`
 --
 ALTER TABLE `buyer`
   ADD PRIMARY KEY (`buyerID`),
-  ADD KEY `FK_createdUser` (`createdBy`);
+  ADD KEY `FK_createdUser` (`createdBy`),
+  ADD KEY `FK_buyer_modify` (`modifiedBy`);
 
 --
 -- Indexes for table `gatepass`
@@ -978,6 +981,7 @@ ALTER TABLE `agreements`
 -- Constraints for table `buyer`
 --
 ALTER TABLE `buyer`
+  ADD CONSTRAINT `FK_buyer_modify` FOREIGN KEY (`modifiedBy`) REFERENCES `users` (`User_ID`),
   ADD CONSTRAINT `FK_createdUser` FOREIGN KEY (`createdBy`) REFERENCES `users` (`User_ID`);
 
 --

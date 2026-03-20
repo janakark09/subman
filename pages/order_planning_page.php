@@ -84,7 +84,7 @@
         if($vendorData)
         {
             $suggestVendor = $vendorData['vendorID'];
-            echo " Suggested Vendor: " . $vendorData['vendor'] . " with Daily Capacity: " . $vendorData['dailyCapacity'];
+            //echo " Suggested Vendor: " . $vendorData['vendor'] . " with Daily Capacity: " . $vendorData['dailyCapacity'];
             // Calculate dates
             $endDate = $deliveryDate;
             $startDate = date('Y-m-d', strtotime($endDate . " -$duration days"));
@@ -178,7 +178,7 @@
                                                 //             $suggested[$result1['SO_ID']]['vendor'] == $vendor['vendorID']) 
                                                 //             ? 'selected' : '';
                                             ?>
-                                            <option value="<?php echo $vendor['vendorID'];?>" <?php if($vendor['vendorID']==$suggestVendor){echo 'selected';} ?>>
+                                            <option value="<?php echo $vendor['vendorID'];?>" <?php if($vendor['vendorID']==$suggestVendor && $suggestVendor!=""){echo 'selected';} ?>>
                                                 <?php echo $vendor['vendor']?>
                                             </option>
                                             <?php } ?>

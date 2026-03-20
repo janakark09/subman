@@ -241,6 +241,9 @@
 										case 'allbuyers':
 											include ("buyers_all_page.php");
 										break;
+										case 'editbuyer':
+											include ("buyers_edit_page.php");
+										break;
 										//----------------------------
 										case 'styles':
 											include ("buyers_styles_page.php");
