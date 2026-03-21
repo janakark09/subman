@@ -22,6 +22,9 @@
     $approveddt="";
     $accConfirm=0;
     $status="";
+    $totalFQty=0;
+    $totalDQty=0;
+    $totalSQty=0;
     
     
     $slectedgrnID=$_REQUEST['selectedID'];
@@ -29,10 +32,12 @@
     $grnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',SP.recordID AS 'PROID',SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
                 DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
                 SUM(GD.fgValue+GD.sampleValue+GD.vat) AS 'GRNVAL', DATE_FORMAT(GD.createdDT,'%d/%m/%y') AS 'GRNDATE', GD.createdBy AS 'GRNBY', GD.status AS 'STATUS',
-                ML.location AS 'LOC', A.id AS 'AGREEMENT', GD.approvedBy AS 'APPROVED', DATE_FORMAT(GD.approvedDT,'%d/%m/%y') AS 'APPDT'
+                ML.location AS 'LOC', A.id AS 'AGREEMENT', GD.approvedBy AS 'APPROVED', DATE_FORMAT(GD.approvedDT,'%d/%m/%y') AS 'APPDT', 
+                SUM(GD1.recFinQty) AS 'TOTALFQTY', SUM(GD1.recDamQty) AS 'TOTALDQTY', SUM(GD1.SampleQty) AS 'TOTALSQTY'
                 FROM grn_details GD JOIN sub_production SP ON GD.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
                 JOIN mast_location ML ON SP.locationID=ML.locationID JOIN vendors V ON SP.vendorID=V.vendorID JOIN users U ON SP.createdBy=U.User_ID 
-                JOIN agreements A ON SO.id=A.styleOrderID WHERE GD.grnCode1='$slectedgrnID'";
+                JOIN agreements A ON SO.id=A.styleOrderID JOIN grn_details1 GD1 ON GD.grnCode1=GD1.grnNo 
+                WHERE GD.grnCode1='$slectedgrnID'";
     $selectedData=mysqli_query($conn,$grnQuery);
 
     if($selectedData && mysqli_num_rows($selectedData)==1)
@@ -55,6 +60,9 @@
             $approvedby=$rowData['APPROVED'];
             $approveddt=$rowData['APPDT'];
             $status=$rowData['STATUS'];
+            $totalFQty=$rowData['TOTALFQTY'];
+            $totalDQty=$rowData['TOTALDQTY'];
+            $totalSQty=$rowData['TOTALSQTY'];
         }
     
     $detailsQuery="SELECT GD1.prodetailsID AS 'PROID', PD.cutNO AS 'CUT', C.color AS 'COLOR',S.size AS 'SIZE', GD1.recFinQty AS 'FQTY', GD1.recDamQty AS 'DQTY', GD1.SampleQty AS 'SQTY' 
@@ -79,7 +87,7 @@
             $updateQuery="UPDATE grn_details SET status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE grnCode1='$slectedgrnID'";
             $updateRes=mysqli_query($conn,$updateQuery);
 
-            $sendNotifQry="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'GRN No: $slectedgrnID has been approved by $user.',$createdby,'0')";
+            $sendNotifQry="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'GRN No: $slectedgrnID has been approved by $user.',$grnby,'0')";
             $sendNotifRes=mysqli_query($conn, $sendNotifQry);
 
             if($updateRes && $sendNotifRes)
@@ -96,16 +104,18 @@
         }
 
     if(isset($_POST['btnDel']))
-        {
+        {   
+            $clearProRecQry="UPDATE sub_pro_details SET recFinishedQty=recFinishedQty-'$totalFQty', recDamQty=recDamQty-'$totalDQty', recSampleQty=recSampleQty-'$totalSQty' WHERE grnCode='$slectedgrnID'";
+            if($clearProRecRes=mysqli_query($conn,$clearProRecQry)){
+            
             $deleteQry1="DELETE FROM grn_details1 WHERE grnNo='$slectedgrnID'";
             if($deleteRes1=mysqli_query($conn,$deleteQry1)){
                 $deleteQuery="DELETE FROM grn_details WHERE grnCode1='$slectedgrnID'";
                 $deleteRes=mysqli_query($conn,$deleteQuery);
 
-                $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'GRN No: $slectedgrnID has been deleted by $user.',$createdby,'0')";
-                $sendNotifRes1=mysqli_query($conn, $sendNotifQry1);
 
-                if($deleteRes && $sendNotifRes1)
+
+                if($deleteRes)
                     {
                         echo "<script>
                         setTimeout(function(){window.location.href = 'home_page.php?activity=grnList';}, 1000);
@@ -116,7 +126,8 @@
                     {
                         $message="Error while deleting the GRN. Try again.";
                     }
-                }            
+                } 
+            }           
         }
  ?>
  
@@ -127,6 +138,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GRN view</title>
+
+     <link rel="icon" type="image/x-icon" href="../Resources/images/syslogo.ico">
 
     <!--bootstrap-->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
@@ -277,7 +290,7 @@
                                     if($accConfirm==1 && $status!="Approved"){
                                     ?>
                                     <input type="submit" class="btn btn-primary save_btn" value="Approve" name="btnApprove" id="btnApprove"/>
-                                    <input type="submit" class="btn btn-primary save_btn" value="Delete" name="btnDel" id="btnDel"/>
+                                    <!-- <input type="submit" class="btn btn-primary save_btn" value="Delete" name="btnDel" id="btnDel"/> -->
                                     <?php
                                     }
                                 ?>

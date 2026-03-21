@@ -112,7 +112,7 @@
                             VALUES ('$vendorid','$typeid','$orderNo','$pieces','$totalQty','$perDayQty','$startingDate','$endingDate','$creditPeriod','$finishedPrice','$samplePrice','$status',NOW(),'$activeUser')";
             
             if(mysqli_query($conn, $insertQuery)){
-                echo "<script>alert('Payment Receipt added successfully!');
+                echo "<script>alert('Subcontract Agreement Created successfully!');
                 setTimeout(function(){window.location.href = 'home_page.php?activity=agreements';}, 500)</script>";
                     exit();
             } else {

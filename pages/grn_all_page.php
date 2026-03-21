@@ -79,6 +79,7 @@
             }
         }
     }
+    // echo $result1['RECFINQTY'] . $result1['FINQTY'] . $result1['RECDAMQTY'] . $result1['DAMQTY'] . $result1['RECSMQTY'] . $result1['SMQTY'];
 
 
 
@@ -154,7 +155,7 @@
         </div>
         
     <div class="table-wrapper">
-        <table class="table1 text-center" cellspacing="0" style="font-size: 9pt;">
+        <table class="table1 text-center" cellspacing="0" style="font-size: 9pt; min-width: 100%;">
         	<tr class="table-header">
                 <th>GRN</th>
             	<th>Record No.</th>
@@ -177,7 +178,8 @@
                     <tr class="flex align-items-center">
                         <td>
                         <?php
-                                if($result1['RECFINQTY'] > $result1['FINQTY'] || $result1['RECDAMQTY'] < $result1['DAMQTY'] || $result1['RECSMQTY'] < $result1['SMQTY']){
+                                
+                                if($result1['RECFINQTY'] < $result1['FINQTY'] || $result1['RECDAMQTY'] < $result1['DAMQTY'] || $result1['RECSMQTY'] < $result1['SMQTY']){
                                 ?>    
                                 <button type="button" name="addGRN" value="addGRN" class="btn btn-success" onclick="window.location.href='home_page.php?activity=grnUpdate&selectedID=<?php echo $result1['recID']?>'">ADD</button></td>
                                 <?php

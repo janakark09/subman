@@ -27,7 +27,7 @@
     $selectedID=$_REQUEST['selectedID'];
 
     $receiptQuery="SELECT P.receiptID AS 'ID', DATE_FORMAT(P.Date,'%d/%m/%y') AS 'DATE', V.vendor AS 'VEN', PM.paymethod AS 'METHOD', P.accountdetails AS 'ACC', 
-            P.refNo AS 'REF',P.grossValue AS 'GROSS',P.vat AS 'VAT',P.vatValue AS 'VATVAL',P.netValue AS 'NETVAL', CONCAT(U.Fname,'',U.Lname) AS 'USER',
+            P.refNo AS 'REF',P.grossValue AS 'GROSS',P.vat AS 'VAT',P.vatValue AS 'VATVAL',P.netValue AS 'NETVAL', CONCAT(U.Fname,'',U.Lname) AS 'USER', U.User_ID AS 'USERID',
             DATE_FORMAT(P.createdDT,'%d/%m/%y') AS 'CREATEDDT',P.Status AS 'STATUS', P.approvedBy AS 'APPROVED', DATE_FORMAT(P.approvedDT,'%d/%m/%y') AS 'APPROVEDDT'  FROM payments P 
             JOIN payment_methods PM ON P.payMenthod=PM.methodID JOIN vendors V ON P.VendorID=V.vendorID JOIN users U ON P.createdBy=U.User_ID 
             WHERE P.receiptID='$selectedID'";
@@ -47,6 +47,7 @@
             $vatValue=$rowData['VATVAL'];
             $netValue=$rowData['NETVAL'];
             $createdby=$rowData['USER'];
+            $createdbyID=$rowData['USERID'];
             $createddate=$rowData['CREATEDDT'];
             $status=$rowData['STATUS'];
             $approvedby=$rowData['APPROVED'];
@@ -78,7 +79,7 @@
             $updateQuery="UPDATE payments SET Status='Approved', approvedBy='$activeUser', approvedDT=NOW() WHERE receiptID='$selectedID'";
             $updateRes=mysqli_query($conn,$updateQuery);
             
-            $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Payment No: $selectedID has been approved by $user.',$createdby,'0')";
+            $sendNotifQry1="INSERT INTO notifications (user, description, attUser, NotifyStatus) VALUES ('$activeUser', 'Payment No: $selectedID has been approved by $user.',$createdbyID,'0')";
             $sendNotifRes1=mysqli_query($conn, $sendNotifQry1);
 
             if($updateRes)
@@ -102,6 +103,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment view</title>
+
+     <link rel="icon" type="image/x-icon" href="../Resources/images/syslogo.ico">
 
     <!--bootstrap-->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">

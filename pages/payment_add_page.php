@@ -1,11 +1,11 @@
     <?php
 	include "../includes/db-con.php";
 
-    $selectedVendor = 1;
+    $selectedVendor = "";
     $allgrnQuery="";
     $NewID=0;
     $message="";
-    $returnAll="";
+    $returnAll=null;
     $selectedVat=0;
     $selectedGRNs="";
     $gross=0;
@@ -47,7 +47,7 @@
         $venResult=mysqli_fetch_assoc($returnVen);
         $selectedVat=$venResult['vatPercentage'];
     }
-    
+    //echo $selectedVendor;
     if($selectedVendor != ""){
             $allgrnQuery="SELECT GD.grnCode1 AS 'CODE1',CONCAT(GD.grnCode2,'/',GD.grnCode1) AS 'CODE2',GD.invoiceNo AS 'INV', SO.styleNo AS 'STYLE',SO.orderNo AS 'ORDERNO', 
                 DATE_FORMAT(GD.invoiceDate,'%d/%m/%y') AS 'INVDATE',GD.recFnishedQty AS 'RECFQTY', V.vendor AS 'VEN',GD.recDamQty AS 'RECDQTY',GD.recSampleQty AS 'RECSQTY', 
@@ -55,7 +55,7 @@
                 FROM grn_details GD JOIN sub_production SP ON GD.proRecNo=SP.recordID JOIN styleorder SO ON SP.orderNoID=SO.id 
                 JOIN mast_location ML ON SP.locationID=ML.locationID JOIN vendors V ON GD.VendorID=V.vendorID JOIN users U ON SP.createdBy=U.User_ID 
                 JOIN agreements A ON SP.orderAgreement=A.id WHERE GD.VendorID='$selectedVendor' AND GD.status='Approved' AND (GD.receiptID='' OR GD.receiptID IS NULL) AND 
-                SP.status='Approved' AND SO.Status='Active' AND ML.status='Active' AND V.status='Active' AND V.status='Active' AND A.Status='Active' ORDER BY GD.createdDT DESC";
+                SP.status='Approved' AND SO.Status='Active' AND ML.status='Active' AND V.status='Active' /*AND A.Status='Active'*/ ORDER BY GD.createdDT DESC";
 
         $returnAll=mysqli_query($conn,$allgrnQuery);
     }
@@ -135,7 +135,7 @@
                 echo "<script>
                     setTimeout(function(){
                     window.open('payment_view_page.php?activity=payView&selectedID=".$receiptID."', '_blank');
-                    window.location.href = 'home_page.php?activity=payList';}, 1000);
+                    window.location.href = 'home_page.php?activity=payList';}, 500);
                 </script>";
                 exit();
             }
@@ -213,9 +213,9 @@
             <!-- -------------------------------------------------------------------------------------------------------------------- -->
              <div class="text-center p-3"><h4>GRN Details</h4></div>
             <div class="table-wrapper">
-                            <table class="table1 text-center" cellspacing="0" style="font-size: 9pt;">
+                            <table class="table1 text-center" cellspacing="0" style="font-size: 9pt;" >
                                 <tr class="table-header">
-                                    <th>Add</th>
+                                    <th  <?php if($savetoOK==true) echo 'hidden'; ?>>Add</th>
                                     <th>GRN No.</th>
                                     <th>Style</th>
                                     <th>Order</th>
@@ -231,33 +231,36 @@
                                 </tr>
                                 <?php
                                 try{
-                                    while($result1=mysqli_fetch_assoc($returnAll))
-                                    {
-                                        ?>
-                                        <tr class="flex align-items-center">
-                                            <td><input type="checkbox" class="form-check-input" name="selectedGRN[]" value="<?php echo $result1['CODE1']; ?>" <?php if(isset($_POST['selectedGRN']) && in_array($result1['CODE1'], $_POST['selectedGRN'])) echo "checked"; ?>>
-                                            
-                                            </td>
-                                            <td class="text-center"><?php 
-                                                    $selected= $result1['CODE1'];
-                                                    $url = 'grn_view_page.php?activity=grnView&Criteria=Grn&selectedID= '.$selected;
-                                                    echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">'.$result1['CODE2'].'</a>';
-                                            ?></td> 
-                                            <td><?php echo $result1['STYLE']?></td>
-                                            <td><?php echo $result1['ORDERNO']?></td>
-                                            <td><?php echo $result1['INV']?></td>
-                                            <td ><?php echo $result1['INVDATE']?></td>
-                                            <td><?php echo $result1['VEN']?></td>
-                                            <td><?php echo $result1['RECFQTY']?></td>
-                                            <td><?php echo $result1['RECDQTY']?></td>
-                                            <td><?php echo $result1['RECSQTY']?></td>
-                                            <td class="decimal-data"><?php echo $result1['GRNVAL'];?></td>
-                                            <td hidden><input type="text" name="grnval[]" value="<?php echo $result1['GRNVAL']; ?>"></td>
-                                            <td><?php echo $result1['GRNDATE']?></td>
-                                            <td><?php echo $result1['GRNBY']?></td>
-                                        </tr>
-                                        <?php
-                                    }
+                                    if($returnAll && mysqli_num_rows($returnAll) > 0)
+                                        {
+                                            while($result1=mysqli_fetch_assoc($returnAll))
+                                            {
+                                                ?>
+                                                <tr class="flex align-items-center" <?php if($savetoOK==true) if(isset($_POST['selectedGRN']) && in_array($result1['CODE1'], $_POST['selectedGRN'])){echo ''; } else { echo 'hidden'; } ?>>
+                                                    <td  <?php if($savetoOK==true) echo 'hidden'; ?>><input type="checkbox" class="form-check-input"  name="selectedGRN[]" value="<?php echo $result1['CODE1']; ?>" <?php if(isset($_POST['selectedGRN']) && in_array($result1['CODE1'], $_POST['selectedGRN'])) echo "checked"; ?>>
+                                                    
+                                                    </td>
+                                                    <td class="text-center"><?php 
+                                                            $selected= $result1['CODE1'];
+                                                            $url = 'grn_view_page.php?activity=grnView&Criteria=Grn&selectedID= '.$selected;
+                                                            echo '<a href="' . htmlspecialchars($url) . '" target="_blank" rel="noopener noreferrer">'.$result1['CODE2'].'</a>';
+                                                    ?></td> 
+                                                    <td><?php echo $result1['STYLE']?></td>
+                                                    <td><?php echo $result1['ORDERNO']?></td>
+                                                    <td><?php echo $result1['INV']?></td>
+                                                    <td ><?php echo $result1['INVDATE']?></td>
+                                                    <td><?php echo $result1['VEN']?></td>
+                                                    <td><?php echo $result1['RECFQTY']?></td>
+                                                    <td><?php echo $result1['RECDQTY']?></td>
+                                                    <td><?php echo $result1['RECSQTY']?></td>
+                                                    <td class="decimal-data"><?php echo $result1['GRNVAL'];?></td>
+                                                    <td hidden><input type="text" name="grnval[]" value="<?php echo $result1['GRNVAL']; ?>"></td>
+                                                    <td><?php echo $result1['GRNDATE']?></td>
+                                                    <td><?php echo $result1['GRNBY']?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
                                 }
                                 catch(Exception $e){
                                     echo "Error: " . $e->getMessage();

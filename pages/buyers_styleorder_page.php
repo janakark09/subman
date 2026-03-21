@@ -40,7 +40,7 @@
 			{
 			?>
             <tr>
-            	<td><a href="home_page.php?activity=editStyleorder&selectedID=<?php echo $result1['ID']?>"><?php echo $result1['ID']?></a></td>
+            	<td><?php echo $result1['ID']?></td>
                 <td><?php echo $result1['BUYER']?></td>
                 <td><?php echo $result1['STYLE']?></td>
                 <td><?php echo $result1['ORDERNO']?></td>

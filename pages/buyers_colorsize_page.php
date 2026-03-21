@@ -50,7 +50,7 @@
     {
         $newColor = $_POST['newColor'];
         $orderNo=$_POST['orderNo'];
-        echo "New Color: ".$newColor." for Order No: ".$_POST['orderNo'];
+        //echo "New Color: ".$newColor." for Order No: ".$_POST['orderNo'];
         if($newColor != ""){
             
             $insertColorQuery = "INSERT INTO style_colors (color,orderNoID, active) VALUES ('$newColor','$orderNo', 1)";

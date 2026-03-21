@@ -6,22 +6,34 @@
 	
 	$activeUser=$_SESSION['_UserID'];
 
-    if(isset($_GET['action']) && $_GET['action'] == "delete")
+    if(isset($_POST['btnDelete']))
         {
-            $userID = $_GET['selectedID'];
+            $userID = $_POST['deleteID'];
             deleteUser($conn, $userID);
         }
     function deleteUser($conn, $userID)
         {
-            $sqlDeleteUser = "DELETE FROM users WHERE User_ID = '$userID'";
             $sqlDeleteUserDetails = "DELETE FROM user_details WHERE User_ID = '$userID'";
-            if(mysqli_query($conn, $sqlDeleteUser) && mysqli_query($conn, $sqlDeleteUserDetails))
+            if(mysqli_query($conn, $sqlDeleteUserDetails))
             {
-                echo "<script>alert('User deleted successfully.'); window.location.href='home_page.php?activity=users';</script>";
+                
+                $sqlDeleteUser = "DELETE FROM users WHERE User_ID = '$userID'";
+                
+                if(mysqli_query($conn, $sqlDeleteUser))
+                {
+                    echo "<script>alert('User deleted successfully.');</script>";
+                        echo "<script>
+                            setTimeout(function(){window.location.href = 'home_page.php?activity=users';}, 100);
+                        </script>";
+                }
+                else
+                {
+                    echo "<script>alert('Error deleting user: " . mysqli_error($conn) . "');</script>";
+                }
             }
             else
             {
-                echo "<script>alert('Error deleting user: " . mysqli_error($conn) . "');</script>";
+                echo "<script>alert('Error deleting user details: " . mysqli_error($conn) . "');</script>";
             }
         }
 
@@ -67,11 +79,13 @@
                 <td><?php echo $result1['Email']?></td>
                 <td><?php echo $result1['User_Type']?></td>
                 <td><?php echo $result1['Member_Status']?></td>
-                <td>
-                    <a href="home_page.php?action=del&selectedID=<?php echo $result1['User_ID']?>"
-                    onclick="return confirm('Are you sure you want to delete this user?');">
-                    Delete
-                    </a>
+                <td class="text-center">
+                    <form method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                        <input type="hidden" name="deleteID" value="<?php echo $result1['User_ID']; ?>">
+                        <button type="submit" name="btnDelete" class="bg-danger btn text-white">
+                            Delete
+                        </button>
+                    </form>
                 </td>
 				
             <tr>

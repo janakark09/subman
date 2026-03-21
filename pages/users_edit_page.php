@@ -252,7 +252,7 @@
                                 <?php 
                                     while($usertype=mysqli_fetch_assoc(result:$returnDataSet1)){
                                         ?>
-                                        <option <?php if($usertype['userType'] == $userType) echo 'selected'; ?>><?php echo $usertype['userType']?></option>
+                                        <option <?php if($usertype['userType'] == $userType) {echo 'selected'; } ?>><?php echo $usertype['userType']?></option>
                                     <?php
                                     }
                                     ?>

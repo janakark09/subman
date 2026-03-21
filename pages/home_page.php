@@ -38,9 +38,11 @@
 <html>
 	<head>
 		
-		<title>User Login</title>
+		<title>Subman</title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		 <link rel="icon" type="image/x-icon" href="../Resources/images/syslogo.ico">
 
 		<!--bootstrap-->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -146,9 +148,12 @@
 									<div class="small text-muted"><?php echo $notify['description']; ?></div>
 									<small class="text-muted">
 										<?php 
+											date_default_timezone_set('Asia/Colombo');
 											$createdTime = new DateTime($notify['createdDT']);
-											$currentTime = new DateTime();
+											$currentTime = new DateTime('now');
 											$interval = $currentTime->diff($createdTime);
+
+											//echo $currentTime->format('Y-m-d H:i:s') ." - " . $createdTime->format('Y-m-d H:i:s') . " = " . $interval->format('%y years, %m months, %d days, %h hours, %i minutes');
 
 											if ($interval->y > 0) {
 												echo $interval->y . ' year' . ($interval->y > 1 ? 's' : '') . ' ago';

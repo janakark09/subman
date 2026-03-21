@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 20, 2026 at 09:50 AM
+-- Generation Time: Mar 21, 2026 at 07:21 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `subman_db`
 --
-CREATE DATABASE IF NOT EXISTS `subman_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `subman_db`;
 
 -- --------------------------------------------------------
 
@@ -60,7 +58,8 @@ INSERT INTO `agreements` (`id`, `vendorID`, `process`, `styleOrderID`, `pcsPerSe
 (2, 102, 1, 1, 2, 5000, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Cancelled', '2026-02-13 12:41:39', 1001, NULL, NULL, 1001, '2026-03-17 10:56:13'),
 (3, 102, 1, 1, 2, 3500, 300, '2026-02-13', '2026-04-20', 0, 35, 35, 'Approved', '2026-02-13 12:45:36', 1001, 1001, '2026-03-18 17:13:02', NULL, NULL),
 (4, 101, 1, 1, 2, 10000, 30, '2026-03-08', '2028-06-18', 30, 150, 30, 'Approved', '2026-03-08 22:13:37', 1002, 1001, '2026-03-18 17:15:39', NULL, NULL),
-(5, 101, 1, 1, 2, 2, 600, '2026-03-19', '2026-03-19', 30, 100, 75, 'Approved', '2026-03-19 10:55:58', 1001, 1001, '2026-03-19 10:56:07', NULL, NULL);
+(5, 101, 1, 1, 2, 2, 600, '2026-03-19', '2026-03-19', 30, 100, 75, 'Approved', '2026-03-19 10:55:58', 1001, 1001, '2026-03-19 10:56:07', NULL, NULL),
+(6, 103, 5, 4, 2, 450, 10, '2026-03-28', '2026-05-11', 30, 450, 400, 'Approved', '2026-03-21 09:39:20', 1001, 1001, '2026-03-21 09:39:33', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -122,7 +121,8 @@ CREATE TABLE `gatepass` (
 
 INSERT INTO `gatepass` (`gatepassID_1`, `gatepassID_2`, `locationID`, `orderNoID`, `gatepassDate`, `vendorID`, `orderAgreement`, `status`, `createdDT`, `createdBy`, `approvedBy`, `approvedDT`) VALUES
 (11, '1-260302', 1, 1, '2026-03-04', 102, 2, 'Approved', '2026-03-02 21:59:33', 1001, 1001, '2026-03-03 20:26:30'),
-(12, '1-260303', 1, 1, '2026-02-27', 102, 3, 'Approved', '2026-03-03 15:50:50', 1001, 1001, '2026-03-03 17:46:41');
+(12, '1-260303', 1, 1, '2026-02-27', 102, 3, 'Approved', '2026-03-03 15:50:50', 1001, 1001, '2026-03-03 17:46:41'),
+(13, '1-260321', 1, 4, '2026-03-21', 103, 6, 'Approved', '2026-03-21 09:42:43', 1001, 1001, '2026-03-21 09:47:31');
 
 -- --------------------------------------------------------
 
@@ -152,7 +152,9 @@ INSERT INTO `gatepass_details` (`id`, `gpID`, `cutNo`, `colorID`, `sizeID`, `mat
 (20, 12, '4', 4, 2, 20),
 (21, 12, '4', 2, 2, 10),
 (22, 12, '4', 4, 2, 20),
-(23, 12, '4', 4, 2, 20);
+(23, 12, '4', 4, 2, 20),
+(24, 13, '3', 11, 4, 150),
+(25, 13, '3', 10, 6, 350);
 
 -- --------------------------------------------------------
 
@@ -189,7 +191,15 @@ CREATE TABLE `grn_details` (
 --
 
 INSERT INTO `grn_details` (`grnCode1`, `grnCode2`, `proRecNo`, `locationID`, `VendorID`, `invoiceDate`, `invoiceNo`, `recFnishedQty`, `fgUnitPrice`, `fgValue`, `recDamQty`, `sampleUnitPrice`, `sampleValue`, `recSampleQty`, `vat`, `createdDT`, `createdBy`, `status`, `approvedBy`, `approvedDT`, `receiptID`) VALUES
-(22, '2026', 2, 1, 102, '2026-03-11', '121212', 150, 125, 18750, 8, 100, 400, 4, 0, '2026-03-07 14:46:44', 1002, 'Approved', 1002, '2026-03-07 15:39:33', 1001);
+(22, '2026', 2, 1, 102, '2026-03-11', '121212', 150, 125, 18750, 8, 100, 400, 4, 0, '2026-03-07 14:46:44', 1002, 'Approved', 1002, '2026-03-07 15:39:33', 1001),
+(23, '2026', 2, 1, 102, '2026-03-27', '1066626', 120, 100, 12000, 13, 50, 200, 4, 0, '2026-03-20 21:20:15', 1001, 'Approved', 1001, '2026-03-20 23:04:49', 1002),
+(26, '2026', 2, 1, 102, '2026-03-20', '1066626', 100, 100, 10000, 0, 80, 0, 0, 0, '2026-03-20 23:51:32', 1001, 'Approved', 1001, '2026-03-20 23:52:34', 1002),
+(27, '2026', 3, 1, 102, '2026-03-20', '3543', 80, 100, 8000, 0, 80, 0, 0, 0, '2026-03-20 23:51:57', 1001, 'Approved', 1001, '2026-03-21 10:10:18', NULL),
+(28, '2026', 5, 1, 101, '2026-04-17', '3543', 255, 150, 38250, 3, 100, 100, 1, 0, '2026-03-21 09:54:45', 1001, 'Approved', 1001, '2026-03-21 10:10:35', NULL),
+(29, '2026', 5, 1, 101, '2026-05-22', '3543', 22, 150, 3300, 2, 100, 100, 1, 0, '2026-03-21 09:56:03', 1001, 'Approved', 1001, '2026-03-21 10:10:30', NULL),
+(30, '2026', 4, 1, 101, '2026-03-28', '1066626', 100, 150, 15000, 0, 100, 0, 0, 0, '2026-03-21 10:00:10', 1001, 'Approved', 1001, '2026-03-21 10:20:31', NULL),
+(31, '2026', 4, 1, 101, '2026-04-03', '121212', 50, 100, 5000, 0, 75, 0, 0, 0, '2026-03-21 10:06:04', 1001, 'Pending', NULL, NULL, NULL),
+(32, '2026', 6, 1, 103, '2026-03-27', '32135', 35, 100, 3500, 1, 75, 0, 0, 0, '2026-03-21 10:09:03', 1001, 'Pending', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -212,7 +222,20 @@ CREATE TABLE `grn_details1` (
 INSERT INTO `grn_details1` (`prodetailsID`, `grnNo`, `recFinQty`, `recDamQty`, `SampleQty`) VALUES
 (2, 22, 70, 5, 1),
 (3, 22, 30, 3, 3),
-(4, 22, 50, 0, 0);
+(4, 22, 50, 0, 0),
+(2, 23, 100, 0, 1),
+(3, 23, 0, 13, 3),
+(4, 23, 20, 0, 0),
+(2, 26, 100, 0, 0),
+(5, 27, 50, 0, 0),
+(6, 27, 30, 0, 0),
+(8, 28, 130, 3, 1),
+(9, 28, 125, 0, 0),
+(8, 29, 20, 2, 0),
+(9, 29, 2, 0, 1),
+(7, 30, 100, 0, 0),
+(7, 31, 50, 0, 0),
+(10, 32, 35, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -268,7 +291,23 @@ INSERT INTO `notifications` (`id`, `user`, `description`, `attUser`, `createdDT`
 (1, 1001, 'Logged', 1001, '2026-03-18 11:43:23', 0),
 (2, 1002, 'logout', 1001, '2026-03-18 12:12:57', 1),
 (3, 1001, 'Agreement No:  4 has been approved by System Admin.', 1002, '2026-03-18 17:15:39', 1),
-(4, 1001, 'Agreement No:  5 has been approved by System Admin.', 1001, '2026-03-19 10:56:07', 0);
+(4, 1001, 'Agreement No:  5 has been approved by System Admin.', 1001, '2026-03-19 10:56:07', 0),
+(5, 1002, 'Production Record No:  4 has been approved by A.D. Kumara.', 1002, '2026-03-20 23:27:25', 0),
+(6, 1001, 'Production Record No:  3 has been approved by System Admin.', 1002, '2026-03-20 23:29:28', 0),
+(7, 1001, 'GRN No:  26 has been approved by System Admin.', 1001, '2026-03-20 23:52:34', 1),
+(8, 1001, 'Payment No: 1002 has been approved by System Admin.', 1001, '2026-03-21 00:38:11', 1),
+(9, 1001, 'Agreement No:  6 has been approved by System Admin.', 1001, '2026-03-21 09:39:33', 0),
+(10, 1001, 'Gatepass No:  13 has been approved by System Admin.', 1001, '2026-03-21 09:47:31', 0),
+(11, 1002, 'Production Record No:  5 has been approved by A.D. Kumara.', 1002, '2026-03-21 09:53:19', 0),
+(12, 1002, 'Production Record No:  6 has been approved by A.D. Kumara.', 1002, '2026-03-21 10:08:31', 0),
+(13, 1001, 'GRN No:  27 has been approved by System Admin.', 1001, '2026-03-21 10:10:18', 0),
+(14, 1001, 'GRN No:  29 has been approved by System Admin.', 1001, '2026-03-21 10:10:30', 0),
+(15, 1001, 'GRN No:  28 has been approved by System Admin.', 1001, '2026-03-21 10:10:35', 0),
+(16, 1001, 'GRN No:  30 has been approved by System Admin.', 1001, '2026-03-21 10:20:31', 0),
+(17, 1001, 'Payment No: 1002 has been approved by System Admin.', 1001, '2026-03-21 10:27:06', 0),
+(18, 1001, 'Payment No: 1002 has been approved by System Admin.', 1001, '2026-03-21 10:29:18', 1),
+(19, 1001, 'Payment No: 1003 has been approved by System Admin.', 1001, '2026-03-21 10:30:58', 1),
+(20, 1001, 'Payment No: 1002 has been approved by System Admin.', 1001, '2026-03-21 10:43:12', 1);
 
 -- --------------------------------------------------------
 
@@ -326,7 +365,8 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`receiptID`, `date`, `VendorID`, `payMenthod`, `accountdetails`, `refNo`, `grossValue`, `vat`, `vatValue`, `netValue`, `createdDT`, `createdBy`, `Status`, `approvedBy`, `approvedDT`) VALUES
-(1001, '2026-03-09 00:00:00', 102, 1, 'sad', '365665', 19150, 18, 3447, 22597, '2026-03-08 08:59:59', 1002, 'Approved', 1002, '2026-03-08 09:00:02');
+(1001, '2026-03-09 00:00:00', 102, 1, 'sad', '365665', 19150, 18, 3447, 22597, '2026-03-08 08:59:59', 1002, 'Approved', 1002, '2026-03-08 09:00:02'),
+(1002, '2026-03-21 00:00:00', 102, 1, '35435465', '365665', 22200, 18, 3996, 26196, '2026-03-21 10:43:09', 1001, 'Approved', 1001, '2026-03-21 10:43:12');
 
 -- --------------------------------------------------------
 
@@ -368,7 +408,13 @@ CREATE TABLE `process_type` (
 --
 
 INSERT INTO `process_type` (`typeid`, `processType`) VALUES
-(1, 'WASHING');
+(1, 'WASHING'),
+(2, 'PLEATING'),
+(3, 'SMOCKING'),
+(4, 'SEWING'),
+(5, 'PRINTING'),
+(6, 'EMBROIDERY'),
+(7, 'HANDWORK');
 
 -- --------------------------------------------------------
 
@@ -505,7 +551,11 @@ CREATE TABLE `sub_production` (
 --
 
 INSERT INTO `sub_production` (`recordID`, `gatepassRefID`, `orderNoID`, `gatepassDate`, `locationID`, `vendorID`, `orderAgreement`, `comments`, `status`, `cratedDT`, `createdBy`, `approvedBy`, `approvedDT`) VALUES
-(2, '365665', 1, '2026-03-12', 2, 102, 2, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-03 22:54:27', 1002, 1001, '2026-03-18 17:39:34');
+(2, '365665', 1, '2026-03-12', 2, 102, 2, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-03 22:54:27', 1002, 1001, '2026-03-18 17:39:34'),
+(3, '365665', 1, '2026-03-20', 1, 101, 4, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-20 21:25:43', 1002, 1001, '2026-03-20 23:29:28'),
+(4, '365665', 1, '2026-03-20', 1, 101, 4, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-20 23:27:13', 1002, 1002, '2026-03-20 23:27:25'),
+(5, '365665', 4, '2026-03-21', 4, 103, 6, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-21 09:53:11', 1002, 1002, '2026-03-21 09:53:19'),
+(6, '365665', 4, '2026-03-28', 2, 103, 6, 'fdgfd fd gfd gfdgfdgtrtf  hgf hfg', 'Approved', '2026-03-21 10:08:25', 1002, 1002, '2026-03-21 10:08:31');
 
 -- --------------------------------------------------------
 
@@ -534,9 +584,15 @@ CREATE TABLE `sub_pro_details` (
 
 INSERT INTO `sub_pro_details` (`id`, `recID`, `cutNo`, `colorID`, `sizeID`, `finishedQty`, `fabDamQty`, `processDamQty`, `sampleQty`, `recFnishedQty`, `recDamQty`, `recSampleQty`) VALUES
 (1, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
-(2, 2, '3', 1, 1, 100, 10, 3, 3, NULL, 13, 2),
-(3, 2, '3', 1, 1, 100, 10, 3, 3, 100, NULL, NULL),
-(4, 2, '3', 1, 1, 100, 10, 3, 3, 80, 13, 3);
+(2, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
+(3, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
+(4, 2, '3', 1, 1, 100, 10, 3, 3, 100, 13, 3),
+(5, 3, '3', 2, 1, 50, 0, 0, 0, 50, 0, 0),
+(6, 3, '3', 1, 2, 30, 0, 0, 0, 30, 0, 0),
+(7, 4, '3', 1, 1, 150, 0, 0, 0, 150, 0, 0),
+(8, 5, '3', 10, 4, 150, 3, 2, 1, 150, 5, 1),
+(9, 5, '3', 11, 5, 127, 0, 0, 1, 127, 0, 1),
+(10, 6, '3', 11, 4, 35, 1, 0, 0, 35, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -616,7 +672,7 @@ CREATE TABLE `user_details` (
 
 INSERT INTO `user_details` (`User_ID`, `Address`, `TelNumber`, `Joined_Date`, `locationID`, `venderID`, `acc1`, `acc2`, `acc3`, `acc4`, `acc5`, `acc6`, `acc7`, `acc8`, `acc9`, `acc10`, `acc11`, `acc12`, `acc13`, `acc14`, `acc15`, `acc16`, `acc17`, `acc18`, `acc19`, `acc20`, `acc21`, `acc22`, `acc23`, `acc24`, `acc25`) VALUES
 (1001, 'Bandaragama', '0778520129', '2026-02-02', 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 1, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1002, '301/A, Owitiyagala, Horana.', '0778520129', '2026-02-05', 1, 103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (1003, 'Bandaragama', '0778520129', '2026-02-09', 1, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (1004, 'dsf dsf sdf sdf', '354356356', '2026-03-03', 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (1005, ' sdf sdf sdfsdf', '35435465', '2026-03-08', 2, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -870,7 +926,7 @@ ALTER TABLE `vendors`
 -- AUTO_INCREMENT for table `agreements`
 --
 ALTER TABLE `agreements`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `buyer`
@@ -882,19 +938,19 @@ ALTER TABLE `buyer`
 -- AUTO_INCREMENT for table `gatepass`
 --
 ALTER TABLE `gatepass`
-  MODIFY `gatepassID_1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `gatepassID_1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `gatepass_details`
 --
 ALTER TABLE `gatepass_details`
-  MODIFY `id` bigint(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `grn_details`
 --
 ALTER TABLE `grn_details`
-  MODIFY `grnCode1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `grnCode1` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `mast_location`
@@ -906,7 +962,7 @@ ALTER TABLE `mast_location`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
@@ -918,7 +974,7 @@ ALTER TABLE `payment_methods`
 -- AUTO_INCREMENT for table `process_type`
 --
 ALTER TABLE `process_type`
-  MODIFY `typeid` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `typeid` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `styleorder`
@@ -942,13 +998,13 @@ ALTER TABLE `style_sizes`
 -- AUTO_INCREMENT for table `sub_production`
 --
 ALTER TABLE `sub_production`
-  MODIFY `recordID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `recordID` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `sub_pro_details`
 --
 ALTER TABLE `sub_pro_details`
-  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(32) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`

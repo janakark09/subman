@@ -4,7 +4,7 @@
 
     $vendors = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) total FROM vendors WHERE status='Active'"));
     $orders = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) total FROM styleorder WHERE Status='Active'"));
-    $gatepass = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as TOTALAGR FROM `agreements` WHERE Status='Active' AND endDate > NOW();"));
+    $gatepass = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) as TOTALAGR FROM `agreements` WHERE Status='Active' OR Status='Approved' AND endDate > NOW();"));
     $grn = mysqli_fetch_assoc(mysqli_query($conn,"SELECT COUNT(*) AS 'PAYBLEGRN' FROM grn_details WHERE status='Approved' AND receiptID!=''"));
     $payments = mysqli_fetch_assoc(mysqli_query($conn,"SELECT SUM(fgValue+sampleValue) AS 'PAYBLE' FROM grn_details WHERE status='Approved' AND receiptID!=''"));
 

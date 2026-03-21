@@ -7,6 +7,7 @@
     $selectedStyle = "";
     $selectedOrder = "";
     $activeVendor = "";
+    $selectedVendor="";
     $userloc="";
 
     $activeUser=$_SESSION['_UserID'];  
@@ -129,6 +130,8 @@
     }
     //------------------ Handle Form Submission -------------------
     if(isset($_POST['btnSave'])){
+        if($selectedVendor != "" && $activeVendor != ""){
+            
             $gpRef=$_POST['refno'];
             $orderNo = $_POST['orderNo'];
             $gpDate=$_POST['finishingDate'];
@@ -182,6 +185,15 @@
                 $message = "Error creating gatepass: " . $e->getMessage();
             }
         }
+        }
+        else{
+            echo "<script>alert('No active vendor found for the user.Please log with a vendor username');</script>";
+            echo "<script>
+                    setTimeout(function(){window.location.href = 'home_page.php?activity=proRec';}, 1000);
+                </script>";
+                exit();
+        }
+            
     }
  ?>
 
@@ -191,6 +203,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Production</title>
+
+     <link rel="icon" type="image/x-icon" href="Resources/images/syslogo.ico">
 </head>
 <body>
     <div class="container-fluid">
@@ -278,7 +292,7 @@
 
                         <div class="form-group mb-1 col">
                                 <label for="remark">Remarks</label>
-                                <input type="text" class="form-control" id="remark" name="remark" value="<?php echo $_POST['remark'];?>">
+                                <input type="text" class="form-control" id="remark" name="remark" value="<?php if(isset($_POST['remark'])) {echo $_POST['remark'];}  else {echo '';} ?>">
                         </div>
 
                      <!-- ---------------------------------- Colors Sizes and Quantity Section -------------------------------- -->

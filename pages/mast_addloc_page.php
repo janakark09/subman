@@ -11,6 +11,7 @@
     if(isset($_POST['btnSubmit']))
     {
         $loc_address=$_POST['locaddress'];
+        $loc_name=$_POST['locname'];
         $loc_status=$_POST['locstatus'];
         
         $insertQuery="INSERT INTO mast_location (location, address,status, createdBy) 

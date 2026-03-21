@@ -136,7 +136,7 @@
                         </div>
                         <div class="form-group col-md-4 me-3">
                             <label >Product Category</label>
-                            <select id="inputCat" class="form-select" name="productCategory">
+                            <select id="inputCat" class="form-select" name="proCategory">
                                 <option>BODY SUITE</option>
                                 <option>sleep suite</option>
                                 <option>kids wear pant</option>

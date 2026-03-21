@@ -83,12 +83,12 @@
                     </div>
                     <div class="form-group mb-1">
                         <label for="address1">Address</label>
-                        <input type="address" class="form-control" id="address1" required name="address">
+                        <input type="address" class="form-control" id="address1" name="address">
                     </div>
                     <div class="d-lg-flex mb-1">
                         <div class="form-group me-5 col-lg-4">
                             <label>Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Working Email" required name="email">
+                            <input type="email" class="form-control" id="email" placeholder="Working Email" name="email">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>Tel.</label>
@@ -102,15 +102,15 @@
                     <div class="d-lg-flex mb-1">
                         <div class="form-group me-5 col-lg-4">
                             <label>Contact Person</label>
-                            <input type="text" class="form-control" id="contactperson" required name="contactperson">
+                            <input type="text" class="form-control" id="contactperson" name="contactperson">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>BR No.</label>
-                            <input type="text" class="form-control" id="brno"  required name="brno">
+                            <input type="text" class="form-control" id="brno"  name="brno">
                         </div>
                         <div class="form-group me-5 col-lg-3">
                             <label>VAT No.</label>
-                            <input type="text" class="form-control" id="vatno" required name="vatno">
+                            <input type="text" class="form-control" id="vatno" name="vatno">
                         </div>
                     </div>
                 <!-- ------------------------------------------- -->

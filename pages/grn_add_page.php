@@ -10,6 +10,7 @@
     $location="";
     $address="";
     $vendor="";
+    $vendorID="";
     $venAddrs="";
     $venTel="";
     $agreement="";
@@ -38,7 +39,7 @@
     $slectedrecID=$_REQUEST['selectedID'];
 
     $recQuery="SELECT SP.recordID AS 'recID',Sp.gatepassRefID AS 'REF', SP.gatepassDate AS 'GPDATE', SO.styleNo AS 'STYLE', SO.orderNo AS 'ORDERNO', ML.location AS 'LOC', ML.address AS 'ADDR',
-                V.vendor AS 'VEN',V.address AS 'VADDR',V.tel AS 'VTEL',V.fax AS 'VFAX',V.email AS 'VEMAIL', SP.orderAgreement AS 'AGREEMENT',SUM(PD.finishedQty) AS 'FINQTY',(SUM(PD.fabDamQty)+SUM(PD.processDamQty)) AS 'DAMQTY',SUM(PD.sampleQty) AS 'SMQTY', 
+                SP.vendorID AS 'VID',V.vendor AS 'VEN',V.address AS 'VADDR',V.tel AS 'VTEL',V.fax AS 'VFAX',V.email AS 'VEMAIL', SP.orderAgreement AS 'AGREEMENT',SUM(PD.finishedQty) AS 'FINQTY',(SUM(PD.fabDamQty)+SUM(PD.processDamQty)) AS 'DAMQTY',SUM(PD.sampleQty) AS 'SMQTY', 
                 SP.status AS 'STATUS', CONCAT(U.Fname,' ',U.Lname) AS 'CREATEDBY', DATE_FORMAT(SP.cratedDT,'%d/%m/%y') AS 'CREATEDDT' 
                     FROM  sub_production SP JOIN sub_pro_details PD ON SP.recordID=PD.recID 
                     JOIN mast_location AS ML ON SP.locationID=ML.locationID  
@@ -58,6 +59,7 @@
             $order=$rowData['ORDERNO'];
             $location=$rowData['LOC'];
             $address=$rowData['ADDR'];
+            $VendorID=$rowData['VID'];
             $vendor=$rowData['VEN'];
             $venAddrs=$rowData['VADDR'];
             $venTel=$rowData['VTEL'];
@@ -131,10 +133,11 @@
              try{
                 $conn->begin_transaction();
 
+                //echo $vendorID."-".$UsrLoc."-".$InvDate."-".$InvNo."-".$totalRecFQty."-".$fgUnitPrice."-".$fgValue."-".$totalRecDQty."-".$sampleUnitPrice."-".$sampleValue."-".$totalRecSQty."<br>";
                 //echo $totalRecFQty."-".$totalRecDQty."-".$totalRecSQty."<br>".count($recFQty)."-".count($recDQty)."-".count($recSQty);
-                $updateRecQuery="INSERT INTO grn_details(grnCode2, proRecNo, locationID, invoiceDate, invoiceNo, recFnishedQty, fgUnitPrice, fgValue, recDamQty, sampleUnitPrice, 
+                $updateRecQuery="INSERT INTO grn_details(grnCode2, proRecNo, locationID, VendorID, invoiceDate, invoiceNo, recFnishedQty, fgUnitPrice, fgValue, recDamQty, sampleUnitPrice, 
                             sampleValue, recSampleQty, createdDT, createdBy, status) 
-                            VALUES ('".date('Y')."', '$recID', '$UsrLoc', STR_TO_DATE('$InvDate','%Y-%m-%d'), '$InvNo', '$totalRecFQty', '$fgUnitPrice', '$fgValue', '$totalRecDQty', '$sampleUnitPrice', '$sampleValue', '$totalRecSQty', NOW(), '$activeUser', 'Pending')";
+                            VALUES ('".date('Y')."', '$recID', '$UsrLoc', '$VendorID', STR_TO_DATE('$InvDate','%Y-%m-%d'), '$InvNo', '$totalRecFQty', '$fgUnitPrice', '$fgValue', '$totalRecDQty', '$sampleUnitPrice', '$sampleValue', '$totalRecSQty', NOW(), '$activeUser', 'Pending')";
                 $conn->query($updateRecQuery);
                 $last_id = $conn->insert_id;
 
@@ -150,7 +153,7 @@
                                 else
                                     {
                                         $conn->begin_transaction();
-                                        echo $ROWID[$i]."--".$recFQty[$i]."-".$recDQty[$i]."-".$recSQty[$i]."<br>";
+                                        //echo $ROWID[$i]."--".$recFQty[$i]."-".$recDQty[$i]."-".$recSQty[$i]."<br>";
                                         $updateDetailsQuery="UPDATE sub_pro_details SET recFnishedQty=recFnishedQty+'$recFQty[$i]', recDamQty=recDamQty+'$recDQty[$i]', recSampleQty=recSampleQty+'$recSQty[$i]' WHERE id='$ROWID[$i]'";
                                         $conn->query($updateDetailsQuery);
                                         $createGRNQuery="INSERT INTO grn_details1(prodetailsID, grnNo, recFinQty, recDamQty, SampleQty) VALUES ('$ROWID[$i]', '$last_id', '$recFQty[$i]', '$recDQty[$i]', '$recSQty[$i]')";
@@ -161,10 +164,10 @@
                         $conn->commit();
                         $message="Record Saved Successfully!";
                         $saved=1;
-                        // echo "<script>
-                        //     setTimeout(function(){window.location.href = 'home_page.php?activity=grnAll';}, 1000);
-                        // </script>";
-                        // exit(); 
+                        echo "<script>
+                            setTimeout(function(){window.location.href = 'home_page.php?activity=grnAll';}, 1000);
+                        </script>";
+                        exit(); 
                     }
                 else
                     {

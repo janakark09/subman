@@ -164,6 +164,7 @@ $groupBy=" GROUP BY SO.orderNo";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Style report</title>
+     <link rel="icon" type="image/x-icon" href="../../Resources/images/syslogo.ico">
 </head>
 <body>
     <div class="d-flex justify-content-between mb-3">
