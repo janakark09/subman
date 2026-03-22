@@ -69,6 +69,7 @@
         {
             $setsRequired = (int)$orderQty / (int)$piecesPerSet;
             $requiredDaily = $setsRequired / (int)$duration;
+            //echo "Required Contract Qty: " . $setsRequired . "- Required Daily Qty: " . $requiredDaily;
         }
         else{
             $requiredDaily = 0;
@@ -76,8 +77,7 @@
             $startDate = "";
             $endDate = "";
         }
-        // $requiredDaily = (int)$orderQty / (int)$duration;
-        //echo " Required Daily Qty: " . $requiredDaily;
+        
         // Find suitable vendor
         $sqlVendor = "SELECT * FROM vendors 
                     WHERE dailyCapacity >= '$requiredDaily' 

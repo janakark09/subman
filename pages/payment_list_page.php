@@ -87,11 +87,11 @@
             <div class="d-lg-flex mb-3">
                     <div class="form-group col-lg-2">
                         <label>From Date</label>
-                        <input type="date" class="form-control" id="fromDate" required name="fromDate" value="<?php echo isset($_POST['fromDate']) ? $_POST['fromDate'] : ''; ?>" onchange="this.form.submit()"/>
+                        <input type="date" class="form-control" id="fromDate" name="fromDate" value="<?php echo isset($_POST['fromDate']) ? $_POST['fromDate'] : ''; ?>" onchange="this.form.submit()"/>
                     </div>
                     <div class="form-group col-lg-2">
                         <label>To Date</label>
-                        <input type="date" class="form-control" id="toDate" required name="toDate" value="<?php echo isset($_POST['toDate']) ? $_POST['toDate'] : ''; ?>" onchange="this.form.submit()"/>
+                        <input type="date" class="form-control" id="toDate" name="toDate" value="<?php echo isset($_POST['toDate']) ? $_POST['toDate'] : ''; ?>" onchange="this.form.submit()"/>
                     </div>
                         <div class="form-group col-md-4 me-3 ms-5">
                             <br>
